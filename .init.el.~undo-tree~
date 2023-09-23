@@ -1,0 +1,33 @@
+(undo-tree-save-format-version . 1)
+"c6700046471de7fc634fa899803fb6595cd1babe"
+[nil nil nil nil (25870 57539 497121 418000) 0 nil]
+([nil nil ((929 . 1212) (#("(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )" 0 239 (fontified nil)) . -17992) (#("(custom-set-faces
+ '(header-line
+   ((t (:background \"#11111b\"))))
+ )" 0 69 (fontified nil)) . -929) (18058 . 18060) (#("
+" 0 1 (fontified nil)) . -18058) (17817 . 18059) (#(" " 0 1 (fontified nil)) . 17817) (17544 . 17818) (#("(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(hl-todo minimap org-modern counsel-projectile projectile hydra all-the-icons helpful perfect-margin which-key evil-commentary evil-escape evil-collection evil general rainbow-delimiters ivy-rich counsel swiper catppuccin-theme)))" 0 508 (fontified nil)) . -17544) (t 25870 57533 134206 436000)) nil (25870 57539 497111 566000) 0 nil])
+([nil current ((929 . 1212) (#("(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(header-line ((t (:background \"#11111b\")))))" 0 283 (fontified nil)) . -929) (18280 . 18282) (#("
+" 0 1 (fontified nil)) . -18280) (18031 . 18281) (#(" " 0 1 (fontified nil)) . 18031) (17758 . 18032) (#("(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(vertico hl-todo minimap org-modern counsel-projectile projectile hydra all-the-icons helpful perfect-margin which-key evil-commentary evil-escape evil-collection evil general rainbow-delimiters ivy-rich counsel swiper catppuccin-theme)))" 0 516 (fontified nil)) . -17758) (t 25870 57539 517539 989000)) nil (25870 57781 685592 662000) 0 nil])
+nil
