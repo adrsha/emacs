@@ -1,9 +1,33 @@
 (undo-tree-save-format-version . 1)
-"98cf6a75f4c3f41987c725abc71ab1f930e40fd1"
-[nil nil nil nil (25872 56301 397761 784000) 0 nil]
-([nil current ((1072 . 1355) (#("(custom-set-faces
+"448501b430c08e99eebd323f072ceb3116d0a78b"
+[nil nil nil nil (25873 3017 416403 958000) 0 nil]
+([nil nil ((987 . 1270) (#("(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )" 0 239 (fontified nil)) . -23790) (#("(custom-set-faces
  '(header-line
    ((t (:background \"#11111b\"))))
- )" 0 69 (fontified nil)) . -1072) (19491 . 19494) (#("
-" 0 1 (fontified nil)) . -19491) (19223 . 19492) (#(" " 0 1 (fontified nil)) . 19223) (18950 . 19224) (t 25872 56153 123360 545000)) nil (25872 56301 397754 516000) 0 nil])
+ )" 0 69 (fontified nil)) . -987) (23856 . 23858) (#("
+" 0 1 (fontified nil)) . -23856) (23623 . 23857) (#(" " 0 1 (fontified nil)) . 23623) (23350 . 23624) (#("(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(hl-todo minimap org-modern counsel-projectile projectile hydra all-the-icons helpful perfect-margin which-key evil-commentary evil-escape evil-collection evil general rainbow-delimiters ivy-rich counsel swiper catppuccin-theme)))" 0 508 (fontified nil)) . -23350) (t 25873 3002 50144 236000)) nil (25873 3017 416395 463000) 0 nil])
+([nil current ((987 . 1270) (#("(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(header-line ((t (:background \"#11111b\")))))" 0 283 (fontified nil)) . -987) (24070 . 24072) (#("
+" 0 1 (fontified nil)) . -24070) (23837 . 24071) (#(" " 0 1 (fontified nil)) . 23837) (23564 . 23838) (#("(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(hl-todo minimap org-modern counsel-projectile projectile hydra all-the-icons helpful perfect-margin which-key evil-commentary evil-escape evil-collection evil general rainbow-delimiters ivy-rich counsel swiper catppuccin-theme)))" 0 508 (fontified nil)) . -23564) (t 25873 3017 536811 49000)) nil (25873 3385 872131 195000) 0 nil])
 nil

@@ -6,6 +6,8 @@
 (menu-bar-mode -1) ;; Disable the menu bar
 ;; Centralize Backup
 (setq backup-directory-alist '((".*" . "~/.local/share/Trash/files")))
+(setq scroll-step            1
+      scroll-conservatively  10000)
 
 ;; Only warn about important stuff
 (setq warning-minimum-level :emergency)
@@ -54,6 +56,34 @@
   (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+
+;; Using garbage magic hack.
+(use-package gcmh
+  :config
+  (gcmh-mode 1))
+;; Setting garbage collection threshold
+(setq gc-cons-threshold 402653184
+      gc-cons-percentage 0.6)
+
+;; Profile emacs startup
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "*** Emacs loaded in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
+
+;; Silence compiler warnings as they can be pretty disruptive (setq comp-async-report-warnings-errors nil)
+
+;; Silence compiler warnings as they can be pretty disruptive
+(if (boundp 'comp-deferred-compilation)
+    (setq comp-deferred-compilation nil)
+  (setq native-comp-deferred-compilation nil))
+;; In noninteractive sessions, prioritize non-byte-compiled source files to
+;; prevent the use of stale byte-code. Otherwise, it saves us a little IO time
+;; to skip the mtime checks on every *.elc file.
+(setq load-prefer-newer noninteractive)
 
 ;; Initialize Package souces
 (require 'package)
@@ -116,6 +146,108 @@
   :if (< (length command-line-args) 3)
   :config
   (dashboard-setup-startup-hook))
+
+(setq-default dired-kill-when-opening-new-dired-buffer t)
+(use-package treemacs
+  :ensure t
+  :defer t
+  :init
+  (with-eval-after-load 'winum
+    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  :config
+  (progn
+    (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
+          treemacs-deferred-git-apply-delay        0.5
+          treemacs-directory-name-transformer      #'identity
+          treemacs-display-in-side-window          t
+          treemacs-eldoc-display                   'simple
+          treemacs-file-event-delay                2000
+          treemacs-file-extension-regex            treemacs-last-period-regex-value
+          treemacs-file-follow-delay               0.2
+          treemacs-file-name-transformer           #'identity
+          treemacs-follow-after-init               t
+          treemacs-expand-after-init               t
+          treemacs-find-workspace-method           'find-for-file-or-pick-first
+          treemacs-git-command-pipe                ""
+          treemacs-goto-tag-strategy               'refetch-index
+          treemacs-header-scroll-indicators        '(nil . "^^^^^^")
+          treemacs-hide-dot-git-directory          t
+          treemacs-indentation                     2
+          treemacs-indentation-string              " "
+          treemacs-is-never-other-window           nil
+          treemacs-max-git-entries                 5000
+          treemacs-missing-project-action          'ask
+          treemacs-move-forward-on-expand          nil
+          treemacs-no-png-images                   nil
+          treemacs-no-delete-other-windows         t
+          treemacs-project-follow-cleanup          nil
+          treemacs-persist-file                    (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+          treemacs-position                        'left
+          treemacs-read-string-input               'from-child-frame
+          treemacs-recenter-distance               0.1
+          treemacs-recenter-after-file-follow      nil
+          treemacs-recenter-after-tag-follow       nil
+          treemacs-recenter-after-project-jump     'always
+          treemacs-recenter-after-project-expand   'on-distance
+          treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
+          treemacs-project-follow-into-home        nil
+          treemacs-show-cursor                     nil
+          treemacs-show-hidden-files               t
+          treemacs-silent-filewatch                nil
+          treemacs-silent-refresh                  nil
+          treemacs-sorting                         'alphabetic-asc
+          treemacs-select-when-already-in-treemacs 'move-back
+          treemacs-space-between-root-nodes        t
+          treemacs-tag-follow-cleanup              t
+          treemacs-tag-follow-delay                1.5
+          treemacs-text-scale                      nil
+          treemacs-user-mode-line-format           nil
+          treemacs-user-header-line-format         nil
+          treemacs-wide-toggle-width               70
+          treemacs-width                           35
+          treemacs-width-increment                 1
+          treemacs-width-is-initially-locked       t
+          treemacs-workspace-switch-cleanup        nil)
+
+    ;; The default width and height of the icons is 22 pixels. If you are
+    ;; using a Hi-DPI display, uncomment this to double the icon size.
+    ;;(treemacs-resize-icons 44)
+
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (treemacs-fringe-indicator-mode 'always)
+    (when treemacs-python-executable
+      (treemacs-git-commit-diff-mode t))
+
+    (pcase (cons (not (null (executable-find "git")))
+                 (not (null treemacs-python-executable)))
+      (`(t . t)
+       (treemacs-git-mode 'deferred))
+      (`(t . _)
+       (treemacs-git-mode 'simple)))
+
+    (treemacs-hide-gitignored-files-mode nil))
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t d"   . treemacs-select-directory)
+        ("C-x t B"   . treemacs-bookmark)
+        ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag)))
+
+(use-package treemacs-evil
+  :after (treemacs evil)
+  :ensure t)
+
+(use-package treemacs-projectile
+  :after (treemacs projectile)
+  :ensure t)
+
+(use-package treemacs-icons-dired
+  :hook (dired-mode . treemacs-icons-dired-enable-once)
+  :ensure t)
 
 (setq ivy-ignore-buffers '("\*.*\*"))
 (use-package swiper :ensure t)
@@ -209,6 +341,10 @@
 (require 'lsp-bridge)
 (global-lsp-bridge-mode)
 
+(use-package apheleia)
+(apheleia-global-mode +1)
+;; (add-hook 'prog-mode-hook #'format-all-ensure-formatter))
+
 (use-package projectile
   :diminish projectile-mode
   :config (projectile-mode)
@@ -248,6 +384,7 @@
     "bp" '(previous-buffer :which-key "󰛁 switch buffer")
     "bb" '(counsel-switch-buffer :which-key "view buffers"))  
 
+
   (e/leader-keys
     "s"  '(:ignore t :which-key "search")
     "ss" '(counsel-grep-or-swiper :which-key "use swiper")
@@ -258,9 +395,17 @@
     "sd" '(dictionary-search :which-key "search in dictionary"))
 
   (e/leader-keys
+    "d" '(treemacs :which-key "treemacs"))
+
+  (e/leader-keys
     "e"  '(:ignore t :which-key "evaluate")
     "eb" '(eval-buffer :which-key "evaluate buffer")
     "er" '(eval-region :which-key "evaluate region"))
+
+  (e/leader-keys
+    "c"  '(:ignore t :which-key "code")
+    "ca" '(lsp-bridge-code-action :which-key "code actions")
+    "cf" '(format-all-buffer :which-key "format the buffer"))
 
   (e/leader-keys
     "h"  '(:ignore t :which-key "help")
@@ -304,6 +449,7 @@
 (use-package evil-collection
   :after evil
   :config
+  (setq evil-collection-mode-list '(dashboard dired ibuffer))
   (evil-collection-init))
 
 (use-package evil-escape
@@ -351,8 +497,8 @@
 
 ;; Setting RETURN key in org-mode to follow links
 (setq org-return-follows-link  t)
-;; (electric-indent-mode -1)    ;; Turn off the weird indenting that Emacs does by default.
-
+(electric-indent-mode -1)    ;; Turn off the weird indenting that Emacs does by default.
+(setq org-src-preserve-indentation nil)
 (setq org-edit-src-content-indentation 2) ;; Set src block automatic indent to 0 instead of 2.
 (defun chilly/org-mode-setup ()
   (org-indent-mode)
@@ -416,6 +562,9 @@
 ;; Don't show *Buffer list* when opening multiple files at the same time.
 (setq inhibit-startup-buffer-menu t)
 
+(set-frame-parameter (selected-frame) 'buffer-predicate
+                     (lambda (buf) (not (string-match-p "^\*.*\*" (buffer-name buf)))))
+
 ;; Show only one active window when opening multiple files at the same time.
 (add-hook 'window-setup-hook 'delete-other-windows)
 
@@ -471,6 +620,7 @@
           (":properties:" . ?)
           ("TODO" . "")
           ("DONE" . "")
+          ("|" . "│")
           ("[ ]" . "☐")
           ("[X]" . "☑")
           ("[-]" . "❍")
@@ -498,6 +648,7 @@
 ;; prevent number lines to show in terminals NOTE: Removed org-mode-hook
 (dolist (mode '(term-mode-hook
                 shell-mode-hook
+                treemacs-mode-hook
                 eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
@@ -505,8 +656,6 @@
 (global-display-line-numbers-mode t)
 (auto-revert-mode 1)	     ;; Revert the buffer automatically
 
-(set-frame-parameter (selected-frame) 'buffer-predicate
-                     (lambda (buf) (not (string-match-p "^\*.*\*" (buffer-name buf)))))
 
 ;; DONT TOUCH THIS:
 (custom-set-variables
