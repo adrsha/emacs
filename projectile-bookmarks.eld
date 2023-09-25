@@ -1,1 +1,1 @@
-("~/.config/" "/hdd/Code/SBSCalculator/" "/hdd/Code/world_time_app/" "/hdd/Code/Portfolio/" "/hdd/Code/Cpp/" "/hdd/Code/Canvasanimations/")
+("~/.config/emacs/" "/hdd/Code/SBSCalculator/" "~/.config/" "/hdd/Code/world_time_app/" "/hdd/Code/Portfolio/" "/hdd/Code/Cpp/" "/hdd/Code/Canvasanimations/")

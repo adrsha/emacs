@@ -7,11 +7,16 @@
 ;; Centralize Backup
 (setq backup-directory-alist '((".*" . "~/.local/share/Trash/files")))
 
+;; Only warn about important stuff
+(setq warning-minimum-level :emergency)
+
+;; Disable the modeline itself
+(setq-default mode-line-format nil)
+
 ;; Setting the fonts
 (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font Medium" :height 130)
 (set-face-attribute 'fixed-pitch nil :font "JetBrainsMono Nerd Font Medium" :height 130)
-;; (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height 140 :weight 'regular)
-(set-face-attribute 'variable-pitch nil :font "Quicksand" :height 140 :weight 'medium)
+;; (set-face-attribute 'variable-pitch nil :font "JetBrainsMono Nerd Font Medium" :height 140)
 (set-face-attribute 'font-lock-comment-face nil :slant 'italic)
 (set-face-attribute 'font-lock-keyword-face nil :slant 'italic)
 
@@ -27,7 +32,7 @@
                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
   ;; Set faces for heading levels
-  (dolist (face '((org-meta-line . 0.5)
+  (dolist (face '((org-meta-line . 0.7)
                   (org-level-1 . 1.7)
                   (org-level-2 . 1.5)
                   (org-level-3 . 1.4)
@@ -37,7 +42,7 @@
                   (org-level-7 . 1.2)
                   (org-level-8 . 1.1)))
     ;; (set-face-attribute (car face) nil :font "ETbb" :weight 'regular :height (cdr face))
-    (set-face-attribute (car face) nil :font "Rubik" :weight 'regular :height (cdr face))
+    (set-face-attribute (car face) nil :font "Barlow" :weight 'medium :height (cdr face))
     )
   (set-face-attribute 'line-number nil :font "JetBrainsMono Nerd Font Bold" :height 90)
 
@@ -79,6 +84,19 @@
 
 (use-package all-the-icons)
 
+(use-package hl-todo
+  :hook ((org-mode . hl-todo-mode)
+         (prog-mode . hl-todo-mode))
+  :config
+  (setq hl-todo-highlight-punctuation ":"
+        hl-todo-keyword-faces
+        `(("TODO"       warning bold)
+          ("FIXME"      error bold)
+          ("HACK"       font-lock-constant-face bold)
+          ("REVIEW"     font-lock-keyword-face bold)
+          ("NOTE"       success bold)
+          ("DEPRECATED" font-lock-doc-face bold))))
+
 (use-package dashboard
   :ensure t 
   :init
@@ -98,19 +116,6 @@
   :if (< (length command-line-args) 3)
   :config
   (dashboard-setup-startup-hook))
-
-(use-package hl-todo
-  :hook ((org-mode . hl-todo-mode)
-         (prog-mode . hl-todo-mode))
-  :config
-  (setq hl-todo-highlight-punctuation ":"
-        hl-todo-keyword-faces
-        `(("TODO"       warning bold)
-          ("FIXME"      error bold)
-          ("HACK"       font-lock-constant-face bold)
-          ("REVIEW"     font-lock-keyword-face bold)
-          ("NOTE"       success bold)
-          ("DEPRECATED" font-lock-doc-face bold))))
 
 (setq ivy-ignore-buffers '("\*.*\*"))
 (use-package swiper :ensure t)
@@ -141,61 +146,6 @@
 (use-package ivy-rich
   :init
   (ivy-rich-mode 1))
-
-
-;; Enable vertico
-(use-package vertico
-  :init
-  (vertico-mode)
-
-  ;; Different scroll margin
-
-  ;; (setq vertico-scroll-margin 0)
-
-  ;; Show more candidates
-  ;; (setq vertico-count 20)
-
-  ;; Grow and shrink the Vertico minibuffer
-  ;; (setq vertico-resize t)
-
-  ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
-  ;; (setq vertico-cycle t)
-  )
-
-;; Persist history over Emacs restarts. Vertico sorts by history position.
-(use-package savehist
-  :init
-  (savehist-mode))
-
-;; A few more useful configurations...
-(use-package emacs
-  :init
-  ;; Add prompt indicator to `completing-read-multiple'.
-  ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
-  (defun crm-indicator (args)
-    (cons (format "[CRM%s] %s"
-                  (replace-regexp-in-string
-                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                   crm-separator)
-                  (car args))
-          (cdr args)))
-  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
-
-  ;; Do not allow the cursor in the minibuffer prompt
-  (setq minibuffer-prompt-properties
-        '(read-only t cursor-intangible t face minibuffer-prompt))
-  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-
-  ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
-  ;; Vertico commands are hidden in normal buffers.
-  ;; (setq read-extended-command-predicate
-  ;;       #'command-completion-default-include-p)
-
-  ;; Enable recursive minibuffers
-  (setq enable-recursive-minibuffers t))
-
-
-(use-package consult)
 
 (use-package undo-tree
   :ensure t
@@ -237,8 +187,6 @@
 (defun org-add-electric-pairs ()
   (setq-local electric-pair-pairs (append electric-pair-pairs org-electric-pairs))
   (setq-local electric-pair-text-pairs electric-pair-pairs))
-
-(add-hook 'org-mode-hook 'org-add-electric-pairs)
 
 ;; Disable the autocompletion of pairs <>
 (add-hook 'org-mode-hook (lambda ()
@@ -302,13 +250,12 @@
 
   (e/leader-keys
     "s"  '(:ignore t :which-key "search")
-    "ss" '(:ignore t :which-key "swiper")
-    "sso" '(counsel-grep-or-swiper :which-key "open swiper")
-    "ssh" '(swiper-thing-at-point :which-key "swipe this point")
-    "ssw" '(swiper-thing-at-point :which-key "swipe for word")
-    "ssm" '(swiper-all :which-key "swipe on other buffers")
-    "sr" '(eval-buffer :which-key "open swiper")
-    "sd" '(eval-region :which-key "search in dictionary"))
+    "ss" '(counsel-grep-or-swiper :which-key "use swiper")
+    "si" '(all-the-icons-insert :which-key "search for icons")
+    "sw" '(swiper-thing-at-point :which-key "swipe for this word")
+    "saw" '(swiper-all-thing-at-point :which-key "swipe in all buffers for this word")
+    "sm" '(swiper-all :which-key "swipe on other buffers")
+    "sd" '(dictionary-search :which-key "search in dictionary"))
 
   (e/leader-keys
     "e"  '(:ignore t :which-key "evaluate")
@@ -323,8 +270,7 @@
     "hr"  '(:ignore t :which-key "reload")
     "hrb" '(revert-buffer-quick :which-key "reload buffer")
     "hrr" '((lambda () (interactive)
-              (load-file "~/.config/emacs/init.el")
-              (ignore (elpaca-process-queues)))
+              (load-file "~/.config/emacs/init.el"))
             :wk "Reload emacs config"))
 
   (e/leader-keys
@@ -408,7 +354,16 @@
 ;; (electric-indent-mode -1)    ;; Turn off the weird indenting that Emacs does by default.
 
 (setq org-edit-src-content-indentation 2) ;; Set src block automatic indent to 0 instead of 2.
-(setq org-ellipsis "")
+(defun chilly/org-mode-setup ()
+  (org-indent-mode)
+  ;; (variable-pitch-mode 1) ;; Makes things much slower in org mode
+  )
+
+(use-package org
+  :hook (org-mode . chilly/org-mode-setup)
+  :config
+  (setq org-ellipsis " ❋")
+  (chilly/org-font-setup))
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -429,28 +384,11 @@
 
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'chilly/org-babel-tangle-config)))
 
-(defun chilly/org-mode-setup ()
-  (org-indent-mode)
-  ;; (variable-pitch-mode 1) ;; Makes things much slower in org mode
-  )
-
-(use-package org
-  :hook (org-mode . chilly/org-mode-setup)
-  :config
-  (setq org-ellipsis " ▾")
-  (chilly/org-font-setup))
-
 (require 'org-tempo)
 
 (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
 (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
 (add-to-list 'org-structure-template-alist '("py" . "src python"))
-
-;; Only warn about important stuff
-(setq warning-minimum-level :emergency)
-
-;; Disable the modeline itself
-(setq-default mode-line-format nil) 
 
 ;; Get rid of the extra buffers
 (setq-default message-log-max nil)
@@ -508,16 +446,63 @@
                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 (setq org-hide-emphasis-markers t)
 
+(defun my/org-mode/load-prettify-symbols ()
+  (interactive)
+  (setq prettify-symbols-alist
+        '(("#+begin_src" . " ")
+          ("#+BEGIN_SRC" . " ")
+          ("#+end_src" . " ")
+          ("#+END_SRC" . " ")
+          ("#+title:" . " ")
+          ("#+TITLE:" . " ")
+          ("#+begin_example" . ?)
+          ("#+BEGIN_EXAMPLE" . ?)
+          ("#+end_example" . ?)
+          ("#+END_EXAMPLE" . ?)
+          ("#+header:" . ?)
+          ("#+HEADER:" . ?)
+          ("#+name:" . ?﮸)
+          ("#+NAME:" . ?﮸)
+          ("#+results:" . ?)
+          ("#+RESULTS:" . ?)
+          ("#+call:" . ?)
+          ("#+CALL:" . ?)
+          (":PROPERTIES:" . ?)
+          (":properties:" . ?)
+          ("TODO" . "")
+          ("DONE" . "")
+          ("[ ]" . "☐")
+          ("[X]" . "☑")
+          ("[-]" . "❍")
+          ))
+  (prettify-symbols-mode 1))
+
+(add-hook 'org-mode-hook 'my/org-mode/load-prettify-symbols)
+
+(defun prettify-set ()
+  (interactive)
+  (setq prettify-symbols-alist
+        '(("lambda" .  "λ")
+          ("|>"	 . "▷")
+          ("<|"	 . "◁")
+          ("->>" . "↠")
+          ("->"	 . "→")
+          ("<-"	 . "←")
+          ("=>"	 . "⇒")
+          ("<="	 . "≤")
+          (">="	 . "≥")
+          ))
+  (prettify-symbols-mode 1))
+(add-hook 'prog-mode-hook 'prettify-set)
+
 ;; prevent number lines to show in terminals NOTE: Removed org-mode-hook
 (dolist (mode '(term-mode-hook
                 shell-mode-hook
                 eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-
 (column-number-mode)
 (global-display-line-numbers-mode t)
-(auto-fill-mode 1)	     ;; Make wrap actually break line
 (auto-revert-mode 1)	     ;; Revert the buffer automatically
 
 (set-frame-parameter (selected-frame) 'buffer-predicate
