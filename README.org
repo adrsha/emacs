@@ -1,0 +1,8 @@
+#+TITLE:README
+#+AUTHOR:    Adarsh
+
+* Emacs simple config
+
+NOTE: This isnt written in org-mode. 
+
+
