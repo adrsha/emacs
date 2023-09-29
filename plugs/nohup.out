@@ -1,0 +1,13 @@
+
+Warning: due to a long standing Gtk+ bug
+https://gitlab.gnome.org/GNOME/gtk/issues/221
+Emacs might crash when run in daemon mode and the X11 connection is unexpectedly lost.
+Using an Emacs configured with --with-x-toolkit=lucid does not have this problem.
+Loading /home/chilly/.config/emacs/recentf...
+Loading /home/chilly/.config/emacs/recentf...done
+Cleaning up the recentf list...
+Cleaning up the recentf list...done (0 removed)
+cleanBuffers.el: Warning: (lambda nil \.\.\.) quoted with ' rather than with #'
+[yas] Prepared just-in-time loading of snippets successfully.
+Warning (package): Unnecessary call to ‘package-initialize’ in init file Disable showing Disable logging
+   EMACS 

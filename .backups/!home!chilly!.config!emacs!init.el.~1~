@@ -1,0 +1,37 @@
+(add-to-list 'load-path "~/.config/emacs/plugs/")
+(require 'options)
+(require 'cleanBuffers)
+
+(add-to-list 'load-path "~/.config/emacs/plugs/use-package/")
+
+(require 'usepackage)
+(require 'colorscheme)
+(require 'fonts)
+
+(require 'undoredo)
+(require 'vertico-setup)
+(require 'popupmenu)
+(require 'icons-setup)
+(require 'projectile-setup)
+
+(require 'evil-remaps)
+
+(require 'keymaps)
+(require 'prettify-utils)
+(require 'org-setup)
+(require 'uiChanges)
+(require 'sessions-setup)
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages '(projectile minibuffer-header evil)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
