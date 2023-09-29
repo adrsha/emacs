@@ -73,10 +73,11 @@
         xref-show-definitions-function #'consult-xref)
   :config
 
+  (setq consult-async-min-input 1)
   ;; Optionally configure preview. The default value
   ;; is 'any, such that any key triggers the preview.
   ;; (setq consult-preview-key 'any)
-  ;; (setq consult-preview-key "M-.")
+  (setq consult-preview-key "C-h")
   ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
   ;; For some commands and buffer sources it is useful to configure the
   ;; :preview-key on a per-command basis using the `consult-customize' macro.
@@ -91,7 +92,6 @@
  ;; :preview-key '(:debounce 0.4 any) ;; Option 1: Delay preview
  :preview-key "C-h")            ;; Option 2: Manual preview
 )
-
 
 
 

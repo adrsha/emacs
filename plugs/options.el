@@ -128,16 +128,14 @@
 ;; Display line numbers
 (global-display-line-numbers-mode t)
 
-;; Revert the buffer automatically
-(auto-revert-mode 1)	
+;; Revert buffers when the underlying file has changed
+(global-auto-revert-mode 1)
 
+;; Revert Dired and other buffers
+(setq global-auto-revert-non-file-buffers t)
 
 ;; Enable recentf
 (recentf-mode 1)
-
-;; Centralize Backup
-(setq backup-directory-alist '((".*" . "~/local/share/Trash/files")))
-
 
 ;; Silence compiler warnings as they can be pretty disruptive
 (if (boundp 'comp-deferred-compilation)
@@ -153,6 +151,14 @@
 
 ;; Disable signatures and stuff on minibuf
 (global-eldoc-mode -1)
+
+;; Save my last place
+(save-place-mode 1)
+
+;; Move customization variables to a separate file and load it
+(setq custom-file (locate-user-emacs-file "custom-vars.el"))
+(load custom-file 'noerror 'nomessage)
+
 
 ;; NECESSARY
 (provide 'options)

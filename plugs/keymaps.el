@@ -7,11 +7,12 @@
 
 ;; (define-key vertico-map (kbd "TAB") 'vertico-next)
 (keymap-set vertico-map "RET" '(lambda () (interactive) (vertico-insert) (minibuffer-force-complete-and-exit)))
-;; (keymap-set vertico-map "C-l" '(lambda () (interactive) (vertico-insert) (minibuffer-force-complete-and-exit)))
+;; (keymap-set vertico-map "C-l" '(lambda () (interactive) (vertico-quick-insert) ))
 (keymap-set vertico-map "C-l" #'vertico-insert)
 (keymap-set vertico-map "C-j" #'vertico-next)
 (keymap-set vertico-map "C-k" #'vertico-previous)
 (keymap-set vertico-map "C-h" #'vertico-directory-up)
+(keymap-set vertico-map "M-o" #'vertico-repeat)
 
 (keymap-set global-map "C-k" #'nil)
 (keymap-set global-map "C-j" #'nil)
@@ -28,21 +29,21 @@
 (keymap-set evil-normal-state-map "M-h" 'drag-stuff-left)
 (keymap-set evil-normal-state-map "M-l" 'drag-stuff-right)
 
-(keymap-set evil-normal-state-map "K" '(lambda () (interactive) (global-eldoc-mode 1) (eldoc-box-hover-at-point-mode 1)))
-;; (keymap-set evil-normal-state-map "K" 'eldoc-box-help-at-point)
+(keymap-set evil-normal-state-map "K" 'eldoc-box-help-at-point)
 
 ;;LSP
 (defun hover-enable ()
   "Hover to provide details."
   (interactive)
   (global-eldoc-mode 1)
-  (eldoc-box-hover-at-point-mode 1))
+  )
 
 (defun hover-disable ()
   "Hover to provide details."
   (interactive)
   (global-eldoc-mode 0)
-  (eldoc-box-hover-at-point-mode 0))
+  ;; (eldoc-box-hover-at-point-mode 0)
+  )
 
 
 ;; GNRL
@@ -85,8 +86,7 @@
     "c"  '(:ignore t :which-key "󰅱 code")
     "ch"  '(:ignore t :which-key "󰅱 hover")
     "che"  '(hover-enable :which-key "enable hover")
-    "chd"  '(hover-disable :which-key "disable hover")
-    "cf" '(format-all-region-or-buffer :which-key "󰉼 format the code"))
+    "chd"  '(hover-disable :which-key "disable hover"))
 
 
   (e/leader-keys

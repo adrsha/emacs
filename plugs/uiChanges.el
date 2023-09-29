@@ -3,6 +3,8 @@
 (set-face-attribute 'header-line nil :background "#11111B")
 (set-face-attribute 'mode-line nil :background "#11111B")
 
+(require 'tabspaces)
+
 ;; Margin with writemode
 (require 'automargin)
 (automargin-mode)
@@ -54,12 +56,6 @@ end-of-buffer signals; pass the rest to the default handler."
 (set-face-attribute 'eldoc-box-body nil :weight 'bold :foreground "#b5bfe8" :background "#0B0B11")
 (set-face-attribute 'eldoc-box-border nil :weight 'bold :foreground "#b5bfe8" :background "#0B0B11")
 
-(defun enable-hover-eldoc ()
-  "Upcase the last letter of the word at point."
-  (global-eldoc-mode 1)
-  (eldoc-box-hover-at-point-mode 1))
 
-
-
-
+(setq-default inhibit-message t)
 (provide 'uiChanges)

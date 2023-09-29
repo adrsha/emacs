@@ -1,6 +1,7 @@
 ;; Syntax-highlighting
 (setq font-lock-maximum-decoration t)
 
+
 (use-package rainbow-delimiters
              :hook (prog-mode . rainbow-delimiters-mode))
 
@@ -8,7 +9,6 @@
 (use-package yasnippet)
 (use-package yasnippet-snippets)
 (yas-global-mode 1)
-
 
 (use-package markdown-mode
   :ensure t
@@ -23,13 +23,11 @@
 (global-lsp-bridge-mode)
 
 (setq-default acm-backend-search-file-words-enable-fuzzy-match t)
-(setq-default acm-enable-doc-markdown-render 'async)
 (setq-default lsp-bridge-enable-org-babel t)
 (setq-default lsp-bridge-symbols-enable-which-func t)
 (setq-default lsp-bridge-enable-signature-help t)
 (setq-default lsp-bridge-enable-diagnostics t)
 (setq-default lsp-bridge-enable-hover-diagnostic t)
-(setq-default lsp-bridge-enable-completion-in-minibuffer t)
 
 
 (set-face-attribute 'acm-frame-default-face nil :background "#0E0E16")
@@ -42,7 +40,7 @@
 (electric-pair-mode 1)       ;; Turns on automatic parens pairing
 
 ;; Formatting
-
-(use-package format-all)
+(use-package apheleia
+  :config (apheleia-global-mode +1))
 
 (provide 'codingEnhancement)
