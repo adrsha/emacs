@@ -5,4 +5,5 @@
 
 NOTE: This isnt written in org-mode. 
 
+[[./images/emacs.png]]
 
