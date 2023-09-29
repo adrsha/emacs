@@ -8,4 +8,7 @@
   ([remap describe-variable] . helpful-variable)
   ([remap describe-key] . helpful-key))
 
+
+(use-package hydra)
+
 (provide 'betterDocs)

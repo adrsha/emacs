@@ -135,6 +135,8 @@
 (setq global-auto-revert-non-file-buffers t)
 
 ;; Enable recentf
+(require 'recentf)
+(setq-default recentf-save-file "~/.cache/emacs/recentf")
 (recentf-mode 1)
 
 ;; Silence compiler warnings as they can be pretty disruptive

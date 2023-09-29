@@ -2,7 +2,6 @@
 (add-to-list 'load-path "~/.config/emacs/plugs/")
 (add-to-list 'load-path "~/.config/emacs/plugs/use-package/")
 
-
 (require 'cleanfiles) ;; set this here so that others use this default config
 (require 'usepackage)
 ;; load the colorscheme first to prevent getting blinded accidentally
@@ -30,8 +29,3 @@
 
 ;; Clearn buffers after loading lsp and vertico/consult
 (require 'cleanBuffers)
-
-
-;; Clean emacs configs
-(use-package no-littering)
-(eldoc-box-hover-at-point-mode)

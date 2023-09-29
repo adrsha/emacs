@@ -1,7 +1,6 @@
 ;; Syntax-highlighting
 (setq font-lock-maximum-decoration t)
 
-
 (use-package rainbow-delimiters
              :hook (prog-mode . rainbow-delimiters-mode))
 
@@ -22,6 +21,7 @@
 (require 'lsp-bridge)
 (global-lsp-bridge-mode)
 
+;; options
 (setq-default acm-backend-search-file-words-enable-fuzzy-match t)
 (setq-default lsp-bridge-enable-org-babel t)
 (setq-default lsp-bridge-symbols-enable-which-func t)
@@ -29,7 +29,7 @@
 (setq-default lsp-bridge-enable-diagnostics t)
 (setq-default lsp-bridge-enable-hover-diagnostic t)
 
-
+;; Colors
 (set-face-attribute 'acm-frame-default-face nil :background "#0E0E16")
 (set-face-attribute 'acm-frame-border-face nil :background "#0E0E16")
 (set-face-attribute 'acm-frame-select-face nil :background "#11111B")

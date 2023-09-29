@@ -157,22 +157,22 @@ minibuffer will not be hided by minibuffer-cover."
   :group 'vertico-posframe)
 
 (defface vertico-posframe-border-2
-  '((t (:inherit default :background "red")))
+  '((t (:inherit default :background "#0E0E16")))
   "Face used by the vertico-posframe's border when minibuffer-depth = 2."
   :group 'vertico-posframe)
 
 (defface vertico-posframe-border-3
-  '((t (:inherit default :background "green")))
+  '((t (:inherit default :background "#0E0E16")))
   "Face used by the vertico-posframe's border when minibuffer-depth = 3."
   :group 'vertico-posframe)
 
 (defface vertico-posframe-border-4
-  '((t (:inherit default :background "blue")))
+  '((t (:inherit default :background "#0E0E16")))
   "Face used by the vertico-posframe's border when minibuffer-depth = 4."
   :group 'vertico-posframe)
 
 (defface vertico-posframe-border-fallback
-  '((t (:inherit default :background "yellow")))
+  '((t (:inherit default :background "#0E0E16")))
   "Face used by the vertico-posframe's border when find no face."
   :group 'vertico-posframe)
 

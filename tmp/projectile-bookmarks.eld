@@ -1,1 +1,1 @@
-("/hdd/Code/world_time_app/" "/hdd/Code/SBSCalculator/" "/hdd/Code/Portfolio/" "/hdd/Code/Cpp/" "/hdd/Code/Canvasanimations/")
+("~/.config/emacs/" "~/.config/emacs/plugs/lsp-bridge/" "/hdd/Code/world_time_app/" "/hdd/Code/SBSCalculator/" "/hdd/Code/Portfolio/" "/hdd/Code/Cpp/" "/hdd/Code/Canvasanimations/")

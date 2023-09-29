@@ -59,10 +59,15 @@
   "Echo Area separator face."
   :group 'ea-faces)
 
+(defface saved
+  '((t :inherit org-code))
+  "Echo Area Date face."
+  :group 'ea-faces)
+
 
 (defun qv/echo-bar-function ()
   ;; (format "%s%s %s%s%s %s %s%s"
-  (format "%s%s %s%s%s"
+  (format "%s%s%s%s%s"
           (propertize " " 'display `(height ,qv/echo-bar-height))
           (or (ignore-errors (qv/activity-string)) "")
           (or (ignore-errors (qv/battery-format)) "")
@@ -77,7 +82,7 @@
           ;; (propertize "󰇙" 'face 'eaSep)
 
             (propertize
-          "  "
+          "󰥔  "
              'face 'eaTime-icon) 
             (propertize
           (format-time-string "%I:%M")
@@ -93,9 +98,14 @@
               (power-method (battery-format "%L" status)))
     (format "%s %s %s%s%s %s%s %s %s %s "
 
+            (format "%s" (if (and (buffer-file-name) (buffer-modified-p))
             (propertize
-            (format "%s" (if (and (buffer-file-name) (buffer-modified-p)) "❋" ""))
-            'face 'eaSep) 
+             "󰜡  󱀆 "
+             'face 'eaSep)
+            (propertize
+             "󰄭  󰌽 "
+             'face 'saved)
+            ))
 
             (propertize
              (if (buffer-file-name)
@@ -104,7 +114,7 @@
             'face 'eaBuf) 
 
             (propertize 
-            (format " %s" (line-number-at-pos))
+            (format " 󰊠  %s" (line-number-at-pos))
             'face 'eaLinePos)
 
             (propertize "" 'face 'eaSep)
@@ -115,7 +125,7 @@
             (propertize "󰇙" 'face 'eaSep)
 
             (propertize
-             (if (string= power-method "AC") "  " "")
+             (if (string= power-method "AC") "  " "")
              'face 'eaBattery-charge-icon) 
             (propertize
             (cond ((>= percent 95) "󰁹")

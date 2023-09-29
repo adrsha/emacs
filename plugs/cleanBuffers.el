@@ -21,8 +21,8 @@
 (defcustom buffer-skip-regexp
   (rx bos (or (or "*Backtrace*" "*Compile-Log*" "*Completions*"
                   "*Messages*" "*package*" "*Warnings*"  
-                  "\\*lsp-bridge.*" "*Async-native-compile-log*")
-              (seq "*lsp-bridge" (zero-or-more anything))
+                  "*lsp-bridge*" "*Async-native-compile-log*")
+              (seq "lsp-bridge" (zero-or-more anything))
               (seq "magit-diff" (zero-or-more anything))
               (seq "magit-process" (zero-or-more anything))
               (seq "magit-revision" (zero-or-more anything))
