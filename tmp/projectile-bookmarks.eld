@@ -1,1 +1,1 @@
-("~/.config/emacs/" "~/.config/emacs/plugs/lsp-bridge/" "/hdd/Code/world_time_app/" "/hdd/Code/SBSCalculator/" "/hdd/Code/Portfolio/" "/hdd/Code/Cpp/" "/hdd/Code/Canvasanimations/")
+("/hdd/Code/Portfolio/" "/hdd/Scripts/" "~/.config/emacs/" "/hdd/Code/SBSCalculator/" "/hdd/Code/Cpp/" "~/.config/emacs/plugs/lsp-bridge/" "~/" "/hdd/Themes/" "~/.cache/emacs/elpaca/repos/embark/" "~/.cache/emacs/elpaca/repos/evil-collection/")

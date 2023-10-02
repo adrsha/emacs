@@ -18,7 +18,6 @@
 
 ;; startup message
 (setq server-client-instructions nil)
-
 (setq inhibit-startup-message t)
 (setq inhibit-startup-echo-area-message t)
 
@@ -74,27 +73,32 @@
 ;; (define-key company-mode-map [remap indent-for-tab-command]
 ;;   #'company-indent-or-complete-common)
 
+
+;; scroll if reached the end only
+(setq scroll-margin 0 )
+
+;;When you scroll down, and up again, point should end up at the same position you started out with
+(setq scroll-preserve-screen-position t)
+
 ;; Scroll line wise
-(setq scroll-step            1
-      scroll-conservatively  10000)
+(setq scroll-step 1)
 
-;; Pixel scroll (as opposed to char scrool)
-(pixel-scroll-mode t)
+;; What do these do?
+(setq scroll-conservatively  10000)
 
-;; Text mode is initial mode
-(setq initial-major-mode 'text-mode)
-
-;; Text mode is default major mode
-(setq default-major-mode 'text-mode)
 
 ;; Moderate font lock
-(setq font-lock-maximum-decoration nil)
+;; Disabling syntax highlights
+;; (setq font-lock-maximum-decoration nil)
 
-;; No limit on font lock
+;; No limit on font lock (tree style levels)
 (setq font-lock-maximum-size nil)
 
 ;; No line break space points
 (setq auto-fill-mode nil)
+
+;; Better autofill --  is nil by default
+;; (setq refill-mode nil)
 
 ;; Fill column at 80
 (setq fill-column 80)
@@ -104,29 +108,26 @@
 
 ;; Completion style, see
 ;; gnu.org/software/emacs/manual/html_node/emacs/Completion-Styles.html
-(setq completion-styles '(basic substring))
+(setq completion-styles '(basic substring partial-completion ))
 
 ;; Use RET to open org-mode links, including those in quick-help.org
 (setq org-return-follows-link t)
 
 ;; Internal border / padding
-(set-frame-parameter (selected-frame) 'internal-border-width 20)
-(add-to-list 'default-frame-alist '(internal-border-width . 20))
+;; (set-frame-parameter (selected-frame) 'internal-border-width 20)
+(add-to-list 'default-frame-alist '(internal-border-width . 20 ))
 
 ;; Fringe Disable
-(fringe-mode -1)
-
-;; Minimum warnings
+(setq set-fringe-mode 0)
+;; Display Minimum warnings
 (setq warning-minimum-level :emergency)
 
-;; Disable line number mode in a few situations
-(dolist (mode '(term-mode-hook
-                shell-mode-hook
-                eshell-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
-
-;; Display line numbers
+;; Display line numbers globally
 (global-display-line-numbers-mode t)
+
+;; Disable line number mode in a few situations
+(dolist (mode '(term-mode-hook shell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;; Revert buffers when the underlying file has changed
 (global-auto-revert-mode 1)
@@ -136,13 +137,15 @@
 
 ;; Enable recentf
 (require 'recentf)
-(setq-default recentf-save-file "~/.cache/emacs/recentf")
 (recentf-mode 1)
 
 ;; Silence compiler warnings as they can be pretty disruptive
 (if (boundp 'comp-deferred-compilation)
     (setq comp-deferred-compilation nil)
   (setq native-comp-deferred-compilation nil))
+
+(setq native-comp-async-report-warnings-errors nil)
+
 ;; In noninteractive sessions, prioritize non-byte-compiled source files to
 ;; prevent the use of stale byte-code. Otherwise, it saves us a little IO time
 ;; to skip the mtime checks on every *.elc file.
@@ -151,8 +154,11 @@
 ;; No ugly button for checkboxes
 (setq widget-image-enable nil)
 
+;; Disable Blink cursor
+(blink-cursor-mode -1)
+
 ;; Disable signatures and stuff on minibuf
-(global-eldoc-mode -1)
+(global-eldoc-mode 1)
 
 ;; Save my last place
 (save-place-mode 1)
@@ -161,7 +167,32 @@
 (setq custom-file (locate-user-emacs-file "custom-vars.el"))
 (load custom-file 'noerror 'nomessage)
 
+; Raise undo-limit to 80Mb
+(setq undo-limit 80000000)
 
+;; Autosave true
+(setq auto-save-default t)
+
+;; ease of life
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; itterate through CamelCase words
+;; (global-subword-mode 1)
+
+(setq-default delete-by-moving-to-trash t); Delete files to trash
+
+(setq-default delete-selection-mode t)
+
+(setq-default message-log-max 5)
+;; (setq max-mini-window-height 1) ; Don't let echo area grow;; (setq max-mini-window-height 1) ; Don't let echo area grow;; (setq max-mini-window-height 1) ; Don't let echo area grow;; (setq max-mini-window-height 1) ; Don't let echo area grow
+
+(visual-line-mode 1)
+
+;; disable the delays
+(setq show-paren-delay 0)
+(setq eldoc-idle-delay 0)
+
+;; Disable default colors
+(setq css-fontify-colors nil)
 ;; NECESSARY
 (provide 'options)
-

@@ -72,7 +72,6 @@
 
 ;;; Code:
 ;; * vertico-posframe's code
-(use-package posframe)
 (require 'posframe)
 (require 'vertico)
 (require 'vertico-multiform)
@@ -124,7 +123,7 @@ NOTE: This variable is very useful to EXWM users."
   "The function which is used to deal with posframe's size."
   :type 'function)
 
-(defcustom vertico-posframe-border-width 30
+(defcustom vertico-posframe-border-width 40
   "The border width used by vertico-posframe.
 When 0, no border is showed."
   :type 'number)

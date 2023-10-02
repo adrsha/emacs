@@ -1,101 +1,42 @@
-;; Enable vertico
-(use-package vertico
-  :init
-  (vertico-mode)
-  ;; Different scroll margin
-  (setq vertico-scroll-margin 0)
-  ;; (vertico-unobtrusive-mode)
-  ;; Show more candidates
-  ;;(setq vertico-count 20)
-  ;; Grow and shrink the Vertico minibuffer
-  (setq vertico-resize t)
-  ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
-  (setq vertico-cycle t))
+;; Preamble
+(nerd-icons-completion-mode)
+(add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
+(savehist-mode)
+(vertico-mode)
+(setq vertico-scroll-margin 0)
+(setq vertico-cycle t)
 
-;; Persist history over Emacs restarts. Vertico sorts by history position.
-(use-package savehist
-  :init
-  (savehist-mode))
+(setq completion-styles '(orderless basic substring partial-completion ))
+(setq completion-category-overrides '((file (styles basic partial-completion))))
 
-;; better searches in vertico
-(use-package orderless
-  :ensure t
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
-;; Enable recursive minibuffers
+(add-hook 'completion-list-mode #'consult-preview-at-point-mode)
+(setq register-preview-delay 0.5
+      register-preview-function #'consult-register-format)
+(advice-add #'register-preview :override #'consult-register-window)
 
-;; More options
-(use-package consult
-  :hook (completion-list-mode . consult-preview-at-point-mode)
+(setq xref-show-xrefs-function #'consult-xref
+      xref-show-definitions-function #'consult-xref)
 
-  :init
-  ;; Optionally configure the register formatting. This improves the register
-  ;; preview for `consult-register', `consult-register-load',
-  ;; `consult-register-store' and the Emacs built-ins.
-  (setq register-preview-delay 0.5
-        register-preview-function #'consult-register-format)
-  ;; Optionally tweak the register preview window.
-  ;; This adds thin lines, sorting and hides the mode line of the window.
-  (advice-add #'register-preview :override #'consult-register-window)
 
-  ;; Use Consult to select xref locations with preview
-  (setq xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref)
-  :config
-
-  (setq consult-async-min-input 1)
-  ;; Optionally configure preview. The default value
-  ;; is 'any, such that any key triggers the preview.
-  ;; (setq consult-preview-key 'any)
-  (setq consult-preview-key "C-h")
-  ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
-  ;; For some commands and buffer sources it is useful to configure the
-  ;; :preview-key on a per-command basis using the `consult-customize' macro.
-
+(setq consult-async-min-input 1)
+(setq consult-preview-key "C-h")
 (add-to-list 'consult-buffer-filter "\*.*\*")
+
 (consult-customize
  consult-ripgrep consult-git-grep consult-grep
  consult-bookmark consult-recent-file consult-xref
  consult--source-bookmark consult--source-file-register
  consult--source-recent-file consult--source-project-recent-file
- ;; my/command-wrapping-consult    ;; disable auto previews inside my command
- ;; :preview-key '(:debounce 0.4 any) ;; Option 1: Delay preview
  :preview-key "C-h")            ;; Option 2: Manual preview
-)
+(marginalia-mode)
+(setq prefix-help-command #'embark-prefix-help-command)
 
-
-
-;; Enable rich annotations
-(use-package marginalia
-  ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
-  ;; available in the *Completions* buffer, add it to the
-  ;; `completion-list-mode-map'.
-  :bind (:map minibuffer-local-map
-              ("M-A" . marginalia-cycle))
-
-  ;; The :init section is always executed.
-  :init
-
-  ;; Marginalia must be activated in the :init section of use-package such that
-  ;; the mode gets enabled right away. Note that this forces loading the
-  ;; package.
-  (marginalia-mode))
-
-(use-package embark
-  :ensure t
-  :bind
-  (("M--" . embark-act)
-   ("M-." . embark-dwim)
-   ("C-h B" . embark-bindings))
-  :init
-  (setq prefix-help-command #'embark-prefix-help-command))
-
-
-
-
-
-
-
+;; options
+(setq-default acm-backend-search-file-words-enable-fuzzy-match t)
+(setq-default lsp-bridge-enable-org-babel t)
+(setq-default lsp-bridge-symbols-enable-which-func t)
+(setq-default lsp-bridge-enable-signature-help t)
+(setq-default lsp-bridge-enable-diagnostics t)
+(setq-default lsp-bridge-enable-hover-diagnostic t)
 
 (provide 'vertico-setup)

@@ -1,14 +1,16 @@
-;; Get rid of the extra buffers
+;; GET RID OF THE EXTRA BUFFERS
+
 ;; Removes *scratch* from buffer after the mode has been set.
 ;; (defun remove-scratch-buffer ()
 ;;   (if (get-buffer "*scratch*")
 ;;       (kill-buffer "*scratch*")))
 ;; (add-hook 'after-change-major-mode-hook 'remove-scratch-buffer)
 
+;; DIRECTLY
 ;; Removes *messages* from the buffer.
-(setq-default message-log-max nil)
 (kill-buffer "*Messages*")
 
+;; WITH A HOOK
 ;; Removes *Completions* from buffer after you've opened a file.
 (add-hook 'minibuffer-exit-hook
           (lambda ()
@@ -16,13 +18,17 @@
                (and (get-buffer buffer)
                     (kill-buffer buffer)))))
 
+(add-hook 'minibuffer-exit-hook
+          (lambda ()
+             (let ((buffer "*Async-native-compile-log"))
+               (and (get-buffer buffer)
+                    (kill-buffer buffer)))))
 
+;; WITH REGEX
 ;; Prevent getting into the following buffers by previous buffer or next buffer cmds.
 (defcustom buffer-skip-regexp
   (rx bos (or (or "*Backtrace*" "*Compile-Log*" "*Completions*"
-                  "*Messages*" "*package*" "*Warnings*"  
-                  "*lsp-bridge*" "*Async-native-compile-log*")
-              (seq "lsp-bridge" (zero-or-more anything))
+                  "*Messages*" "*package*" "*Warnings*"  )
               (seq "magit-diff" (zero-or-more anything))
               (seq "magit-process" (zero-or-more anything))
               (seq "magit-revision" (zero-or-more anything))

@@ -58,6 +58,7 @@
   :global t
   (if automargin-mode
       (add-hook 'window-configuration-change-hook 'automargin-function)
+      (add-hook 'minibuffer-setup-hook 'automargin-disable-function)
     (remove-hook 'window-configuration-change-hook 'automargin-function)))
 
 (defun automargin--window-width (&optional window)
@@ -70,6 +71,16 @@
 (defun automargin-function ()
   (let* ((automargin-margin
           (/ (- (frame-width) automargin-target-width) 2))
+         (automargin-margin
+          (if (< automargin-margin 0) 0 automargin-margin)))
+    (dolist (window (window-list))
+      (let ((margin (if (= (frame-width) (automargin--window-width window))
+                        automargin-margin 0)))
+        (set-window-margins window margin margin)))))
+
+(defun automargin-disable-function ()
+  (let* ((automargin-margin
+          (/ (- (frame-width) 0) 2))
          (automargin-margin
           (if (< automargin-margin 0) 0 automargin-margin)))
     (dolist (window (window-list))

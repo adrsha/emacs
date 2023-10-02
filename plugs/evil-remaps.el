@@ -1,49 +1,64 @@
-(use-package evil
-  :ensure t
-  :init
-  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-i-jump nil)
-  :config
-  (evil-mode 1))
+(setq evil-want-keybinding nil)
+(setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+(setq evil-want-C-i-jump nil)
+(setq evil-want-fine-undo t) ; By default while in insert all changes are one big blob. Be more granular
+(setq evil-want-Y-yank-to-eol t)
+(evil-select-search-module 'evil-search-module 'evil-search)
+(evil-mode 1)
 
-(use-package evil-collection
-  :after evil
-  :ensure t
-  :config
-  (evil-collection-init)
- (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-
-  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal))
+(evil-collection-init)
+(define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+(evil-global-set-key 'motion "j" 'evil-next-visual-line)
+(evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+(evil-set-initial-state 'messages-buffer-mode 'normal)
+(evil-set-initial-state 'dashboard-mode 'normal)
 
 
-(use-package evil-escape
-  :after evil
-  :init
-  (evil-escape-mode 1)
-  :config
-  (setq-default evil-escape-key-sequence "jk"
-                evil-escape-delay 0.3))
+ (defun configure-evil-esc ()
+   "Default escape key"
+   (evil-escape-mode 1))
+ (add-hook 'evil-insert-state-entry-hook #'configure-evil-esc)
 
-(use-package evil-commentary
-  :after evil
-  :init
-  (evil-commentary-mode 1))
+;; To prevent the visual mode lag:
+ (defun configure-evil-exit-esc ()
+   "Default escape key"
+   (evil-escape-mode -1))
+ (add-hook 'evil-visual-state-entry-hook #'configure-evil-exit-esc)
 
-;; Using RETURN to follow links in Org/Evil 
-;; Unmap keys in 'evil-maps if not done, (setq org-return-follows-link t) will not work
-(with-eval-after-load 'evil-maps
-  (define-key evil-motion-state-map (kbd "SPC") nil)
-  (define-key evil-motion-state-map (kbd "RET") nil)
-  (define-key evil-motion-state-map (kbd "TAB") nil)
-  (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
-  ;; (define-key evil-normal-state-map (kbd "C-d") 'evil-scroll-down)
-  (define-key evil-normal-state-map (kbd "C-r") 'undo-redo)
-  (define-key evil-normal-state-map (kbd "u") 'undo-only)
-)
+ (setq-default evil-escape-key-sequence "jk" evil-escape-delay 0.3)
+
+(global-evil-surround-mode 1)
+ (evil-commentary-mode 1)
+
+(general-def
+  :keymaps 'evil-normal-state-map
+  "C-r" #'undo-redo
+  "u" #'undo-only
+  "C-u" #'evil-scroll-up
+  "C-d" #'evil-scroll-down
+  "C-l" #'evil-ex-nohighlight
+  "M-k" 'drag-stuff-up
+  "M-j" 'drag-stuff-down
+  "M-h" 'drag-stuff-left
+  "M-l" 'drag-stuff-right
+  "C-/" #'consult-line-multi
+  "<tab>" 'next-buffer ;;easier nav
+  "<backtab>" 'previous-buffer ;;easier nav
+  )
+
+
+(general-def
+  :keymaps 'evil-insert-state-map
+  "C-k" 'corfu-previous
+  "C-j" 'corfu-next
+  "C-l" 'corfu-complete
+  )
+
+(general-unbind 'normal
+  "C-j"
+  "C-l"
+  "K"
+  "C-k")
+
 
 (provide 'evil-remaps)

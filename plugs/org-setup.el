@@ -5,18 +5,6 @@
 (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
 (add-to-list 'org-structure-template-alist '("py" . "src python"))
 
-;; PRETTIFYING ORG
-(setq org-ellipsis " ❋")
-(use-package org-bullets)
-(setq org-bullets-bullet-list '("⇾ " "⇾ " "⇾ " "⇾ " "⇾ " "⇾ "))
-;; (setq org-bullets-bullet-list '(" " " " " " " " " " " "))
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-
-(font-lock-add-keywords 'org-mode
-                        '(("^ *\\([-]\\) "
-                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-
-
 ;; FONTS
 (defun my-configure-font (frame)
   "Configure font given initial non-daemon FRAME.

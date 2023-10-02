@@ -1,129 +1,47 @@
 ;;-*- lexical-binding: t; -*-
-;; Make ESC quit prompts
 
-(use-package crux)
-(use-package drag-stuff)
+;; INFO:  Mode specific maps
+;; (general-def org-mode-map
+;;   "C-c C-q" 'counsel-org-tag
+;;   ;; ...
+;;   )
 
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+;; INFO: normal maps
+;; (general-define-key
+;;  "M-x" 'amx
+;;  "C-s" 'counsel-grep-or-swiper)
+
+;; INFO: prefix
+;; (general-define-key
+;;  :prefix "C-c"
+;;  ;; bind "C-c a" to 'org-agenda
+;;  "a" 'org-agenda
+;;  "b" 'counsel-bookmark
+;;  "c" 'org-capture)
+
+;; INFO: Swap!
+;; (general-swap-key nil 'motion
+;;   ";" ":")
+
+;;custom functions
+
+(general-unbind 'normal
+  "C-j"
+  "C-l"
+  "C-k")
+
+(general-def
+  "C-j" 'nil
+  "C-k" 'nil)
 
 ;; (define-key vertico-map (kbd "TAB") 'vertico-next)
 ;; (keymap-set vertico-map "C-l" '(lambda () (interactive) (vertico-insert) (minibuffer-force-complete-and-exit)))
-(keymap-set vertico-map "C-l" '(lambda () (interactive) (vertico-insert) ))
-(keymap-set vertico-map "TAB" #'vertico-insert)
-(keymap-set vertico-map "C-j" #'vertico-next)
-(keymap-set vertico-map "C-k" #'vertico-previous)
-(keymap-set vertico-map "C-h" #'vertico-directory-up)
-(keymap-set vertico-map "M-o" #'vertico-repeat)
 
-(keymap-set global-map "C-k" #'nil)
-(keymap-set global-map "C-j" #'nil)
-(keymap-set evil-insert-state-map "C-j" #'nil)
-(keymap-set evil-insert-state-map "C-k" #'nil)
-
-(keymap-set acm-mode-map "C-l" 'acm-complete)
-(keymap-set acm-mode-map "C-j" 'acm-select-next)
-(keymap-set acm-mode-map "C-k" 'acm-select-prev)
-
-;;DRAG
-(keymap-set evil-normal-state-map "M-k" 'drag-stuff-up)
-(keymap-set evil-normal-state-map "M-j" 'drag-stuff-down)
-(keymap-set evil-normal-state-map "M-h" 'drag-stuff-left)
-(keymap-set evil-normal-state-map "M-l" 'drag-stuff-right)
-(keymap-set evil-normal-state-map "K" 'eldoc-box-help-at-point)
-
-;;LSP
-(keymap-set evil-normal-state-map "K" 'eldoc-box-help-at-point)
-
-(defun hover-enable ()
-  "Hover to provide details."
-  (interactive)
-  (global-eldoc-mode 1)
-  )
-
-(defun hover-disable ()
-  "Hover to provide details."
-  (interactive)
-  (global-eldoc-mode 0)
-  ;; (eldoc-box-hover-at-point-mode 0)
-  )
-
+;; Using RETURN to follow links in Org/Evil
+;; Unmap keys in 'evil-maps if not done, (setq org-return-follows-link t) will not work
 
 ;; GNRL
-(use-package general
-  :after evil
-  :config
-
-  (general-create-definer e/leader-keys
-    :keymaps '(normal insert visual emacs)
-    :prefix "SPC"
-    :global-prefix "C-SPC")
-
-  (e/leader-keys
-    "SPC" '(execute-extended-command :which-key "  M-x"))
-
-  (e/leader-keys
-    "f"  '(:ignore t :which-key "󰈔 files")
-    "ff" '(find-file :which-key "󰈞 find a file")
-    "fr" '(consult-recent-file :which-key "󰣜 recent files")
-    "fc"  '(:ignore t :which-key "󰈔 current file")
-    "fcs" '(crux-sudo-edit :which-key "󱄛 open this file as sudo")
-    "fcr" '(crux-rename-buffer-and-file :which-key "󰑕 rename this file"))
-
-  (e/leader-keys
-    "o"  '(:ignore t :which-key "󰷏 open")
-    "ow" '(crux-open-with :which-key " open with"))
-
-  (e/leader-keys
-    "b"  '(:ignore t :which-key " buffer navigation")
-    "bd" '(kill-buffer-and-window :which-key "󰆴 kill the current buffer and window")
-    "bk" '(crux-kill-other-buffers :which-key "󰛌 kill all other buffers and windows")
-    "bn" '(next-buffer :which-key "󰛂 switch buffer")
-    "bp" '(previous-buffer :which-key "󰛁 switch buffer")
-    "bb" '(consult-buffer :which-key "󰕰 view buffers"))
-
-  (e/leader-keys
-    "s"  '(:ignore t :which-key " search")
-    "ss" '(consult-line :which-key "󰱼 line search")
-    "si" '(nerd-icons-insert :which-key "󰭟 search for icons")
-    "srg" '(consult-ripgrep :which-key "󰟥 search with rg")
-    "sd" '(dictionary-search :which-key "󰬋 search in dictionary"))
-
-  (e/leader-keys
-    "e"  '(:ignore t :which-key "󰈈  evaluate")
-    "eb" '(eval-buffer :which-key "󰷊  evaluate buffer")
-    "ear" '(crux-eval-and-replace :which-key "󰛔 evaluate and replace")
-    "er" '(eval-region :which-key "󰨺  evaluate region"))
-
-  (e/leader-keys
-    "g"  '(:ignore :which-key "󰇐 goto")
-    "gd"  '(lsp-bridge-find-def :which-key "󰇐 goto definitions")
-    "gr"  '(lsp-bridge-find-references :which-key "󰇐 goto references"))
-
-  (e/leader-keys
-    "c"  '(:ignore t :which-key "󰅱 code")
-    "cr"  '(lsp-bridge-rename :which-key "󰑕 rename")
-    "cc"  '(crux-cleanup-buffer-or-region :which-key " cleanup")
-    "cd"  '(crux-duplicate-current-line-or-region :which-key "󰬸 duplicate")
-    "ch"  '(:ignore t :which-key "󰆽 hover")
-    "che"  '(hover-enable :which-key " enable hover")
-    "chd"  '(hover-disable :which-key " disable hover"))
-
-  (e/leader-keys
-    "h"  '(:ignore t :which-key "󰞋 help")
-    "hF" '(describe-face :which-key "󱗎  describe face")
-    "hf" '(describe-function :which-key "󰯻 describe function")
-    "hb" '(embark-bindings :which-key "󰯻 describe bindings")
-    "hv" '(describe-variable :which-key " describe variable")
-    "hr"  '(:ignore t :which-key "󱍸 reload")
-    "hrb" '(revert-buffer-quick :which-key "󰄸 reload buffer")
-    "hrr" '((lambda () (interactive) (load-file "~/.config/emacs/init.el")) :wk "  Reload emacs config"))
-
-  (e/leader-keys
-    "t"  '(:ignore t :which-key " toggles")
-    "tp"  '(perfect-margin-mode :which-key "  perfect margin mode toggle")
-    "tv"  '(visual-line-mode :which-key "󰖶 toggle visual line mode")
-    "tm"  '(minimap-mode :which-key "󰍍 minimap toggles"))
-  )
+(provide 'keymaps)
 ;; Globals
 ;; (global-set-key (kbd "M-b") 'popper-toggle)
 ;; (global-set-key (kbd "M-n") 'popper-cycle)
@@ -135,4 +53,120 @@
 ;; (define-key embark-buffer-map   (kbd "o") (my/embark-ace-action switch-to-buffer))
 ;; (define-key embark-bookmark-map (kbd "o") (my/embark-ace-action bookmark-jump))
 
-(provide 'keymaps)
+;; LEADER KEY
+
+(general-create-definer e/leader-keys
+  :keymaps '(normal insert visual emacs)
+  :prefix "SPC"
+  :global-prefix "C-SPC")
+
+(e/leader-keys
+  "SPC" '(execute-extended-command :which-key "  M-x")
+  "k"  '(eldoc-box-help-at-point :which-key "󰆽 hover")
+  ;;LSP
+  "c"  '(:ignore t :which-key "󰅱 code")
+  "cn"  '(flycheck-next-error :which-key " next error")
+  "cp"  '(flycheck-previous-error :which-key " next error")
+  "cr"  '(eglot-rename :which-key " rename symbol")
+  "cc"  '(format-all-buffer :which-key " format region or buffer")
+  "cl"  '(crux-cleanup-buffer-or-region :which-key " cleanup")
+  "cd"  '(crux-duplicate-current-line-or-region :which-key "󰬸  duplicate")
+
+  "f"  '(:ignore t :which-key "󰈔 files")
+  "ff" '(find-file :which-key "󰈞 find a file")
+  "fd" '(find-dired :which-key "󰈞 find a file")
+  "fr" '(consult-recent-file :which-key "󰣜 recent files")
+  "fc"  '(:ignore t :which-key "󰈔 current file")
+  "fcs" '(crux-sudo-edit :which-key "󱄛 open this file as sudo")
+  "fcr" '(crux-rename-buffer-and-file :which-key "󰑕 rename this file")
+
+  "o"  '(:ignore t :which-key "󰷏 open")
+  "ow" '(crux-open-with :which-key " open with")
+  "or" '(consult-yank-from-kill-ring :which-key " open registry and yank")
+  "oF" '(list-faces-display :which-key " open with")
+
+  "b"  '(:ignore t :which-key " buffer navigation")
+  "bd" '(kill-buffer-and-window :which-key "󰆴 kill the current buffer and window")
+  "bk" '(crux-kill-other-buffers :which-key "󰛌 kill all other buffers and windows")
+  "bn" '(next-buffer :which-key "󰛂 switch buffer")
+  "bp" '(previous-buffer :which-key "󰛁 switch buffer")
+  "bb" '(consult-buffer :which-key "󰕰 view buffers")
+
+  "s"  '(:ignore t :which-key " search")
+  "ss" '(consult-line :which-key "󰱼 line search")
+  "si" '(nerd-icons-insert :which-key "󰭟 search for icons")
+  "srg" '(consult-ripgrep :which-key "󰟥 search with rg")
+  "sd" '(dictionary-search :which-key "󰬋 search in dictionary")
+
+  "e"  '(:ignore t :which-key "󰈈  evaluate")
+  "eb" '(eval-buffer :which-key "󰷊  evaluate buffer")
+  "ear" '(crux-eval-and-replace :which-key "󰛔 evaluate and replace")
+  "er" '(eval-region :which-key "󰨺  evaluate region")
+
+  "p"  '(:ignore t :which-key "󰅱 project")
+  "pr"  '(projectile-recentf :which-key "󰈞 recentf")
+  "pv"  '(:ignore t :which-key "󰅱 view")
+  "pvc"  '(projectile-vc :which-key "󰈞 view changes")
+  "pvd"  '(projectile-browse-dirty-projects :which-key "󰈞 view dirty projects")
+  "ps"  '(:ignore t :which-key "󰅱 switch")
+  "psp"  '(projectile-switch-open-project :which-key "󰅱 switch project")
+
+  "h"  '(:ignore t :which-key "󰞋 help")
+  "ht" '(helpful-at-point :which-key " describe this")
+  "hF" '(describe-face :which-key "󱗎 describe face")
+  "hf" '(helpful-function :which-key "󰯻 describe function")
+  "hb" '(embark-bindings :which-key "󰌌 describe bindings")
+  "hk" '(helpful-key :which-key "󰯻 describe this key")
+  "hv" '(helpful-variable :which-key " describe variable")
+  "hr" '(:ignore t :which-key "󱍸 reload")
+  "hrb" '(revert-buffer-quick :which-key "󰄸 reload buffer")
+  "hrr" '((lambda () (interactive) (load-file "~/.config/emacs/init.el")) :wk "  Reload emacs config")
+
+  "t"  '(:ignore t :which-key "  toggles")
+  "tv"  '(visual-line-mode :which-key "󰖶 toggle visual line mode")
+  "tm"  '(minimap-mode :which-key "󰍍 minimap toggles")
+  )
+
+(general-def
+  "C-<return>" 'embark-act
+  "K" 'nil
+  "<escape>" 'keyboard-escape-quit)
+
+;; (general-def
+;;   :keymaps 'acm-mode-map
+;;   "C-l" 'acm-complete
+;;   "C-j" 'acm-select-next
+;;   "C-k" 'acm-select-prev)
+
+(general-def
+  :keymaps 'vertico-map
+  "TAB" #'vertico-insert
+  "C-l" '(lambda () (interactive) (vertico-insert) )
+  "C-j" #'vertico-next
+  "C-k" #'vertico-previous
+  "C-h" #'vertico-directory-up
+  "M-o" #'vertico-repeat
+  )
+
+;;DRAG
+(general-def
+  :keymaps 'evil-normal-state-map
+  "M-k" 'drag-stuff-up
+  "M-j" 'drag-stuff-down
+  "M-h" 'drag-stuff-left
+  "M-l" 'drag-stuff-right
+  "<tab>" 'next-buffer ;;easier nav
+  "<backtab>" 'previous-buffer ;;easier nav
+  "C-/" 'consult-line-multi)
+
+(general-def
+  :keymaps 'evil-insert-state-map
+  "C-k" 'corfu-previous
+  "C-j" 'corfu-next
+  "C-l" 'corfu-complete
+  )
+
+;;LSP
+
+;; for embark
+;;; keymaps.el ends here

@@ -1,0 +1,54 @@
+* {
+  all: unset;
+}
+
+.time {
+  font-size: 20px;
+  color: #ddb6f2;
+  font-family: "Iosevka Nerd Font";
+}
+.date {
+  font-size: 20px;
+  color: #ddb6f2;
+  font-family: "Iosevka Nerd Font";
+}
+.day {
+  font-size: 70px;
+  font-family: "JetBrainsMono Nerd Font";
+  font-style: italic;
+  color: #f8bd96;
+  padding-bottom: 20px;
+}
+.ang-brac {
+  color: #575268;
+  font-size: 0.7em;
+}
+.info {
+  background-color: #11111b;
+  color: #d9e0ee;
+  border-radius: 20px;
+  padding: 5px;
+  margin: 20px;
+}
+.visibility {
+  opacity: 0;
+}
+.bat {
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 15;
+}
+.wifi-icon {
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 15;
+}
+
+tooltip {
+  background-color: #000000;
+  color: #d9e0ee;
+  font-size: 13px;
+  font-family: "Iosevka Nerd Font";
+  padding: 10px;
+  border-radius: 10px;
+}

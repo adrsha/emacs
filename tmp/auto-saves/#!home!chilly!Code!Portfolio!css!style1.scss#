@@ -1,0 +1,245 @@
+@import url("./responsive.css");
+
+//sans serif
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Prata&display=swap");
+//sans
+@import url("https://fonts.googleapis.com/css2?family=Aboreto&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Averia+Libre:wght@300&display=swap");
+//variables
+$sans1: Aboreto, Verdana, "Segoe UI", sans-serif;
+// $sans2: 'Averia Libre', Verdana, 'Segoe UI', sans-serif
+$sans2: "Quicksand", Verdana, "Segoe UI", sans-serif;
+$serif2: "Prata", "Times New Roman", serif;
+$serif3: "EB Garamond", "Times New Roman", serif;
+$color-2: #0a0a0a;
+$color-1: #0f0f0f;
+$color0: #121212;
+$color1: #261d17;
+$color2: #40342a;
+$color3: #736151;
+$color4: #a68776;
+$color5: #f2dcc2;
+$color6: #fff3ec;
+
+a {
+  color: $color4;
+}
+* {
+  &::selection {
+    background-color: $color5;
+    color: $color0;
+  }
+}
+.minimal-text {
+  font-family: $sans2;
+}
+html {
+  // mix-blend-mode: difference
+  background-color: $color0;
+  color: $color6;
+  font-family: $sans2;
+}
+div.loader {
+  background-color: $color-1;
+  &#sec {
+    background-color: lighten($color-1, 2);
+  }
+  &#thir {
+    background-color: $color5;
+  }
+  span#bouncer {
+    border: 2px solid $color3;
+    &::before {
+      // border: 1px solid $color4
+      background-color: $color5;
+    }
+  }
+}
+div.nav {
+  span.logo {
+    font-family: $serif3;
+  }
+}
+div.scroll-counter {
+  color: $color6;
+
+  .secondhand {
+    background-color: $color4;
+    &::after {
+      background-color: $color3;
+    }
+  }
+  &::after {
+    border: 2px solid $color2;
+  }
+  &:hover {
+    &::after {
+      border: 2px solid $color1;
+    }
+    .secondhand {
+      background-color: $color5;
+    }
+  }
+  &::before {
+    border: 3px dotted $color3;
+  }
+  ol {
+    border: 2px solid $color2;
+    &::after {
+      border: 1px solid $color2;
+    }
+    li {
+      list-style-type: upper-roman;
+      font-family: $serif2;
+      transition:
+        color 0.5s ease,
+        background-color 0.5s ease,
+        padding 0.5s ease;
+    }
+  }
+}
+.quilt-lat {
+  &::before {
+    border-top: 1px solid transparentize($color3, 0.3);
+  }
+  &::after {
+    border-top: 1px solid transparentize($color3, 0.3);
+  }
+  &:hover::after {
+    width: 0%;
+  }
+  &:hover::before {
+    width: 0%;
+  }
+}
+.quilt-stat {
+  &::before {
+    border-top: 1px solid transparentize($color3, 0.3);
+  }
+  &::after {
+    border: 2px solid $color4;
+  }
+}
+div.background {
+  div.background-i {
+    color: transparentize($color4, 0.95);
+    font-family: $serif3;
+  }
+}
+div.header {
+  div.hero {
+    font-family: $serif2;
+    color: $color5;
+  }
+  div.border {
+    border: 4px solid $color2;
+    color: $color5;
+    li {
+      font-family: $sans1;
+    }
+    &::after {
+      border: 1px solid $color3;
+    }
+  }
+}
+div.overlay {
+  background-color: $color5;
+  color: $color-1;
+  font-family: $serif3;
+
+  ul:has(li:hover) li:not(:hover) {
+    color: $color4;
+  }
+}
+div.content {
+  h1#content-header {
+    font-family: $serif2;
+    color: $color5;
+  }
+}
+div.projects {
+  div.card-container {
+    div.card {
+      background-color: $color-1;
+      transition: background-color 0.5s ease;
+      h1 {
+        font-family: $serif3;
+        color: $color4;
+      }
+      a.card-button {
+        &:hover {
+          color: $color5;
+        }
+      }
+    }
+    div.showcase {
+      img {
+        filter: brightness(70%) sepia(50%);
+      }
+      &::after {
+        border: 3px solid transparentize($color3, 0.3);
+      }
+      &::before {
+        border: 1px solid transparentize($color3, 0.3);
+      }
+      &:hover {
+        &::after {
+          border-color: transparentize($color5, 0.9);
+        }
+        &::before {
+          border-color: transparentize($color5, 0.9);
+        }
+      }
+      &:hover {
+        & + .card {
+          color: $color5;
+          background-color: $color-2;
+        }
+      }
+    }
+  }
+}
+.mouse {
+  background-color: $color5;
+}
+@keyframes cursor-jiggle {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  10% {
+    transform: translate(-50%, -50%) scale(0);
+  }
+  20% {
+    transform: translate(-50%, -50%) scale(1.8);
+  }
+  30% {
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  40% {
+    transform: translate(-50%, -50%) scale(1.5);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+  60% {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes mouse-icon-jiggle {
+  0% {
+    transform: translate(0, -10%);
+  }
+  100% {
+    transform: translate(0, 20%);
+  }
+}

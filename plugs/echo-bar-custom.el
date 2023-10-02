@@ -67,10 +67,10 @@
 
 (defun qv/echo-bar-function ()
   ;; (format "%s%s %s%s%s %s %s%s"
-  (format "%s%s%s%s%s"
-          (propertize " " 'display `(height ,qv/echo-bar-height))
-          (or (ignore-errors (qv/activity-string)) "")
+  (format "%s"
           (or (ignore-errors (qv/battery-format)) "")
+          ;; (propertize "󰇙" 'face 'eaSep)
+
           ;;   (propertize
           ;; "󰃭 "
           ;;    'face 'eaDate-icon) 
@@ -81,12 +81,12 @@
 
           ;; (propertize "󰇙" 'face 'eaSep)
 
-            (propertize
-          "󰥔  "
-             'face 'eaTime-icon) 
-            (propertize
-          (format-time-string "%I:%M")
-            'face 'eaTime)
+          ;;   (propertize
+          ;; "󰥔"
+          ;;    'face 'eaTime-icon) 
+          ;;   (propertize
+          ;; (format-time-string " %I:%M")
+          ;;   'face 'eaTime)
   ))
 
 (require 'battery)
@@ -96,15 +96,12 @@
               (status (funcall func))
               (percent (round (string-to-number (battery-format "%p" status))))
               (power-method (battery-format "%L" status)))
-    (format "%s %s %s%s%s %s%s %s %s %s "
+    ;; (format "%s %s %s%s %s %s "
+    (format "%s %s %s%s %s %s "
 
             (format "%s" (if (and (buffer-file-name) (buffer-modified-p))
-            (propertize
-             "󰜡  󱀆 "
-             'face 'eaSep)
-            (propertize
-             "󰄭  󰌽 "
-             'face 'saved)
+            (propertize "󰜡  󱗿 " 'face 'eaSep)
+            (propertize "󰸞  󱗿 " 'face 'saved)
             ))
 
             (propertize
@@ -113,15 +110,21 @@
                (buffer-name))
             'face 'eaBuf) 
 
-            (propertize 
-            (format " 󰊠  %s" (line-number-at-pos))
-            'face 'eaLinePos)
+            ;; (propertize "󰇙" 'face 'eaSep)
 
-            (propertize "" 'face 'eaSep)
+            ;; (propertize 
+            ;;  "󰊠"
+            ;; 'face 'eaLinePos)
+
+            ;; (propertize 
+            ;; (format "%s" (line-number-at-pos))
+            ;; 'face 'eaLinePos)
+
+            ;; (propertize "" 'face 'eaSep)
             
-            (propertize 
-             (format "%s" (count-lines (point-min) (point-max)))
-             'face 'eaLinePos)
+            ;; (propertize 
+            ;;  (format "%s" (count-lines (point-min) (point-max)))
+            ;;  'face 'eaLinePos)
             (propertize "󰇙" 'face 'eaSep)
 
             (propertize
@@ -137,6 +140,5 @@
             (propertize
             (concat (number-to-string percent) "%" )
              'face 'eaBattery) 
-            (propertize "󰇙" 'face 'eaSep)
             )))
 (provide 'echo-bar-custom)
