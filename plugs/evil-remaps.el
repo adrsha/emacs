@@ -20,7 +20,8 @@
  (defun clear ()
    (interactive)
    (evil-ex-nohighlight)
-   (posframe-hide-all))
+   (posframe-hide-all)
+   (pulsar-pulse-line))
 
  (defun configure-evil-esc ()
    "Default escape key"

@@ -114,32 +114,7 @@
 (setf (cdr (assq 'continuation fringe-indicator-alist)) '(nil nil))
 
 ;; Disable the $ symbol too
-
-(defun echo-line-format ()
-  "String to be appended at right of echo area."
-  (propertize (format-mode-line "%l:%c") 'face 'face-faded))
-
- (let* ((right
-          (concat
-           ;; ! First space is a thin space, not a regular space
-           ;; ! Last space needed to have truncated line
-           " " (echo-line-format) " "
-           ))
-         (width (- (frame-width) (length right) 0))
-         (msg (if (car args) (apply 'format-message args) ""))
-         ;; Hack: The space for the split is a thin space, not a regular space
-         ;; This way, we get rid of the added part if present (unless an actual
-         ;; message uses a thin space.
-         (msg (car (split-string msg " ")))
-         (msg (string-trim msg))
-         (left (truncate-string-to-width msg width nil nil "…"))
-         (full (format (format "%%-%ds %%s" width) left right))
-         ))
-(set-display-table-slot
-      (window-display-table (minibuffer-window))
-      'truncation  (make-glyph-code (string-to-char (substring msg -1))))
- (message msg)
-;; (set-display-table-slot standard-display-table 'truncation ?\)
+(set-display-table-slot standard-display-table 'truncation ?\)
 
 ;; Disable fringe
 (fringe-mode '(0 . 0))
