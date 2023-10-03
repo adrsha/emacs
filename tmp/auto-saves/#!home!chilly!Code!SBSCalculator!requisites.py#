@@ -27,7 +27,7 @@ def prev_next_chars(entry, main_index, include_space):
     while prevSpaceNotFound:
         temp_i -= 1
         if temp_i <= 0:
-            prev_index = 
+            prev_index = 0
             break
         for bracket in brackets:
             if entry[temp_i] == bracket[1]:
@@ -38,11 +38,11 @@ def prev_next_chars(entry, main_index, include_space):
             elif (
                 entry[temp_i] == " "
                 or entry[temp_i] == ":"
-                or entry[temp_i - 1: temp_i + 1] == " - "
-                or entry[temp_i - 1: temp_i + 1] == " + "
-                or entry[temp_i - 1: temp_i + 1] == " * "
-                or entry[temp_i - 1: temp_i + 1] == " / "
-                or entry[temp_i - 1: temp_i + 1] == " ^ "
+                or entry[temp_i - 1 : temp_i + 1] == " - "
+                or entry[temp_i - 1 : temp_i + 1] == " + "
+                or entry[temp_i - 1 : temp_i + 1] == " * "
+                or entry[temp_i - 1 : temp_i + 1] == " / "
+                or entry[temp_i - 1 : temp_i + 1] == " ^ "
             ):
                 prev_index = temp_i + 1
                 prevSpaceNotFound = False

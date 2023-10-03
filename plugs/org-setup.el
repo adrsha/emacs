@@ -1,5 +1,14 @@
-;; Replace list hyphen with dot
 
+;; ░█████╗░██████╗░░██████╗░░░░░░░███╗░░░███╗░█████╗░██████╗░███████╗
+;; ██╔══██╗██╔══██╗██╔════╝░░░░░░░████╗░████║██╔══██╗██╔══██╗██╔════╝
+;; ██║░░██║██████╔╝██║░░██╗░█████╗██╔████╔██║██║░░██║██║░░██║█████╗░░
+;; ██║░░██║██╔══██╗██║░░╚██╗╚════╝██║╚██╔╝██║██║░░██║██║░░██║██╔══╝░░
+;; ╚█████╔╝██║░░██║╚██████╔╝░░░░░░██║░╚═╝░██║╚█████╔╝██████╔╝███████╗
+;; ░╚════╝░╚═╝░░╚═╝░╚═════╝░░░░░░░╚═╝░░░░░╚═╝░╚════╝░╚═════╝░╚══════╝
+
+
+
+;; ShortCuts
 (require 'org-tempo)
 (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
 (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
@@ -34,8 +43,6 @@ Intended for `after-make-frame-functions'."
 ;; Hide org markup
 (setq-default org-hide-emphasis-markers t)
 
-
-
 ;; Indentation
 (setq org-startup-folded nil)
 (org-indent-mode 1)
@@ -50,11 +57,9 @@ Intended for `after-make-frame-functions'."
    (python . t)))
 
 (push '("conf-unix" . conf-unix) org-src-lang-modes)
-
 (setq org-confirm-babel-evaluate nil)
 
 
-;; PAIRS
 ;; Custom pairs for electric pair
 (defvar org-electric-pairs '((?/ . ?/) (?= . ?=)) "Electric pairs for org-mode.")
 
@@ -64,7 +69,6 @@ Intended for `after-make-frame-functions'."
 
 ;; Disable the autocompletion of pairs <>
 (add-hook 'org-mode-hook (lambda () (setq-local electric-pair-inhibit-predicate `(lambda (c) (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
-
 
 
 (provide 'org-setup)
