@@ -1,0 +1,4 @@
+(defun insert-java-template ()
+  "Insert the template for Java file."
+  (interactive)
+  (file-header-insert-template-by-file-path "~/.emacs.d/template/java/java_template.txt"))

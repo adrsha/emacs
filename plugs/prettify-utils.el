@@ -79,6 +79,8 @@
 (add-hook 'prog-mode-hook 'rainbow-mode)
 (add-hook 'org-mode-hook 'rainbow-mode)
 
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+
 ;; Ligatures
   ;; Enable all Iosevka ligatures in programming modes
 (ligature-set-ligatures 'prog-mode '("<---" "<--"  "<<-" "<-" "->" "-->" "--->" "<->" "<-->" "<--->" "<---->" "<!--" "<==" "<===" "<=" "=>" "=>>" "==>" "===>" ">=" "<=>" "<==>" "<===>" "<====>" "<!---" "<~~" "<~" "~>" "~~>" "::" ":::" "==" "!=" "===" "!==" ":=" ":-" ":+" "<*" "<*>" "*>" "<|" "<|>" "|>" "+:" "-:" "=:" "<******>" "++" "+++"))

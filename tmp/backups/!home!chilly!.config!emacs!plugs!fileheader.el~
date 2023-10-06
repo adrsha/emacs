@@ -1,0 +1,28 @@
+
+(defun insert-org-template ()
+  "Insert the template for Org file."
+  (interactive)
+  (file-header-insert-template-by-file-path "~/.config/emacs/plugs/templates/org.txt"))
+
+(defun insert-html-template ()
+  "Insert the template for html file."
+  (interactive)
+  (file-header-insert-template-by-file-path "~/.config/emacs/plugs/templates/html.txt"))
+
+(defun insert-org-template ()
+  "Insert the template for Cpp file."
+  (interactive)
+  (file-header-insert-template-by-file-path "~/.config/emacs/plugs/templates/cpp.txt"))
+
+(add-hook 'org-mode-hook
+              (lambda ()
+                ;; Insert the template once a .org file created.
+                (insert-org-template))
+(add-hook 'c++-ts-mode-hook
+              (lambda ()
+                ;; Insert the template once a .cpp file created.
+                (insert-org-template))
+(add-hook 'html-mode-hook
+              (lambda ()
+                ;; Insert the template once a .java file created.
+                (insert-org-template))

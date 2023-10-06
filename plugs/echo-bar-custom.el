@@ -1,4 +1,20 @@
-(qv/package echo-bar)
+;; ███████╗░█████╗░██╗░░██╗░█████╗░
+;; ██╔════╝██╔══██╗██║░░██║██╔══██╗
+;; █████╗░░██║░░╚═╝███████║██║░░██║
+;; ██╔══╝░░██║░░██╗██╔══██║██║░░██║
+;; ███████╗╚█████╔╝██║░░██║╚█████╔╝
+;; ╚══════╝░╚════╝░╚═╝░░╚═╝░╚════╝░
+
+;; ██████╗░░█████╗░██████╗░
+;; ██╔══██╗██╔══██╗██╔══██╗
+;; ██████╦╝███████║██████╔╝
+;; ██╔══██╗██╔══██║██╔══██╗
+;; ██████╦╝██║░░██║██║░░██║
+;; ╚═════╝░╚═╝░░╚═╝╚═╝░░╚═╝
+
+
+
+(require 'echo-bar)
 
 (echo-bar-enable)
 
@@ -7,7 +23,7 @@
 (setq echo-bar-right-padding 4)
 (setq qv/echo-bar-height 1.2)
 
-(qv/face qv/icons :family "all-the-icons")
+;; (qv/face qv/icons :family "all-the-icons")
 
 (defface eaTime-icon
   '((t :inherit org-tag))
@@ -97,18 +113,7 @@
               (percent (round (string-to-number (battery-format "%p" status))))
               (power-method (battery-format "%L" status)))
     ;; (format "%s %s %s%s %s %s "
-    (format "%s %s %s%s %s %s "
-
-            (format "%s" (if (and (buffer-file-name) (buffer-modified-p))
-            (propertize "󰜡  󱗿 " 'face 'eaSep)
-            (propertize "󰸞  󱗿 " 'face 'saved)
-            ))
-
-            (propertize
-             (if (buffer-file-name)
-                 (file-name-nondirectory (buffer-file-name))
-               (buffer-name))
-            'face 'eaBuf) 
+    (format "%s %s %s "
 
             ;; (propertize "󰇙" 'face 'eaSep)
 
@@ -119,13 +124,6 @@
             ;; (propertize 
             ;; (format "%s" (line-number-at-pos))
             ;; 'face 'eaLinePos)
-
-            ;; (propertize "" 'face 'eaSep)
-            
-            ;; (propertize 
-            ;;  (format "%s" (count-lines (point-min) (point-max)))
-            ;;  'face 'eaLinePos)
-            (propertize "󰇙" 'face 'eaSep)
 
             (propertize
              (if (string= power-method "AC") "  " "")

@@ -126,7 +126,7 @@
 (global-display-line-numbers-mode t)
 
 ;; Disable line number mode in a few situations
-(dolist (mode '(term-mode-hook shell-mode-hook))
+(dolist (mode '(term-mode-hook treemacs-mode-hook shell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;; Revert buffers when the underlying file has changed
@@ -167,11 +167,18 @@
 (setq-default custom-file (locate-user-emacs-file "custom-vars.el"))
 (load custom-file 'noerror 'nomessage)
 
-                                        ; Raise undo-limit to 80Mb
+;; Visual line mode : llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+(set-default 'truncate-lines t)
+
+;; Dired fixes
+(setq dired-use-ls-dired nil)
+
+;; Raise undo-limit to 80Mb
 (setq-default undo-limit 80000000)
 
 ;; Autosave true
 (setq-default auto-save-default t)
+
 
 ;; ease of life
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -194,6 +201,9 @@
 
 ;; Disable default css colors
 (setq-default css-fontify-colors nil)
+
+;; empty line at the end
+(setq require-final-newline t)
 
 ;; NECESSARY
 (provide 'options)

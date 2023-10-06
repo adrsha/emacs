@@ -8,8 +8,15 @@
 ;;
 ;;
 
+;; Setup Projectile
 (projectile-mode)
 
+
+;; Breadcrumb
+(require 'breadcrumb)
+(breadcrumb-mode)
+
+;; Setup treesmacs
 (progn
   (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
         treemacs-deferred-git-apply-delay        0.5
@@ -45,7 +52,7 @@
         treemacs-recenter-after-project-jump     'nil
         treemacs-recenter-after-project-expand   'nil
         treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
-        treemacs-project-follow-into-home        t
+        treemacs-project-follow-into-home        'nil
         treemacs-show-cursor                     nil
         treemacs-show-hidden-files               t
         treemacs-silent-filewatch                t
@@ -84,12 +91,17 @@
 
   (treemacs-hide-gitignored-files-mode nil))
 
-(use-package treemacs-icons-dired
-  :hook (dired-mode . treemacs-icons-dired-enable-once))
- 
+;; Modifying icons
+(treemacs-modify-theme "Default"
+  :icon-directory "~/.config/emacs/images/"
+  :config
+  (progn
+    (treemacs-create-icon :file "folder-open.png"   :extensions (root-open))
+    (treemacs-create-icon :file "folder-asterick.png"   :extensions (root-closed))
+    (treemacs-create-icon :file "file.png"   :extensions (text))
+    (treemacs-create-icon :file "emacs.png" :extensions ("el"))
+    (treemacs-create-icon :file "folder-open.png" :extensions (dir-open))
+    (treemacs-create-icon :file "folder.png" :extensions (dir-closed))))
 
-(treemacs-set-scope-type 'Tabs)
 
-(require 'breadcrumb)
-(breadcrumb-mode)
 (provide 'dataManagers)

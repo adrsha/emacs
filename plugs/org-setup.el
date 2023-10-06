@@ -49,26 +49,25 @@ Intended for `after-make-frame-functions'."
 (setq org-level-color-stars-only nil)
 (setq org-hide-leading-stars nil)
 
-;;Languages
+;; ;;Languages
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((emacs-lisp . t)
-   (python . t)))
+;; (org-babel-do-load-languages
+;;  'org-babel-load-languages
+;;  '((emacs-lisp . t)
+;;    (python . t)))
 
-(push '("conf-unix" . conf-unix) org-src-lang-modes)
-(setq org-confirm-babel-evaluate nil)
+;; (push '("conf-unix" . conf-unix) org-src-lang-modes)
+;; (setq org-confirm-babel-evaluate nil)
 
 
-;; Custom pairs for electric pair
-(defvar org-electric-pairs '((?/ . ?/) (?= . ?=)) "Electric pairs for org-mode.")
+;; ;; Custom pairs for electric pair
+;; (defvar org-electric-pairs '((?/ . ?/) (?= . ?=)) "Electric pairs for org-mode.")
 
-(defun org-add-electric-pairs ()
-  (setq-local electric-pair-pairs (append electric-pair-pairs org-electric-pairs))
-  (setq-local electric-pair-text-pairs electric-pair-pairs))
+;; (defun org-add-electric-pairs ()
+;;   (setq-local electric-pair-pairs (append electric-pair-pairs org-electric-pairs))
+;;   (setq-local electric-pair-text-pairs electric-pair-pairs))
 
-;; Disable the autocompletion of pairs <>
-(add-hook 'org-mode-hook (lambda () (setq-local electric-pair-inhibit-predicate `(lambda (c) (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
-
+;; ;; Disable the autocompletion of pairs <>
+;; (add-hook 'org-mode-hook (lambda () (setq-local electric-pair-inhibit-predicate `(lambda (c) (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
 
 (provide 'org-setup)

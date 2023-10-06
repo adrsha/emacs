@@ -18,6 +18,7 @@
 (defvar grim-fgcolor "#232338"
   "The calm foreground of emacs.")
 
+
 ;; Bars/ Lines blend
 (set-face-attribute 'header-line nil :background bgcolor)
 (set-face-attribute 'mode-line nil :background bgcolor)
@@ -35,27 +36,7 @@
 (setq message-log-max nil)
 (echo-bar-mode)
 
-;; Disable "Beginning of Buffer" or "End of Buffer"
-(defun my-command-error-function (data context caller)
-  "Ignore the buffer-read-only, beginning-of-buffer,
-end-of-buffer signals; pass the rest to the default handler."
-  (when (not (memq (car data) '(buffer-read-only
-                                beginning-of-buffer
-                                end-of-buffer)))
-    (command-error-default-function data context caller)))
 
-(setq command-error-function #'my-command-error-function)
-
-(defun suppress-message-advice-around (fun &rest args)
-  (let (message-log-max)
-    (with-temp-message (or (current-message) "")
-      (apply fun args))))
-
-;; example: suppress any messages from `save-buffer'
-(advice-add 'save-buffer :around 'suppress-message-advice-around)
-(advice-add 'kill-buffer :around 'suppress-message-advice-around)
-
-(require 'base)
 (require 'echo-bar-custom)
 (require 'eldoc-box)
 
@@ -76,9 +57,8 @@ end-of-buffer signals; pass the rest to the default handler."
                                      (window-width . 30)
                                      ))
 
+
 ;; FACES
-
-
 (defun configure-face (frame)
   "Configure face given initial non-daemon FRAME.
 Intended for `after-make-frame-functions'."
@@ -97,15 +77,15 @@ Intended for `after-make-frame-functions'."
   (set-face-attribute 'vertico-posframe-border-4 nil :inherit 'ansi-color-white)
   (set-face-attribute 'vertico-posframe-border-fallback nil :background darker-bgcolor :inherit 'ansi-color-white)
   (set-face-attribute 'vertico-current nil :foreground 'unspecified :weight 'bold :inherit 'org-footnote :background bgcolor)
-  (set-face-attribute 'minibuffer-prompt nil :foreground 'unspecified :inherit 'org-document-title :height 220 :weight 'bold :family "Iosevka Nerd Font ExtraBold")
+  (set-face-attribute 'minibuffer-prompt nil :foreground 'unspecified :weight 'bold )
 
   (set-face-attribute 'flycheck-error nil :background "#42232c" :foreground "#F38BA8" :underline 'nil :weight 'bold)
   (set-face-attribute 'flycheck-info nil :background "#262d25" :foreground "#A6E3A1" :underline 'nil :weight 'bold)
   (set-face-attribute 'flycheck-warning nil :background "#453e29" :foreground "#F8D782" :underline 'nil :weight 'bold)
-  
+
   (set-face-attribute 'diff-added nil :background "#262d25" :foreground "#F38BA8" :underline 'nil :weight 'bold)
   (set-face-attribute 'diff-removed nil :background "#42232c" :foreground "#A6E3A1" :underline 'nil :weight 'bold)
-  
+
   (set-face-attribute 'flycheck-fringe-error nil :background 'unspecified :foreground bgcolor :underline 'nil)
   (set-face-attribute 'flycheck-fringe-info nil :background 'unspecified :foreground bgcolor :underline 'nil)
   (set-face-attribute 'flycheck-fringe-warning nil :background 'unspecified :foreground bgcolor :underline 'nil)
@@ -115,14 +95,30 @@ Intended for `after-make-frame-functions'."
   (set-face-attribute 'flycheck-posframe-border-face nil :foreground darker-bgcolor :background darker-bgcolor)
   (set-face-attribute 'eldoc-box-body nil :background darker-bgcolor :weight 'bold)
   (set-face-attribute 'eldoc-box-border nil :background darker-bgcolor :weight 'bold)
-  (set-face-attribute 'mono-complete-preview-face nil :foreground dim-fgcolor :background bgcolor)
   (set-face-attribute 'corfu-default nil :background darker-bgcolor :foreground dim-fgcolor :weight 'bold)
   (set-face-attribute 'corfu-current nil :foreground calm-fgcolor :background bgcolor :weight 'bold)
 
   (set-face-attribute 'pulsar-generic nil :background grim-fgcolor :weight 'bold)
+  (set-face-attribute 'breadcrumb-project-base-face nil :weight 'bold :foreground calm-fgcolor)
+  (set-face-attribute 'breadcrumb-project-leaf-face nil :weight 'bold)
+  (set-face-attribute 'breadcrumb-imenu-leaf-face nil :inherit 'eaBattery-icon :weight 'bold)
+  (set-face-attribute 'treemacs-file-face nil :inherit 'eaBattery :weight 'bold)
+  (set-face-attribute 'treemacs-tags-face nil :inherit 'eaBattery :weight 'bold)
+  (set-face-attribute 'treemacs-help-title-face nil :inherit 'eaBattery :weight 'bold)
+  (set-face-attribute 'treemacs-help-column-face nil :inherit 'eaBattery :weight 'bold)
+  (set-face-attribute 'treemacs-git-added-face nil :foreground calm-fgcolor :weight 'bold)
+  (set-face-attribute 'treemacs-git-modified-face nil :foreground calm-fgcolor :weight 'bold)
+  (set-face-attribute 'treemacs-git-untracked-face nil :foreground calm-fgcolor :weight 'bold)
+  (set-face-attribute 'treemacs-directory-face nil :foreground calm-fgcolor :weight 'bold)
+  (set-face-attribute 'treemacs-term-node-face nil :foreground calm-fgcolor :weight 'bold)
+  (set-face-attribute 'treemacs-root-face nil :foreground calm-fgcolor :weight 'bold)
+
+  (set-face-attribute 'which-key-posframe-border nil :background darker-bgcolor :weight 'bold)
+  (set-face-attribute 'which-key-posframe nil :background darker-bgcolor :weight 'bold)
   (with-current-buffer " *Echo Area 0*" (face-remap-add-relative 'default '(:family "Iosevka Nerd Font ExtraBold")))
 
   ;; ICONS
+  ;; Treemacs png's are defined in dataManagers.el
   (setq flycheck-posframe-warning-prefix "  ")
   (setq flycheck-posframe-error-prefix "󰚌  ")
   (setq flycheck-posframe-info-prefix "  ")
@@ -154,13 +150,18 @@ Intended for `after-make-frame-functions'."
                                   (no-special-glyphs . t)
                                   (desktop-dont-save . t)))
 
-
+  (setq breadcrumb-imenu-crumb-separator "  ")
+  (setq breadcrumb-project-max-length 0.9)
+  (setq path-separator "󰇙")
 
   (remove-hook 'after-make-frame-functions #'configure-face))
 
 (add-hook 'after-make-frame-functions #'configure-face)
 
+
+
 (setq-default inhibit-message t)
 
+(require 'startup)
 (provide 'uiChanges)
 ;;; completed

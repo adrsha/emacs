@@ -21,6 +21,7 @@
    (interactive)
    (evil-ex-nohighlight)
    (posframe-hide-all)
+   (evil-force-normal-state)
    (pulsar-pulse-line))
 
  (defun configure-evil-esc ()
@@ -67,25 +68,41 @@
   :keymaps 'evil-normal-state-map
   "C-r" #'undo-redo
   "u" #'undo-only
+  "f" #'treemacs-select-window
   "C-u" #'evil-scroll-up
   "C-d" #'evil-scroll-down
+  "C-j" 'er/expand-region
   "C-l" 'clear
+  "C-n" 'block-nav-next-block
+  "C-S-n" 'block-nav-previous-block
+  "C-i" 'block-nav-next-indentation-level
+  "C-S-i" 'block-nav-previous-indentation-level
   "M-k" 'drag-stuff-up
   "M-j" 'drag-stuff-down
   "M-h" 'drag-stuff-left
   "M-l" 'drag-stuff-right
   "C-/" #'consult-line-multi
-  "<tab>" 'next-buffer ;;easier nav
-  "<backtab>" 'previous-buffer ;;easier nav
+  "<tab>" 'consult-buffer
+  "<backtab>" 'consult-buffer
   )
 ;; Insert State
+
 (general-def
   :keymaps 'evil-insert-state-map
   "C-h" 'nil
   "C-k" 'corfu-previous
   "C-j" 'corfu-next
+  "C-." 'yas-expand
   "C-l" 'completion-at-point
   "ESC" 'corfu-quit
+  )
+
+;; Treemacs keymaps
+(general-def
+  :keymaps 'treemacs-mode-map
+  "C-u" #'evil-scroll-up
+  "C-l" '(lambda () (interactive) ((evil-ex-nohighlight)))
+  "L" #'treemacs-root-down
   )
 
 (provide 'evil-remaps)

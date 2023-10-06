@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: orgBoiler
+# key: !org
+# --
+
+#+TITLE: $0
+#+AUTHOR: Adarsha Acharya
+#+LANGUAGE:  en
+#+DESCRIPTION: ${1:desc}
+#+KEYWORDS:  Emacs Org-Mode 
+

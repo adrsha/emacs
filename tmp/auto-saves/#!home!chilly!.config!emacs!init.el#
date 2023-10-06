@@ -21,6 +21,12 @@
 (use-package marginalia)
 (use-package block-nav)
 
+(use-package treemacs)
+(use-package treemacs-evil)
+(use-package treemacs-projectile)
+(use-package treemacs-icons-dired)
+(use-package treemacs-tab-bar) 
+
 (use-package evil)
 (use-package evil-collection)
 (use-package evil-escape)
@@ -53,12 +59,6 @@
 (use-package rainbow-delimiters)
 (use-package which-key)
 
-(use-package treemacs)
-(use-package treemacs-evil)
-(use-package treemacs-projectile)
-(use-package treemacs-icons-dired)
-(use-package treemacs-tab-bar) 
-
 (elpaca-wait)
 
 ;; NOTE: Configs
@@ -71,13 +71,13 @@
 (require 'vertico-setup)
 (require 'popupmenu)
 
+(require 'fileheader)
 (require 'codingEnhancement)
 (require 'dataManagers)
 (require 'evil-remaps)
 (require 'keymaps)
 (require 'whichkey-setup)
 
-(require 'snippets-setup)
 (require 'prettify-utils)
 (require 'org-setup)
 (require 'uiChanges)

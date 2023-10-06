@@ -156,15 +156,10 @@
   "K" 'nil
   "<escape>" 'keyboard-escape-quit)
 
-;; (general-def
-;;   :keymaps 'acm-mode-map
-;;   "C-l" 'acm-complete
-;;   "C-j" 'acm-select-next
-;;   "C-k" 'acm-select-prev)
-
 (general-def
   :keymaps 'vertico-map
-  "TAB" #'vertico-insert
+  "TAB" #'vertico-next
+  "<backtab>" #'vertico-previous
   "C-l" '(lambda () (interactive) (vertico-insert) )
   "C-j" #'vertico-next
   "C-k" #'vertico-previous
@@ -197,7 +192,6 @@
 ;; INFO: Swap!
 ;; (general-swap-key nil 'motion
 ;;   ";" ":")
-
 
 
 (provide 'keymaps)

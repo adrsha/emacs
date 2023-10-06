@@ -1,1 +1,1 @@
-("~/.config/emacs/" "/hdd/Code/Cpp/" "~/.cache/emacs/elpaca/repos/corfu/" "~/" "/hdd/Code/SBSCalculator/" "~/.cache/emacs/elpaca/repos/evil-goggles/" "~/.cache/emacs/elpaca/repos/emacs/" "~/.config/emacs/plugs/corfu/" "~/.config/emacs/plugs/lsp-bridge/" "/hdd/Scripts/" "/hdd/Code/Portfolio/" "/hdd/Themes/" "~/.cache/emacs/elpaca/repos/embark/" "~/.cache/emacs/elpaca/repos/evil-collection/")
+("~/.config/emacs/" "/hdd/Code/Cpp/" "~/.config/emacs/plugs/use-package/")

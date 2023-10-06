@@ -44,10 +44,15 @@
 
 (consult-customize
  consult-ripgrep consult-git-grep consult-grep
- consult-bookmark consult-recent-file consult-xref
+ consult-bookmark consult-xref
  consult--source-bookmark consult--source-file-register
- consult--source-recent-file consult--source-project-recent-file
- :preview-key "C-h")            ;; Option 2: Manual preview
+ consult--source-recent-file
+ :preview-key '(:debounce 0.1 any)) ;; Option 1: Automatic preview
+
+(consult-customize
+ consult-buffer
+ :preview-key '(:debounce 0.1 any)) ;; Option 1: Automatic preview
+;; :preview-key "C-h")            ;; Option 2: Manual preview
 
 ;; Documentation in the menu itself
 (marginalia-mode)
