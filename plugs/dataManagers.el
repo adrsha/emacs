@@ -10,7 +10,9 @@
 
 ;; Setup Projectile
 (projectile-mode)
-
+(when (file-directory-p "/hdd/Documents")
+  (setq projectile-project-search-path '("/hdd/Documents")))
+(setq projectile-switch-project-action #'projectile-dired)
 
 ;; Breadcrumb
 (require 'breadcrumb)
@@ -83,7 +85,7 @@
     (treemacs-git-commit-diff-mode t))
 
   (pcase (cons (not (null (executable-find "git")))
-         (not (null treemacs-python-executable)))
+               (not (null treemacs-python-executable)))
     (`(t . t)
      (treemacs-git-mode 'deferred))
     (`(t . _)

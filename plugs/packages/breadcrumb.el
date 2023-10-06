@@ -318,8 +318,8 @@ Given BFN, the `buffer-file-name', produce a a list of
 propertized crumbs."
   (cl-loop
    with project = (project-current)
-   with root = (if project ( project-root project) default-directory)
-   with relname = (file-relative-name (file-truename (or bfn default-directory)) root)
+   with root = (if project (project-root project) default-directory)
+   with relname = (file-relative-name (file-truename (or bfn default-directory)) (file-truename root))
    for (s . more) on (split-string relname "/")
    concat s into upto
    when more concat "/" into upto
