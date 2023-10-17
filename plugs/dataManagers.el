@@ -10,6 +10,9 @@
 
 ;; Setup Projectile
 (projectile-mode)
+
+;; Breadcrumb
+(require 'breadcrumb)
 (when (file-directory-p "/hdd/Documents")
   (setq projectile-project-search-path '("/hdd/Documents")))
 (setq projectile-switch-project-action #'projectile-dired)
@@ -17,6 +20,8 @@
 ;; Breadcrumb
 (require 'breadcrumb)
 (breadcrumb-mode)
+
+;;-------------------- TREEMACS -------------------;;
 
 ;; Setup treesmacs
 (progn
@@ -100,10 +105,46 @@
   (progn
     (treemacs-create-icon :file "folder-open.png"   :extensions (root-open))
     (treemacs-create-icon :file "folder-asterick.png"   :extensions (root-closed))
-    (treemacs-create-icon :file "file.png"   :extensions (text))
+    (treemacs-create-icon :file "org.png"   :extensions ("org"))
+    (treemacs-create-icon :file "file.png"   :extensions (fallback))
     (treemacs-create-icon :file "emacs.png" :extensions ("el"))
     (treemacs-create-icon :file "folder-open.png" :extensions (dir-open))
     (treemacs-create-icon :file "folder.png" :extensions (dir-closed))))
+
+
+(dolist (mode '(treemacs-mode-hook ))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+(setq treemacs-width 25)
+;;-------------------- TREEMACS -------------------;;
+
+
+;; Popper
+(popper-mode 1)
+;; Match eshell, shell, term and/or vterm buffers
+(setq popper-reference-buffers
+      (append popper-reference-buffers
+              '("^\\*eshell.*\\*$" eshell-mode ;eshell as a popup
+                "^\\*shell.*\\*$"  shell-mode  ;shell as a popup
+                "^\\*term.*\\*$"   term-mode   ;term as a popup
+                "^\\*vterm.*\\*$"  vterm-mode  ;vterm as a popup
+                )))
+
+
+;; DIRed
+(setq dired-listing-switches "-Al --group-directories-first")
+(setq-default dired-kill-when-opening-new-dired-buffer 't)
+
+(treemacs-icons-dired-mode 1)
+(defun use-betterfonts-dired ()
+  "Switch the current buffer to a monospace font."
+  (face-remap-add-relative 'default '(:family "Barlow Semi Condensed")))
+
+(add-hook 'dired-mode-hook 'use-betterfonts-dired)
+(add-hook 'dired-mode-hook 'dired-hide-details-mode)
+
+
+
 
 
 (provide 'dataManagers)

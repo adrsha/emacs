@@ -13,6 +13,7 @@
 ;; Nerd Icons
 (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
 
+
 ;; Enable saving history for all things completion
 (savehist-mode)
 
@@ -23,6 +24,7 @@
 ;; Completion styles
 (setq completion-styles '(orderless basic substring partial-completion ))
 (setq completion-category-overrides '((file (styles basic partial-completion))))
+
 
 ;; Previewing the selected element
 (add-hook 'completion-list-mode #'consult-preview-at-point-mode)
@@ -59,5 +61,9 @@
 
 ;; Enable embark help
 (setq prefix-help-command #'embark-prefix-help-command)
+
+;; Completions
+(setq completion-category-defaults nil)
+(setq completion-cycle-threshold 0)
 
 (provide 'vertico-setup)

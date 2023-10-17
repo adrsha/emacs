@@ -77,7 +77,7 @@ The value should be in the mode-line format: see `mode-line-fomat' for details."
                     "Show info in prompt."
                     (unless prompt-text--already
                       (let ((orig (ad-get-arg 0)))
-                        (ad-set-arg 0 (concat orig "󰿘  "))
+                        (ad-set-arg 0 (concat orig "  "))
                         )
                       )
                     (let ((prompt-text--already t))

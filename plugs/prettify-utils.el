@@ -26,23 +26,21 @@
           ("#+END_SRC" . " ")
           ("#+title:" . " ")
           ("#+TITLE:" . " ")
-          ("#+begin_example" . ?)
-          ("#+BEGIN_EXAMPLE" . ?)
-          ("#+end_example" . ?)
-          ("#+END_EXAMPLE" . ?)
-          ("#+header:" . ?)
-          ("#+HEADER:" . ?)
+          ("#+begin_example" . ?\ )
+          ("#+BEGIN_EXAMPLE" . ?\ )
+          ("#+end_example" . ?\ )
+          ("#+END_EXAMPLE" . ?\ )
+          ("#+header:" . ?\ )
+          ("#+HEADER:" . ?\ )
           ("#+name:" . ?﮸)
           ("#+NAME:" . ?﮸)
-          ("#+results:" . ?)
-          ("#+RESULTS:" . ?)
+          ("#+Author:" . ?\ )
+          ("#+results:" . ?󰇼)
+          ("#+RESULTS:" . ?󰇼)
           ("#+call:" . ?)
           ("#+CALL:" . ?)
           (":PROPERTIES:" . ?)
           (":properties:" . ?)
-          ("CLOSED:"        . ?⊡) ; I abuse some math notation.
-          ("SCHEDULED:"     . ?⊞) ; It's a window - not a plus sign in a box
-          ("DEADLINE:"      . ?⊠) ; and now the window has been blocked.
           (":PROPERTIES:"   . ?⚙)
           (":LOGBOOK:"      . ?☰) ; Same width as the gear in Ubuntu mono.
           ("CLOCK:"         . ?⧖) ; Other items in the logbook have a bullet.
@@ -63,8 +61,8 @@
 
 ;; Other symbols
 (setq org-ellipsis " ❋")
-(setq org-bullets-bullet-list '("⇾ " "⇾ " "⇾ " "⇾ " "⇾ " "⇾ "))
-;; (setq org-bullets-bullet-list '(" " " " " " " " " " " "))
+;; (setq org-bullets-bullet-list '("⇾ " "⇾ " "⇾ " "⇾ " "⇾ " "⇾ "))
+(setq org-bullets-bullet-list '(" " " " " " " " " " " "))
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
 (defun prettify-set ()
@@ -100,7 +98,7 @@
                      ("ERROR"      error bold)
                      ("INFO"       outline-1 bold)
                      ("SUCCESS"    success bold)
-                     ("DONE"    success bold)
+                     ("DONE"       success bold)
                      ("HACK"       font-lock-constant-face bold)
                      ("WARN"       warning bold)
                      ("REVIEW"     font-lock-keyword-face bold)

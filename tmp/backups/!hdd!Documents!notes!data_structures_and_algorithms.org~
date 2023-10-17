@@ -1,0 +1,656 @@
+:PROPERTIES:
+:ID:       536ca3ba-6bd2-4ae0-baec-550da1d764ab
+:END:
+#+title: Data Structures and Algorithms
+#+Author:Adarsha Acharya
+
+*** [[id:18836a29-2be6-411f-bea6-daa14c86754c][Home]]
+
+
+=Theory=
+* Big O / Intro
+Measure of complexity of code with respect to input.
+Example:
+
+#+begin_src python :results output
+  n = 3  # Size of the datatype aka input
+  for i in range(0, n):
+	  for j in range(0, i):
+		  print(i, j)
+#+end_src
+
+#+RESULTS:
+: 1 0
+: 2 0
+: 2 1
+
+
+This code has a complexity of =n squared=.
+
+| *PS:* An array is just a contiguous memory space interpreted with respect to the index and size of data type.
+
+=Theory=
+* Constant Time
+Also represented as O(1), meaning there is no extra computation on the literals based on the input.
+Example: 
+
+#+begin_src C++ :includes <iostream>
+
+  int main() {
+	int array_size = 5, data_type_size = 4;
+	int array_pos = array_size * data_type_size;
+	std::cout << array_pos;
+	return 0;
+  }
+#+end_src
+
+#+RESULTS:
+: 20
+
+
+=Theory=
+* Linear Search
+It has a complexity of O(N)
+
+Because for =N= number of values in an array, it needs to look for the search object =N= times for the worst case scenario.
+
+#+begin_src C++ :includes <iostream>
+
+  // Function
+  bool linearSearch(int *arr, int val) {
+
+	for (int i = 0; i < 5; i++) {
+	  if (arr[i] == val)
+		return true;
+	}
+	return false;
+  }
+
+  // Main
+  int main() {
+
+	int a[5] = { 1, 2, 3, 4, 5 };
+	if (linearSearch(a, 3)) {
+	  std::cout << "Found value in " << a;
+	} else {
+	  std::cout << "Did not find value!";
+	}
+	return 0;
+  }
+#+end_src
+
+#+RESULTS:
+: Found value in 0x7ffdf4b4e960
+
+* Binary Search
+
+#+begin_src C++ :includes <iostream>
+
+  int binarySearch(int* arr, int val, int size) {
+	int low = 0;
+	int arrSize = size;
+	int high = arrSize - 1;
+	int ind = (low + high) / 2;
+	while (low <= high) {
+	  if (val < arr[ind]) {
+		high = ind;
+	  } else if (val > arr[ind]) {
+		low = ind + 1;
+	  } else {
+		return ind;
+	  }
+	  ind = (low + (high - low) / 2);
+	}
+	return 0;
+  }
+
+  int main() {
+	int a[4] = {1, 2, 3, 4};
+	int length = sizeof(a)/sizeof(a[0]);
+	std::cout << binarySearch(a, 3, length);
+	return 0;
+  }
+#+end_src
+
+#+RESULTS:
+: 2
+
+| *PS* It isn't possible to get the size of an array of another scope without passing the size itself in cpp.
+
+* Two Crystals
+NOTE:
+=Two crystals= are given to you. You are to find a height at which they break in the most efficient manner. Note that both balls break at the same time.
+The array for if they break per distance is:
+| f f f f f ... t t t t t t .. |
+
+The less efficient way:
+- FInd the midpoint of the whole set.
+- Check if it is one, use linear searching accordingly on two sides. (Not binary, cause we can only break the balls 2 times)
+
+#+begin_src C++ :includes <iostream>
+  using namespace std;
+
+  int breakagePoint(int *arr, int size) {
+	int m = (size - 1) / 2;
+	if (arr[m] == 1)
+	  for (int i = 0; i <= m; i++) {
+		if (arr[i] == 1) {
+		  return i;
+		}
+	  }
+	else {
+	  for (int i = m + 1; i < size; i++) {
+		if (arr[i] == 1) {
+		  return i;
+		}
+	  }
+	}
+	return -1;
+  }
+
+  int main() {
+	int breakage[26] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+	cout << breakagePoint(breakage, sizeof(breakage) / sizeof(breakage[0]));
+	return 0;
+  }
+#+end_src
+
+#+RESULTS:
+: -1
+
+The better way:
+- Divide the array into sqrt(N) many segments resulting in each segment with sqrt(N) values.
+- Linear search on the segment whose final value is 1 and initial is 0.
+
+
+#+begin_src C++ :includes <iostream>
+
+  #include <cmath>
+  using namespace std;
+
+  int breakagePoint(int *arr, int size) {
+	int sqrt_s = sqrt(size);
+	int groups = ceil(sqrt(size)) - 1;
+	int bytes = floor(sqrt(size));
+	for (int i = 0; i < groups; i++) {
+	  int endpoint = (size - ((groups - 1) - i) * bytes);
+	  if (arr[endpoint - 1] == 1) {
+		for (int j = 0; j < endpoint; j++) {
+		  if (arr[j] == 1)
+			return j;
+		}
+	  }
+	}
+	return -1;
+  }
+
+  int main() {
+	int breakage[26] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
+						1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+
+	cout << breakagePoint(breakage, sizeof(breakage) / sizeof(breakage[0]));
+	return 0;
+  }
+#+end_src
+
+#+RESULTS:
+: 8
+
+[[https://frontendmasters.com/courses/algorithms/implementing-two-crystal-balls/][ThePrimegen's way]]
+- Same thing but better approaches
+
+  #+begin_src C++ :includes <iostream>
+
+	#include <math.h>
+
+	int breakagePoint(int *arr, int size) {
+	  int i = 0;
+	  int jumpval = sqrt(size);
+	  for (i = 0; i < size; i += jumpval) {
+		if (arr[i] == 1) {
+		  break;
+		}
+	  }
+	  i -= jumpval;
+	  for (j = i; j < size && j < (i + jumpval); j++) {
+		if (arr[j] == 1)
+		  return j
+			}
+	}
+
+	int main() {
+	  int breakage[26] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
+						  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+
+	  std::cout << breakagePoint(breakage, sizeof(breakage) / sizeof(breakage[0]));
+	  return 0;
+	}
+  #+end_src
+
+  #+RESULTS:
+  : 8
+
+  Doing it inside or outside the main loop doesnt change the Big O values. (Both have sqrt(n)) This is because in both conditions, the second loop only takes place once.
+| Sqrt(N) + Sqrt(N)
+
+*Final Combination:* 
+This method, is still a bit complex but has all the benifits of prime's code.
+
+#+begin_src C++ :includes <iostream>
+
+  #include <cmath>
+  int breakagePoint(int *arr, int size) {
+	int jumpSize = sqrt(size);
+	for (int i = jumpSize; i < size + jumpSize; i += jumpSize) {
+	  if (arr[i] == 1) {
+		for (int j = i - jumpSize; j < (i) && j < size; j++) {
+		  if (arr[j] == 1)
+			return j;
+		}
+	  }
+	}
+	return -1;
+  }
+
+  int main() {
+	int breakage[26] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+	std::cout << breakagePoint(breakage, sizeof(breakage) / sizeof(breakage[0]));
+	return 0;
+  }
+#+end_src
+
+#+RESULTS:
+: -1
+
+* Bubble sorting
+
+#+begin_src C++ :includes <iostream> :results verbatim 
+
+  int *bubbleSort(int *arr, int size) {
+	int finalVal = size - 1;
+	int swapper;
+	while (finalVal != 0) {
+	  for (int i = 0; i < finalVal; i++) {
+		if (arr[i] > arr[i + 1]) {
+		  swapper = arr[i];
+		  arr[i] = arr[i + 1];
+		  arr[i + 1] = swapper;
+		}
+	  }
+	  finalVal--;
+	}
+	return arr;
+  }
+
+  int main() {
+	int a[4] = {1, 4, 3, 2};
+	int size = sizeof(a) / sizeof(a[0]);
+	int *b = bubbleSort(a, size);
+	std::cout << "Arranged:" << std::endl;
+	for (int i = 0; i < size; i++) {
+	  std::cout << b[i] << std::endl;
+	}
+	return 0;
+  }
+#+end_src
+
+#+RESULTS:
+: Arranged:
+: 1
+: 2
+: 3
+: 4
+
+* Linked Lists
+
+Creating a linked list using C++ Objects:
+
+** Code
+#+begin_src C++ :includes <iostream> :results verbatim 
+
+  class lnkdlist {
+  public:
+	static int counter;
+	int value = 2;
+	lnkdlist *prev;
+	lnkdlist *next;
+	lnkdlist(int value, lnkdlist *prev = nullptr, lnkdlist *next = nullptr) {
+	  counter++;
+	  this->next = next;
+	  this->prev = prev;
+	  this->value = value;
+	}
+  };
+  int lnkdlist::counter;
+
+  int main() {
+	lnkdlist l1(1), l2(2), l3(3);
+	l1.next = &l2;
+	l2.prev = &l1;
+	l2.next = &l3;
+	l2.prev = &l1;
+	return 0;
+  }
+#+end_src
+
+* Queue
+
+| 󰯭  󰯰  󰯳  |
+|          |
+
+This is a FIFO structure.
+
+** Code
+#+begin_src C++ :results verbatim 
+
+  #include <iostream>
+  using namespace std;
+
+  // Node
+  struct Node {
+	Node *next;
+	int val;
+
+  public:
+	static int length;
+	Node(int val, Node *next = nullptr) {
+	  this->val = val;
+	  this->next = next;
+	  length++;
+	}
+  };
+  int Node::length;
+
+  // Queue
+
+  class Queue {
+	Node *tail;
+	Node *head;
+
+  public:
+	int length;
+	Queue(Node *head = nullptr, Node *tail = nullptr) {
+	  this->tail = tail;
+	  this->head = head;
+	  this->length = Node::length;
+	}
+	void enqueue(Node *node) {
+	  Node *lastNode = this->tail;
+	  this->tail = node;
+	  lastNode->next = node;
+	}
+	void dequeue() {
+	  Node *firstNode = this->head;
+	  this->head = firstNode->next;
+	  firstNode->next = nullptr;
+	}
+	void displayQueue() {
+	  Node *currNode = this->head;
+	  while (currNode != nullptr) {
+		cout << (currNode->val) << " | ";
+		currNode = currNode->next;
+	  }
+	}
+	bool isempty() {
+	  return (this->length == 0);
+	}
+  };
+
+  int main() {
+	Node n1(1), n2(2), n3(3);
+	Queue q1(&n1, &n3);
+	n1.next = &n2;
+	n2.next = &n3;
+	q1.displayQueue();
+	cout << "Length = " << q1.length << endl;
+	cout << "Is empty? "<< q1.isempty();
+	return 0;
+  }
+#+end_src
+
+#+RESULTS:
+: 1 | 2 | 3 | Length = 3
+: Is empty? 0
+
+* Stack
+
+#+begin_src C++ :results verbatim 
+
+  #include <iostream>
+
+  using namespace std;
+
+  class Elements {
+  public:
+	int val;
+	static int length;
+	Elements *prev;
+	Elements(int val, Elements *prev = nullptr) {
+	  this->val = val;
+	  this->prev = prev;
+	  length ++;
+	}
+  };
+
+  class Stack {
+  public:
+	Elements *last;
+	Stack(Elements *last) { this->last = last; }
+	Elements pop() {
+	  Elements *lastEl = this->last;
+	  this->last = lastEl->prev;
+	  lastEl->prev = nullptr;
+	  return *lastEl;
+	}
+	Elements peek() { return *(this->last); }
+	void add(Elements &newEl) {
+	  newEl.prev = this->last;
+	  this->last = &newEl;
+	}
+	void displayStack() {
+	  Elements *currEl = this->last;
+	  cout << endl;
+	  while (currEl != nullptr) {
+		cout << (currEl->val) << " < ";
+		currEl = currEl->prev;
+	  }
+	}
+  };
+  int main() {
+	Elements e1(1), e2(2), e3(3), e4(4);
+	e2.prev = &e1;
+	e3.prev = &e2;
+	Stack s1(&e3);
+	s1.displayStack();
+	cout << endl << "Popped " << s1.pop().val;
+	s1.displayStack();
+	s1.add(e4);
+	s1.displayStack();
+	return 0;
+  }
+#+end_src
+
+#+RESULTS:
+: 
+: 3 < 2 < 1 < 
+: Popped 3
+: 2 < 1 < 
+: 4 < 2 < 1 < 
+
+* Path Finder algorithm =RECURSION=
+Say we have a maze defined using the following:
+
+| 󰠚 |
+|                             |
+|                     |
+|                     |
+| 󰊙  |
+
+There is a clear path from Start to End. 
+We use the following way to solve this problem,
+- Recursively Check for choices on all 4 sides.
+- Until you reach:
+  + the end
+  + a wall
+  + a already stepped block
+  + a outside the edge
+
+** Code
+
+#+begin_src C++ :results verbatim 
+
+  #include <iostream>
+  using namespace std;
+
+  class Position {
+  public:
+	Position *prev = nullptr;
+	int x = 0, y = 0;
+	Position(int x = 0, int y = 0) {
+	  this->x = x;
+	  this->y = y;
+	}
+  };
+
+  void showMaze(string *maze, int maxX, int maxY) {
+	string val;
+	for (int j = 0; j < maxY; j++) {
+	  for (int i = 0; i < maxX; i++) {
+		val = maze[j][i];
+		if (val == "*") {
+		  val = "  ";
+		}
+		if (val == " ") {
+		  val = "   ";
+		}
+		if (val == "E") {
+		  val = " 󰠚 ";
+		}
+		if (val == "S") {
+		  val = "  ";
+		}
+		if (val == "#") {
+		  val = "███";
+		}
+		cout << val;
+	  }
+	  cout << endl;
+	}
+	cout << endl;
+  }
+
+  class posStack {
+  public:
+	int val;
+	bool ends = false;
+	Position *lastNode = nullptr;
+	void push(Position &newNode) {
+	  newNode.prev = this->lastNode;
+	  this->lastNode = &newNode;
+	}
+  };
+
+  Position findPosOf(char c, string *maze, int maxX, int maxY) {
+	Position pos;
+	for (int i = 0; i < maxX; i++) {
+	  for (int j = 0; j < maxY; j++) {
+		if (maze[j][i] == c) { // maze[y][x]
+		  pos.x = i;
+		  pos.y = j;
+		  break;
+		}
+	  }
+	}
+	return pos;
+  }
+
+  posStack pathFinder(string *maze, Position cur, posStack stack, int size) {
+	if (maze[cur.y][cur.x] == 'E') {
+	  stack.ends = true;
+	  maze[cur.y][cur.x] = '*';
+	  showMaze(maze, maze[0].length(), size);
+	  stack.push(cur);
+	  return stack;
+	} else if (maze[cur.y][cur.x] == '#') {
+	  stack.ends = false;
+	  return stack;
+	} else if (maze[cur.y][cur.x] == '*') {
+	  stack.ends = false;
+	  return stack;
+	} else if (cur.y < 0 || cur.y >= size || cur.x <0 || cur.x >= (int)maze[0].length()) {
+	  stack.ends = false;
+	}
+
+	string newMaze[size];
+	for (int i = 0; i < size; i++) {
+	  newMaze[i] = maze[i];
+	}
+	newMaze[cur.y][cur.x] = '*';
+	Position upPos = cur;
+	Position downPos = cur;
+	Position leftPos = cur;
+	Position rightPos = cur;
+	upPos.y--;
+	downPos.y++;
+	leftPos.x--;
+	rightPos.x++;
+	stack.push(cur);
+
+	// showMaze(newMaze, newMaze[0].length(), sizeof(newMaze) / sizeof(newMaze[0]));
+	posStack upStack = pathFinder(newMaze, upPos, stack, size);
+	if (upStack.ends) {
+	  return upStack;
+	}
+
+	posStack downStack = pathFinder(newMaze, downPos, stack, size);
+	if (downStack.ends) {
+	  return downStack;
+	}
+
+	posStack leftStack = pathFinder(newMaze, leftPos, stack, size);
+	if (leftStack.ends) {
+	  return leftStack;
+	}
+
+	posStack rightStack = pathFinder(newMaze, rightPos, stack, size);
+	if (rightStack.ends) {
+	  return rightStack;
+	}
+	return stack;
+  }
+
+  int main() {
+	string maze[4] = {"##################E##",
+					  "###                 #",
+					  "#    ###########    #",
+					  "#S###################"};
+	int rows = sizeof(maze) / sizeof(maze[0]);
+	int cols = maze[0].length();
+	Position posInit(0, 0);
+	Position posS = findPosOf('S', maze, cols, rows);
+
+	showMaze(maze, cols, rows);
+	posStack emptyStack;
+	posStack finalPath = pathFinder(maze, posS, emptyStack, rows);
+	return 0;
+  }
+#+end_src
+
+#+RESULTS:
+#+begin_example
+██████████████████████████████████████████████████████ 󰠚 ██████
+█████████                                                   ███
+███            █████████████████████████████████            ███
+███  █████████████████████████████████████████████████████████
+
+██████████████████████████████████████████████████████  ██████
+█████████                                   ███
+███         █████████████████████████████████          ███
+███  █████████████████████████████████████████████████████████
+
+#+end_example
+

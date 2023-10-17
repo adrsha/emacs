@@ -55,4 +55,6 @@ end-of-buffer signals; pass the rest to the default handler."
 (advice-add 'save-buffer :around 'suppress-message-advice-around)
 (advice-add 'kill-buffer :around 'suppress-message-advice-around)
 
+;; Need to do this before setting the evil keybindings
+(setq evil-want-keybinding nil)
 (provide 'startup)

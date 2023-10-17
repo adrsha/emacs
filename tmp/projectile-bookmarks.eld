@@ -1,1 +1,1 @@
-("~/.config/emacs/" "/hdd/Code/Cpp/" "~/.config/emacs/plugs/use-package/")
+("~/.config/emacs/" "~/" "~/.config/emacs/plugs/corfu/" "/hdd/Code/Cpp/" "/hdd/Themes/" "~/.config/" "/hdd/Code/Portfolio/" "~/.cache/emacs/elpaca/repos/kind-icon/" "~/.config/emacs/plugs/use-package/" "~/.config/emacs/plugs/org-fc/")

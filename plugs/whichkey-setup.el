@@ -33,9 +33,9 @@
 ;; (add-to-list 'which-key-replacement-alist '(("SPC" . nil) . ("󱁐" . nil)))
 
 ;; Faces
-(set-face-attribute 'which-key-group-description-face nil :foreground "#CBA6F7" :weight 'bold)
-(set-face-attribute 'which-key-command-description-face nil :foreground "#6C7086" :weight 'bold)
-(set-face-attribute 'which-key-key-face nil :foreground "#89B4FA" :weight 'bold)
+(set-face-attribute 'which-key-group-description-face nil :weight 'bold)
+(set-face-attribute 'which-key-command-description-face nil :weight 'bold)
+(set-face-attribute 'which-key-key-face nil :weight 'bold :inherit 'org-drawer)
 
 ;; whichkey posframe
 (setq which-key-posframe-poshandler 'posframe-poshandler-frame-bottom-center)

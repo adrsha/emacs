@@ -1,0 +1,47 @@
+:PROPERTIES:
+:ID:       08f99c6c-e281-48a9-81fc-239417dac2a1
+:END:
+#+title: Intermediate Cpp
+#+Author:Adarsha Acharya
+
+* Variables
+
+The datatypes of a variable is always only representative of it's size. The way a function uses a variabel associated to that data type is completely upto the function itself.
+For example:
+
+#+begin_src C++ :includes <iostream> :results verbatim
+
+  #include <ostream>
+  int a = 65;
+  char c = 65;
+
+  int main(){
+	std::cout << a << std::endl;
+	std::cout << c << std::endl;
+  }
+#+end_src
+
+#+RESULTS:
+: 65
+: A
+
+The cout function interprets =65= of data type char as a character of that asci-code.
+
+#+begin_src C++ :includes <iostream> :results verbatim
+
+  #include <ostream>
+  int a = 'A';
+  char c = 'A';
+
+  int main(){
+	std::cout << a << std::endl;
+	std::cout << c << std::endl;
+  }
+#+end_src
+
+#+RESULTS:
+: 65
+: A
+
+But it interprets =A= of type integer as 65.
+This is because =A= and =65= are the same value, for the C. And =cout= uses datatypes to dictate it's format.

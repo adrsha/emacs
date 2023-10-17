@@ -1,0 +1,29 @@
+:PROPERTIES:
+:ID:       54cd4cae-3926-41f1-ad73-8062a3819b6f
+:END:
+#+title: csacademy: Platforms
+#+Author:Adarsha Acharya
+
+* Question
+There are =N= horizontal platforms, each situated at a different height. For the sake of simplicity, we represent the platforms as horizontal segments in the cartesian plane. For each segment we know the =x= coordinates of its endpoints. A platform can be moved left or right, the cost of such an operation being equal to the distance covered by the platform while moving.
+
+=M= unidimensional balls are about to fall from the sky, and for each of them we know the =x= coordinate of the landing place on the =x=-axis. You have to move the platforms in such a way that no ball will fall strictly inside a platform. You should minimize the total cost of moving the platforms.
+
+** Standard input
+The first line contains two integers NN and MM, the number of platforms and the number of balls, respectively.
+
+Each of the next NN lines contains two values, the xx coordinates of the endpoints of a different platform. These two values are in increasing order.
+
+Finally, the last line of the input contains MM values representing the landing coordinates of the balls on the xx-axis.
+
+** Standard output
+The output should contain a single number representing the minimum cost of moving the platforms.
+
+** Constraints and notes
+    1≤N≤1051≤N≤105
+    1≤M≤1051≤M≤105
+    The endpoints of the segments are integers between −108−108 and 108108
+    The landing coordinates of the balls are integers between −108−108 and 108108 
+
+* Code
+

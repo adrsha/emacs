@@ -18,14 +18,14 @@
 
 ;; startup message
 (setq server-client-instructions nil)
-(setq inhibit-startup-message t)
 (setq inhibit-startup-echo-area-message t)
 
 ;; No message in scratch buffer
 (setq initial-scratch-message nil)
 
 ;; Initial buffer
-(setq initial-buffer-choice nil)
+(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+;; (setq initial-buffer-choice nil)
 
 ;; No frame title
 (setq frame-title-format nil)
@@ -68,11 +68,14 @@
 (setq-default window-min-height 1)
 
 ;; Tab behavior
-;; (setq tab-always-indent 'complete)
+(setq tab-always-indent 't)
 ;; (global-company-mode)
 ;; (define-key company-mode-map [remap indent-for-tab-command]
 ;;   #'company-indent-or-complete-common)
 
+;; Indenting style
+(setq c-default-style "linux"
+          c-basic-offset 'tab-width)
 
 ;; scroll if reached the end only
 (setq-default scroll-margin 0 )
@@ -80,11 +83,13 @@
 ;;When you scroll down, and up again, point should end up at the same position you started out with
 (setq scroll-preserve-screen-position t)
 
+(setq auto-window-vscroll nil)
 ;; Scroll line wise
 (setq-default scroll-step 1)
 
 ;; What do these do?
-(setq-default scroll-conservatively  10000)
+(customize-set-variable 'fast-but-imprecise-scrolling t)
+(customize-set-variable 'scroll-conservatively 101)
 
 ;; Moderate font lock
 ;; Disabling syntax highlights
@@ -113,8 +118,16 @@
 ;; Disable the line break symbols
 (setf (cdr (assq 'continuation fringe-indicator-alist)) '(nil nil))
 
+;; Links
+(setq org-link-frame-setup
+      '((vm . vm-visit-folder-other-frame)
+        (vm-imap . vm-visit-imap-folder-other-frame)
+        (gnus . org-gnus-no-new-news)
+        (file . find-file)
+        (wl . wl-other-frame)))
+
 ;; Disable the $ symbol too
-(set-display-table-slot standard-display-table 'truncation ?\)
+(set-display-table-slot standard-display-table 'truncation ?\ )
 
 ;; Disable fringe
 (fringe-mode '(0 . 0))
@@ -126,7 +139,7 @@
 (global-display-line-numbers-mode t)
 
 ;; Disable line number mode in a few situations
-(dolist (mode '(term-mode-hook treemacs-mode-hook shell-mode-hook))
+(dolist (mode '(org-mode-hook org-agenda-mode term-mode-hook dired-mode-hook shell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;; Revert buffers when the underlying file has changed
@@ -204,6 +217,25 @@
 
 ;; empty line at the end
 (setq require-final-newline t)
+
+;; Auto executable if consists a shebang
+(add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p)
+
+
+;; MISC OPTIMIZATIONS ----
+;;; optimizations (froom Doom's core.el). See that file for descriptions.
+(setq idle-update-delay 1.0)
+
+;; Disabling bidi (bidirectional editing stuff)
+(setq-default bidi-display-reordering 'left-to-right 
+              bidi-paragraph-direction 'left-to-right)
+(setq bidi-inhibit-bpa t)  ; emacs 27 only - disables bidirectional parenthesis
+
+(setq-default cursor-in-non-selected-windows nil)
+(setq highlight-nonselected-windows nil)
+(setq fast-but-imprecise-scrolling t)
+(setq inhibit-compacting-font-caches t)
+
 
 ;; NECESSARY
 (provide 'options)

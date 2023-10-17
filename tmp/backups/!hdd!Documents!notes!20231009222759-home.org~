@@ -1,0 +1,28 @@
+:PROPERTIES:
+:ID:       ea223465-00a3-46fb-b0b8-7a5772fc398c
+:END:
+
+#+title: Home
+
+* College
+** Course 
+***  [[file:~/Documents/Sem4/DSA.org][ Data Structures and Algorithms ]]
+***  [[file:~/Documents/Sem4/Instrumentation.org][ Instrumentation ]] 
+***  [[file:~/Documents/Sem4/NumericalMethods.org][ Numerical Methods]] 
+***  [[file:~/Documents/Sem4/AppliedMathematics.org][ Applied Mathematics ]]
+***  [[file:~/Documents/Sem4/ElectricMachines.org][ Electric Machines ]] 
+***  [[file:~/Documents/Sem4/DiscreteStructure.org][ Discrete Structure ]]
+***  [[file:~/Documents/Sem4/Microprocessors.org][ Microprocessors]]
+* Inbox
+** TODO Make Emacs Usable for Competitive programming
+SCHEDULED: <2023-10-10 Tue>
+** TODO Make Emacs Usable for Note taking
+SCHEDULED: <2023-10-10 Tue>
+** TODO IEEE Coding event
+DEADLINE: <2023-10-28 Sat>
+** TODO Learn Assembly
+** TODO Add path completion to corfu
+DEADLINE: <2023-10-09 Mon>
+* Archives
+** DONE Demo task
+CLOSED: [2023-10-09 Mon 20:32]

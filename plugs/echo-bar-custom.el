@@ -113,7 +113,10 @@
               (percent (round (string-to-number (battery-format "%p" status))))
               (power-method (battery-format "%L" status)))
     ;; (format "%s %s %s%s %s %s "
-    (format "%s %s %s "
+    (format "%s %s %s %s "
+            (propertize 
+            (format "%s" (buffer-name))
+            'face 'eaBuf)
 
             ;; (propertize "󰇙" 'face 'eaSep)
 

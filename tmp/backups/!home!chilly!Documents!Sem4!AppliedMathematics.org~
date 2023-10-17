@@ -1,0 +1,29 @@
+#+title:Applied Mathematics
+#+AUTHOR: Adarsha
+
+**** [[file:~/Documents/home.org][home]]
+
+* Complex Analysis
+** Complex Analytic Function
+** Conformal Mapping
+** Integral in the Complex Plane
+** Complex Power Series, Complex Taylor series and Lauren Series
+* The Z-Transform
+** Introduction
+** Properties of Z-transform
+** Z-transform of elementry functions
+** Linearity properties
+** First shifting theorem, Second shifting theorem, Initial value theorem
+** Final value theorem, convolution theorem
+** Some standard Z-transforms
+** Inverse Z-transform
+** Method for finding inverse Z-transform
+** Application of Z-transform to difference equations
+* Partial Differential Equations
+** Linear Partial differential equation of second order, their classification and solution
+** Solution of one dimensional wave equation, one dimensional heat equation, and Laplace equation (Cartesian and polar form) by variable separation method
+* Fourier Transform
+** Fourier interal theorems (sine, cosine integral; complex fourier integral)
+** Fourier trasforms (sine, cosine)
+** Convolution, Parseval's Identity
+** Relation between fourier and laplace transforms

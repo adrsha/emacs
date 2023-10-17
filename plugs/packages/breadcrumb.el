@@ -154,7 +154,7 @@
   "Compute index to insert X in sequence A, keeping it sorted.
           If X already in A, the resulting index is the leftmost such
           index, unless FROM-END is t.  KEY is as usual in other CL land."
-  (cl-macrolet ((search (from-end key)
+  (cl-macrolet ((cl-search (from-end key)
                   `(cl-loop while (< from to)
                             for mid = (/ (+ from to) 2)
                             for p1 = (elt a mid)
@@ -162,26 +162,26 @@
                             if (,(if from-end '< '<=) x p2)
                             do (setq to mid) else do (setq from (1+ mid))
                             finally return from)))
-    (if from-end (if key (search t key) (search t nil))
-      (if key (search nil key) (search nil nil)))))
+    (if from-end (if key (cl-search t key) (search t nil))
+      (if key (cl-search nil key) (search nil nil)))))
 
 (defun bc--ipath-rich (index-alist pos)
   "Compute ipath for rich `imenu--index-alist' structures.
   These structures have a `breadcrumb-region' property on every
   node."
   (cl-labels
-      ((search (nodes &optional ipath)
+      ((cl-search (nodes &optional ipath)
          (cl-loop
           for n in nodes
           for reg = (get-text-property 0 'breadcrumb-region (car n))
           when (<= (car reg) pos (cdr reg))
-          return (search (cdr n) (cons
-                                  (propertize (car n)
-                                              'breadcrumb-siblings nodes
-                                              'breadcrumb-parent (car ipath))
-                                  ipath))
+          return (cl-search (cdr n) (cons
+									 (propertize (car n)
+												 'breadcrumb-siblings nodes
+												 'breadcrumb-parent (car ipath))
+									 ipath))
           finally (cl-return ipath))))
-    (nreverse (search index-alist))))
+    (nreverse (cl-search index-alist))))
 
 (defvar-local bc--ipath-plain-cache nil
   "A cache for `breadcrumb--ipath-plain'.")
@@ -318,7 +318,7 @@ Given BFN, the `buffer-file-name', produce a a list of
 propertized crumbs."
   (cl-loop
    with project = (project-current)
-   with root = (if project (project-root project) default-directory)
+   with root = (file-truename (if project (project-root project) default-directory) )
    with relname = (file-relative-name (file-truename (or bfn default-directory)) (file-truename root))
    for (s . more) on (split-string relname "/")
    concat s into upto
