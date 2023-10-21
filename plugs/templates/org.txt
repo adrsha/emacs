@@ -1,4 +1,0 @@
-#+TITLE: #FILE_NAME#
-#+AUTHOR: Adarsha Acharya
-#+DESCRIPTION: An org document
-

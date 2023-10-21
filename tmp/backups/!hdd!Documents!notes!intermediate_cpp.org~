@@ -16,8 +16,8 @@ For example:
   char c = 65;
 
   int main(){
-	std::cout << a << std::endl;
-	std::cout << c << std::endl;
+  std::cout << a << std::endl;
+  std::cout << c << std::endl;
   }
 #+end_src
 
@@ -34,8 +34,8 @@ The cout function interprets =65= of data type char as a character of that asci-
   char c = 'A';
 
   int main(){
-	std::cout << a << std::endl;
-	std::cout << c << std::endl;
+  std::cout << a << std::endl;
+  std::cout << c << std::endl;
   }
 #+end_src
 
@@ -45,3 +45,112 @@ The cout function interprets =65= of data type char as a character of that asci-
 
 But it interprets =A= of type integer as 65.
 This is because =A= and =65= are the same value, for the C. And =cout= uses datatypes to dictate it's format.
+
+#+begin_src C++ :results verbatim 
+
+  #include <iostream>
+  using namespace std;
+
+  int main(){
+
+  return 0;
+  }
+
+#+end_src
+    
+* Pointers
+
+Simply integer-like data type which stores addresses. Thats all there is to it. They store addresses.
+
+#+begin_src C++ :results verbatim 
+
+  #include <iostream>
+  using namespace std;
+
+  int main(){
+  int a = 2;
+  int *ptr = &a;
+  return 0;
+  }
+
+#+end_src
+
+~int *~ or ~int*~ are integers pointer declaration keywords and nothing else. They represent nothing other than just keywords. However a ~*~ alone represents the =Dereference= operator, which provides the value stored at a particular address. ~*a~ in this code returns 2. Think of every operator in c++ as a =function=, including the dereference operator.
+| PS: The size of the value returned always depends on the type of the pointer. |
+Similarly provide a variable to the ~&~ operator, and it will provide you with the address of the given variable.
+
+* Inheritance
+
+If the base class object is parent class type, then that object can only access the base type's functions.
+Example:
+
+#+begin_src C++ :results verbatim 
+
+  #include <iostream>
+  using namespace std;
+
+  class Parent {
+  public:
+    void stuff() { cout << "Parent stuff" << endl; }
+  };
+
+  class ParentWVirtual {
+  public:
+    virtual void stuff() { cout << "Parent with Virtual stuff" << endl; }
+  };
+
+  class Child : public Parent, public ParentWVirtual {
+  public:
+    void stuff() { cout << "Child stuff" << endl; }
+  };
+
+  int main() {
+    Child c, h;
+    Parent *p = &c;
+    ParentWVirtual *pWV = &h;		// T
+    p->stuff();
+    pWV->stuff();hi
+    return 0;
+  }
+    #+end_src
+
+    #+RESULTS:
+    : Parent stuff
+    : Child stuff
+
+ Meaning the only thing that inheritance is doing is =adding more types= to the base class. And the =virtual= keyword allows for the function, in this case, to be overriden by the child.
+
+** Constructor/Destructor sequence
+ #+begin_src C++ :results verbatim 
+
+   #include <iostream>
+   using namespace std;
+
+   class Parent {
+   public:
+     Parent() { cout << "The parent Constructor" << endl; }
+     void stuff() { cout << "Parent stuff" << endl; }
+     void Pstuff() { cout << "Parent Pstuff" << endl; }
+     ~Parent() { cout << "The parent Destructor" << endl; }
+   };
+
+   class Child : public Parent {
+   public:
+     Child() { cout << "The Child Constructor" << endl; }
+     void stuff() { cout << "Child stuff" << endl; }
+     ~Child() { cout << "The Child Destructor" << endl; }
+   };
+
+   int main() {
+     Child c;
+     c.stuff();
+     return 0;
+   }
+    #+end_src
+
+    #+RESULTS:
+    : The parent Constructor
+    : The Child Constructor
+    : Child stuff
+    : The Child Destructor
+    : The parent Destructor

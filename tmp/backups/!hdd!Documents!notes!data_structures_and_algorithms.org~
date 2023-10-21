@@ -2,7 +2,7 @@
 :ID:       536ca3ba-6bd2-4ae0-baec-550da1d764ab
 :END:
 #+title: Data Structures and Algorithms
-#+Author:Adarsha Acharya
+#+author:Adarsha Acharya
 
 *** [[id:18836a29-2be6-411f-bea6-daa14c86754c][Home]]
 
@@ -59,23 +59,23 @@ Because for =N= number of values in an array, it needs to look for the search ob
   // Function
   bool linearSearch(int *arr, int val) {
 
-	for (int i = 0; i < 5; i++) {
-	  if (arr[i] == val)
-		return true;
-	}
-	return false;
+    for (int i = 0; i < 5; i++) {
+      if (arr[i] == val)
+        return true;
+    }
+    return false;
   }
 
   // Main
   int main() {
 
-	int a[5] = { 1, 2, 3, 4, 5 };
-	if (linearSearch(a, 3)) {
-	  std::cout << "Found value in " << a;
-	} else {
-	  std::cout << "Did not find value!";
-	}
-	return 0;
+    int a[5] = { 1, 2, 3, 4, 5 };
+    if (linearSearch(a, 3)) {
+      std::cout << "Found value in " << a;
+    } else {
+      std::cout << "Did not find value!";
+    }
+    return 0;
   }
 #+end_src
 
@@ -346,70 +346,67 @@ This is a FIFO structure.
 
 ** Code
 #+begin_src C++ :results verbatim 
-
-  #include <iostream>
-  using namespace std;
-
+  struct Node {
   // Node
   struct Node {
-	Node *next;
-	int val;
+    Node *next;
+    int val;
 
   public:
-	static int length;
-	Node(int val, Node *next = nullptr) {
-	  this->val = val;
-	  this->next = next;
-	  length++;
-	}
+    static int length;
+    Node(int val, Node *next = nullptr) {
+      this->val = val;
+      this->next = next;
+      length++;
+    }
   };
   int Node::length;
 
   // Queue
 
   class Queue {
-	Node *tail;
-	Node *head;
+    Node *tail;
+    Node *head;
 
   public:
-	int length;
-	Queue(Node *head = nullptr, Node *tail = nullptr) {
-	  this->tail = tail;
-	  this->head = head;
-	  this->length = Node::length;
-	}
-	void enqueue(Node *node) {
-	  Node *lastNode = this->tail;
-	  this->tail = node;
-	  lastNode->next = node;
-	}
-	void dequeue() {
-	  Node *firstNode = this->head;
-	  this->head = firstNode->next;
-	  firstNode->next = nullptr;
-	}
-	void displayQueue() {
-	  Node *currNode = this->head;
-	  while (currNode != nullptr) {
-		cout << (currNode->val) << " | ";
-		currNode = currNode->next;
-	  }
-	}
-	bool isempty() {
-	  return (this->length == 0);
-	}
+    int length;
+    Queue(Node *head = nullptr, Node *tail = nullptr) {
+      this->tail = tail;
+      this->head = head;
+      this->length = Node::length;
+    }
+    void enqueue(Node *node) {
+      Node *lastNode = this->tail;
+      this->tail = node;
+      lastNode->next = node;
+    }
+    void dequeue() {
+      Node *firstNode = this->head;
+      this->head = firstNode->next;
+      firstNode->next = nullptr;
+    }
+    void displayQueue() {
+      Node *currNode = this->head;
+      while (currNode != nullptr) {
+        cout << (currNode->val) << " | ";
+        currNode = currNode->next;
+      }
+    }
+    bool isempty() { return (this->length == 0); }
   };
 
   int main() {
-	Node n1(1), n2(2), n3(3);
-	Queue q1(&n1, &n3);
-	n1.next = &n2;
-	n2.next = &n3;
-	q1.displayQueue();
-	cout << "Length = " << q1.length << endl;
-	cout << "Is empty? "<< q1.isempty();
-	return 0;
+    Node n1(1), n2(2), n3(3);
+    Queue q1(&n1, &n3);
+    n1.next = &n2;
+    n2.next = &n3;
+    q1.displayQueue();
+    cout << "Length = " << q1.length << endl;
+    cout << "Is empty? " << q1.isempty();
+    return 0;
   }
+  #include <iostream>
+  using namespace std;
 #+end_src
 
 #+RESULTS:
@@ -475,20 +472,15 @@ This is a FIFO structure.
 #+end_src
 
 #+RESULTS:
-: 
-: 3 < 2 < 1 < 
-: Popped 3
-: 2 < 1 < 
-: 4 < 2 < 1 < 
 
-* Path Finder algorithm =RECURSION=
+* Path Finder algorithm =RECURSION= 
 Say we have a maze defined using the following:
 
-| 󰠚 |
-|                             |
-|                     |
-|                     |
-| 󰊙  |
+|  󰠚 |
+|                              |
+|                      |
+|                      |
+|  󰊙  |
 
 There is a clear path from Start to End. 
 We use the following way to solve this problem,
@@ -508,135 +500,135 @@ We use the following way to solve this problem,
 
   class Position {
   public:
-	Position *prev = nullptr;
-	int x = 0, y = 0;
-	Position(int x = 0, int y = 0) {
-	  this->x = x;
-	  this->y = y;
-	}
+    Position *prev = nullptr;
+    int x = 0, y = 0;
+    Position(int x = 0, int y = 0) {
+      this->x = x;
+      this->y = y;
+    }
   };
 
   void showMaze(string *maze, int maxX, int maxY) {
-	string val;
-	for (int j = 0; j < maxY; j++) {
-	  for (int i = 0; i < maxX; i++) {
-		val = maze[j][i];
-		if (val == "*") {
-		  val = "  ";
-		}
-		if (val == " ") {
-		  val = "   ";
-		}
-		if (val == "E") {
-		  val = " 󰠚 ";
-		}
-		if (val == "S") {
-		  val = "  ";
-		}
-		if (val == "#") {
-		  val = "███";
-		}
-		cout << val;
-	  }
-	  cout << endl;
-	}
-	cout << endl;
+    string val;
+    for (int j = 0; j < maxY; j++) {
+      for (int i = 0; i < maxX; i++) {
+        val = maze[j][i];
+        if (val == "*") {
+          val = "  ";
+        }
+        if (val == " ") {
+          val = "   ";
+        }
+        if (val == "E") {
+          val = " 󰠚 ";
+        }
+        if (val == "S") {
+          val = "  ";
+        }
+        if (val == "#") {
+          val = "███";
+        }
+        cout << val;
+      }
+      cout << endl;
+    }
+    cout << endl;
   }
 
   class posStack {
   public:
-	int val;
-	bool ends = false;
-	Position *lastNode = nullptr;
-	void push(Position &newNode) {
-	  newNode.prev = this->lastNode;
-	  this->lastNode = &newNode;
-	}
+    int val;
+    bool ends = false;
+    Position *lastNode = nullptr;
+    void push(Position &newNode) {
+      newNode.prev = this->lastNode;
+      this->lastNode = &newNode;
+    }
   };
 
   Position findPosOf(char c, string *maze, int maxX, int maxY) {
-	Position pos;
-	for (int i = 0; i < maxX; i++) {
-	  for (int j = 0; j < maxY; j++) {
-		if (maze[j][i] == c) { // maze[y][x]
-		  pos.x = i;
-		  pos.y = j;
-		  break;
-		}
-	  }
-	}
-	return pos;
+    Position pos;
+    for (int i = 0; i < maxX; i++) {
+      for (int j = 0; j < maxY; j++) {
+        if (maze[j][i] == c) { // maze[y][x]
+          pos.x = i;
+          pos.y = j;
+          break;
+        }
+      }
+    }
+    return pos;
   }
 
   posStack pathFinder(string *maze, Position cur, posStack stack, int size) {
-	if (maze[cur.y][cur.x] == 'E') {
-	  stack.ends = true;
-	  maze[cur.y][cur.x] = '*';
-	  showMaze(maze, maze[0].length(), size);
-	  stack.push(cur);
-	  return stack;
-	} else if (maze[cur.y][cur.x] == '#') {
-	  stack.ends = false;
-	  return stack;
-	} else if (maze[cur.y][cur.x] == '*') {
-	  stack.ends = false;
-	  return stack;
-	} else if (cur.y < 0 || cur.y >= size || cur.x <0 || cur.x >= (int)maze[0].length()) {
-	  stack.ends = false;
-	}
+    if (maze[cur.y][cur.x] == 'E') {
+      stack.ends = true;
+      maze[cur.y][cur.x] = '*';
+      showMaze(maze, maze[0].length(), size);
+      stack.push(cur);
+      return stack;
+    } else if (maze[cur.y][cur.x] == '#') {
+      stack.ends = false;
+      return stack;
+    } else if (maze[cur.y][cur.x] == '*') {
+      stack.ends = false;
+      return stack;
+    } else if (cur.y < 0 || cur.y >= size || cur.x < 0 ||
+               cur.x >= (int)maze[0].length()) {
+      stack.ends = false;
+    }
 
-	string newMaze[size];
-	for (int i = 0; i < size; i++) {
-	  newMaze[i] = maze[i];
-	}
-	newMaze[cur.y][cur.x] = '*';
-	Position upPos = cur;
-	Position downPos = cur;
-	Position leftPos = cur;
-	Position rightPos = cur;
-	upPos.y--;
-	downPos.y++;
-	leftPos.x--;
-	rightPos.x++;
-	stack.push(cur);
+    string newMaze[size];
+    for (int i = 0; i < size; i++) {
+      newMaze[i] = maze[i];
+    }
+    newMaze[cur.y][cur.x] = '*';
+    Position upPos = cur;
+    Position downPos = cur;
+    Position leftPos = cur;
+    Position rightPos = cur;
+    upPos.y--;
+    downPos.y++;
+    leftPos.x--;
+    rightPos.x++;
+    stack.push(cur);
 
-	// showMaze(newMaze, newMaze[0].length(), sizeof(newMaze) / sizeof(newMaze[0]));
-	posStack upStack = pathFinder(newMaze, upPos, stack, size);
-	if (upStack.ends) {
-	  return upStack;
-	}
+    // showMaze(newMaze, newMaze[0].length(), sizeof(newMaze) /
+    // sizeof(newMaze[0]));
+    posStack upStack = pathFinder(newMaze, upPos, stack, size);
+    if (upStack.ends) {
+      return upStack;
+    }
 
-	posStack downStack = pathFinder(newMaze, downPos, stack, size);
-	if (downStack.ends) {
-	  return downStack;
-	}
+    posStack downStack = pathFinder(newMaze, downPos, stack, size);
+    if (downStack.ends) {
+      return downStack;
+    }
 
-	posStack leftStack = pathFinder(newMaze, leftPos, stack, size);
-	if (leftStack.ends) {
-	  return leftStack;
-	}
+    posStack leftStack = pathFinder(newMaze, leftPos, stack, size);
+    if (leftStack.ends) {
+      return leftStack;
+    }
 
-	posStack rightStack = pathFinder(newMaze, rightPos, stack, size);
-	if (rightStack.ends) {
-	  return rightStack;
-	}
-	return stack;
+    posStack rightStack = pathFinder(newMaze, rightPos, stack, size);
+    if (rightStack.ends) {
+      return rightStack;
+    }
+    return stack;
   }
 
   int main() {
-	string maze[4] = {"##################E##",
-					  "###                 #",
-					  "#    ###########    #",
-					  "#S###################"};
-	int rows = sizeof(maze) / sizeof(maze[0]);
-	int cols = maze[0].length();
-	Position posInit(0, 0);
-	Position posS = findPosOf('S', maze, cols, rows);
+    string maze[4] = {"##################E##", "###                 #",
+                      "#    ###########    #", "#S###################"};
+    int rows = sizeof(maze) / sizeof(maze[0]);
+    int cols = maze[0].length();
+    Position posInit(0, 0);
+    Position posS = findPosOf('S', maze, cols, rows);
 
-	showMaze(maze, cols, rows);
-	posStack emptyStack;
-	posStack finalPath = pathFinder(maze, posS, emptyStack, rows);
-	return 0;
+    showMaze(maze, cols, rows);
+    posStack emptyStack;
+    posStack finalPath = pathFinder(maze, posS, emptyStack, rows);
+    return 0;
   }
 #+end_src
 
