@@ -10,7 +10,7 @@
 (setq inhibit-startup-screen t)
 
 ;; No random messages
-(setq inhibit-message t)
+(setq inhibit-message nil)
 
 ;; startup message
 (setq server-client-instructions nil)
@@ -202,7 +202,7 @@
 ;; (setq-default message-log-max nil)
 
 ;;(setq max-mini-window-height 1) ; Don't let echo area grow;;
-(setq resize-mini-windows t) 
+(setq resize-mini-windows t)
 
 ;; disable the delays
 (setq-default show-paren-delay 0.0)
@@ -233,6 +233,16 @@
 ;; Disable echoing keystrokes
 (setq-default echo-keystrokes 0)
 (setq-default evil-echo-state nil)
+
+(defun org-hugo--advice-silence-messages (orig-fun &rest args)
+  "Advice function that silences all messages in ORIG-FUN."
+  (let ((inhibit-message t)      ;Don't show the messages in Echo area
+        (message-log-max nil))   ;Don't show the messages in the *Messages* buffer
+
+
+    (dolist (fn '(org-babel-exp-src-block write-region)
+                (advice-add fn :around #'org-hugo--advice-silence-messages))
+      (apply orig-fun args))))
 
 ;; Custom Windows with custom vehaviours
 (add-to-list 'display-buffer-alist '("\\*helpful.*"
@@ -269,7 +279,7 @@
 
 (defvar bgcolor "#11111b"
   "The normal background of emacs.")
-(defvar grim-bgcolor "#1e1e2e"
+(defvar grim-bgcolor "#383945"
   "The darker background of emacs.")
 (defvar darker-bgcolor "#0D0D15"
   "The darker background of emacs.")
@@ -358,7 +368,7 @@
 
 (defun my-org-agenda-format-date-aligned (date)
   "Format a DATE string for display in the daily/weekly agenda, or timeline.
-            This function makes sure that dates are aligned for easy reading."
+              This function makes sure that dates are aligned for easy reading."
   (require 'cal-iso)
   (let* ((dayname (calendar-day-name date nil nil))
          (day (cadr date))
@@ -425,6 +435,38 @@
   (interactive)
   (org-schedule t "+1d"))
 
+;; Search and replace pair-by-pair
+(defun batch-replace-strings (replacement-alist)
+  "Prompt user for pairs of strings to search/replace, then do so in the current buffer"
+  (interactive (list (batch-replace-strings-prompt)))
+  (dolist (pair replacement-alist)
+    (save-excursion
+      (replace-string (car pair) (cdr pair)))))
+
+(defun batch-replace-strings-prompt ()
+  "prompt for string pairs and return as an association list"
+  (let (from-string
+        ret-alist)
+    (while (not (string-equal "" (setq from-string (read-string "String to search (RET to stop): "))))
+      (setq ret-alist
+            (cons (cons from-string (read-string (format "Replace %s with: " from-string)))
+                  ret-alist)))
+    ret-alist))
+
+;; Dired fixes
+(setq dired-use-ls-dired nil)
+(setq dired-kill-when-opening-new-dired-buffer t)
+;; DIRed
+(setq dired-listing-switches "-Al --group-directories-first")
+(setq-default dired-kill-when-opening-new-dired-buffer 't)
+
+(defun use-betterfonts-dired ()
+  "Switch the current buffer to a monospace font."
+  (face-remap-add-relative 'default '(:family "Barlow Semi Condensed")))
+
+(add-hook 'dired-mode-hook 'use-betterfonts-dired)
+(add-hook 'dired-mode-hook 'dired-hide-details-mode)
+
 (use-package evil
   :init
   (setq evil-undo-system 'undo-fu)
@@ -436,13 +478,13 @@
   (setq evil-want-Y-yank-to-eol t)
 
   ;; ----- Setting cursor colors
-  (setq evil-emacs-state-cursor    '("#cba6f7" box))
-  (setq evil-normal-state-cursor   '("#BAC2DE" box))
-  (setq evil-operator-state-cursor '("#90b6f3" (bar . 6))) 
+  (setq evil-emacs-state-cursor    '("#f38ba8" box))
+  (setq evil-normal-state-cursor   '("#cba6f7" box))
+  (setq evil-operator-state-cursor '("#90b6f3" (bar . 6)))
   (setq evil-visual-state-cursor   '("#6C7096" box))
-  (setq evil-insert-state-cursor   '("#b4befe" (bar . 2)))
-  (setq evil-replace-state-cursor  '("#eb998b" hbar))
-  (setq evil-motion-state-cursor   '("#f38ba8" box))
+  (setq evil-insert-state-cursor   '("#90b6f3" (bar . 2)))
+  (setq evil-replace-state-cursor  '("#f38ba8" hbar))
+  (setq evil-motion-state-cursor   '("#a6e3a1" box))
   :config
   (evil-mode 1)
   ;; INITIAL BINDINGS
@@ -477,20 +519,6 @@
   (global-evil-surround-mode 1)
   :after evil)
 
-;; Dired fixes
-(setq dired-use-ls-dired nil)
-(setq dired-kill-when-opening-new-dired-buffer t)
-;; DIRed
-(setq dired-listing-switches "-Al --group-directories-first")
-(setq-default dired-kill-when-opening-new-dired-buffer 't)
-
-(defun use-betterfonts-dired ()
-  "Switch the current buffer to a monospace font."
-  (face-remap-add-relative 'default '(:family "Barlow Semi Condensed")))
-
-(add-hook 'dired-mode-hook 'use-betterfonts-dired)
-(add-hook 'dired-mode-hook 'dired-hide-details-mode)
-
 (use-package general
   :config
 
@@ -504,6 +532,7 @@
 (general-def
   "M-p" 'popper-toggle-type
   "M-n" 'popper-cycle
+  "M-," 'which-key-abort
   "M-S-n" 'popper-cycle-backwards
   "M-d" 'popper-kill-latest-popup
   "C-;" 'embark-become
@@ -525,18 +554,29 @@
 
 (e/leader-keys
   "SPC" '(execute-extended-command :which-key "  M-x  ")
-  "k" '(eldoc-box-help-at-point :which-key "  hover  ")
+  "k" '(eldoc-box-help-at-point :which-key "  hover  "))
+
+(e/leader-keys
   "c"  '(:ignore t :which-key "󰅱  code  ")
   "cr"  '(eglot-rename :which-key "󰑕  rename symbol  ")
+  "cd"  '(duplicate-dwim :which-key "  code duplicate  ")
   "ce"  '(org-ctrl-c-ctrl-c :which-key "󰅱  execute code in org  ")
   "cc"  '(format-all-buffer :which-key "  format region or buffer  ")
   "cf" '((lambda () (interactive) (indent-region (point-min) (point-max))) :wk "  format default  "))
 
 (e/leader-keys
+  "a"  '(:ignore t :which-key "  avy  ")
+  "aa" '(evil-avy-goto-word-1 :which-key "󰀫  avy char  ")
+  "al" '(avy-goto-line :which-key "󰂶  avy line  ")
+  "am"  '(:ignore t :which-key "  avy move  ")
+  "aml" '(avy-move-line :which-key "󰂶  avy move line  "))
+
+(e/leader-keys
   "f"  '(:ignore t :which-key "󰈔  files  ")
   "ff" '(find-file :which-key "󰈞  find a file  ")
   "fr" '(consult-recent-file :which-key "󰣜  recent files  ")
-  "fi" '(file-info-show :which-key "󰣜  recent files  ")
+  "fi" '(file-info-show :which-key "  file info  ")
+  "fot" '(org-babel-tangle :which-key "󰗆  org tangle")
   "fn" '(org-roam-node-find :which-key "󰣜  find nodes  ")
   "fc"  '(:ignore t :which-key "󰈔  current file  "))
 
@@ -577,8 +617,8 @@
 
 (e/leader-keys
   "s"  '(:ignore t :which-key "  search  ")
-  "ss" '(consult-line :which-key "󰱼  line search  ")
   "si" '(nerd-icons-insert :which-key "󰭟   search for icons  ")
+  "ss" '(consult-line :which-key "󰱼  line search  ")
   "srg" '(consult-ripgrep :which-key "󰟥   search with rg  ")
   "sd" '(dictionary-search :which-key "  search in dictionary  "))
 
@@ -602,6 +642,7 @@
   "ht" '(helpful-at-point :which-key "  describe this  ")
   "hF" '(describe-face :which-key "󱗎  describe face  ")
   "hf" '(helpful-function :which-key "󰯻  describe function  ")
+  "hh" '(devdocs-lookup :which-key "󰯻  describe function  ")
   "hb" '(embark-bindings :which-key "󰌌  describe bindings  ")
   "hk" '(helpful-key :which-key "󰯻  describe this key  ")
   "hv" '(helpful-variable :which-key "  describe variable  ")
@@ -628,10 +669,10 @@
 
 (general-def
   :keymaps 'evil-normal-state-map
-  "\\" #'treemacs-select-window
   "C-u" #'evil-scroll-up
   "C-d" #'evil-scroll-down
   "C-s" (lambda () (interactive) (evil-ex "%s/"))
+  "C-S-s" 'iedit-mode
   "C-l" 'clear
   "RET" 'org-open-at-point-global
   "M-k" 'drag-stuff-up
@@ -737,32 +778,32 @@
   (load-theme 'catppuccin :no-confirm)
 
   ;; Customization
-  (catppuccin-set-color 'rosewater "#f5e0dc")
-  (catppuccin-set-color 'flamingo "#f2cdcd")
-  (catppuccin-set-color 'pink "#f5c2e7")
-  (catppuccin-set-color 'mauve "#cba6f7")
-  (catppuccin-set-color 'red "#f38ba8")
-  (catppuccin-set-color 'maroon "#eba0ac")
-  (catppuccin-set-color 'peach "#fab387")
-  (catppuccin-set-color 'yellow "#f9e2af")
-  (catppuccin-set-color 'green "#a6e3a1")
-  (catppuccin-set-color 'teal "#94e2d5")
-  (catppuccin-set-color 'sky "#89dceb")
-  (catppuccin-set-color 'sapphire "#74c7ec")
-  (catppuccin-set-color 'blue "#89b4fa")
-  (catppuccin-set-color 'lavender "#b4befe")
-  (catppuccin-set-color 'text "#cdd6f4")
-  (catppuccin-set-color 'subtext1 "#bac2de")
-  (catppuccin-set-color 'subtext0 "#a6adc8")
-  (catppuccin-set-color 'overlay2 "#9399b2")
-  (catppuccin-set-color 'overlay1 "#7f849c")
-  (catppuccin-set-color 'overlay0 "#6c7086")
-  (catppuccin-set-color 'surface2 "#585b70")
-  (catppuccin-set-color 'surface1 "#45475a")
-  (catppuccin-set-color 'surface0 "#313244")
-  (catppuccin-set-color 'mantle "#0E0E16")
-  (catppuccin-set-color 'crust "#0B0B11")
-  (catppuccin-set-color 'base "#11111B")
+(catppuccin-set-color 'rosewater "#f5e0dc")
+(catppuccin-set-color 'flamingo "#f2cdcd")
+(catppuccin-set-color 'pink "#f5c2e7")
+(catppuccin-set-color 'mauve "#cba6f7")
+(catppuccin-set-color 'red "#f38ba8")
+(catppuccin-set-color 'maroon "#eba0ac")
+(catppuccin-set-color 'peach "#fab387")
+(catppuccin-set-color 'yellow "#f9e2af")
+(catppuccin-set-color 'green "#a6e3a1")
+(catppuccin-set-color 'teal "#94e2d5")
+(catppuccin-set-color 'sky "#89dceb")
+(catppuccin-set-color 'sapphire "#74c7ec")
+(catppuccin-set-color 'blue "#89b4fa")
+(catppuccin-set-color 'lavender "#b4befe")
+(catppuccin-set-color 'text "#cdd6f4")
+(catppuccin-set-color 'subtext1 "#bac2de")
+(catppuccin-set-color 'subtext0 "#a6adc8")
+(catppuccin-set-color 'overlay2 "#9399b2")
+(catppuccin-set-color 'overlay1 "#7f849c")
+(catppuccin-set-color 'overlay0 "#6c7086")
+(catppuccin-set-color 'surface2 "#585b70")
+(catppuccin-set-color 'surface1 "#45475a")
+(catppuccin-set-color 'surface0 "#313244")
+(catppuccin-set-color 'mantle "#0E0E16")
+(catppuccin-set-color 'crust "#0B0B11")
+(catppuccin-set-color 'base "#11111B")
 
   (catppuccin-reload)
   )
@@ -874,6 +915,10 @@
           ("REVIEW"     font-lock-keyword-face bold)
           ("NOTE"       success bold)
           ("DEPRECATED" shadow bold))))
+
+(use-package avy)
+
+(use-package devdocs)
 
 ;; Enable vertico
 (use-package vertico
@@ -1121,7 +1166,7 @@
 
 (use-package all-the-icons-dired
   :hook
-  (dired-mode . all-the-icons-dired-mode)) 
+  (dired-mode . all-the-icons-dired-mode))
 
 (all-the-icons-completion-mode)
 
@@ -1134,18 +1179,18 @@
   (setq hydra-hint-display-type 'posframe)
   (setq hydra-posframe-show-params `(:poshandler posframe-poshandler-window-bottom-center
                                                  :internal-border-width 40
-                                                 :internal-border-color "#0D0D15"
-                                                 :background-color "#0D0D15"
+                                                 :internal-border-color "#111916"
+                                                 :background-color "#111916"
                                                  :left-fringe 0
                                                  :right-fringe 0)))
 
 (defhydra hydra-hydras (:color teal)
   "
-           ^Hydras           
+           ^Hydras
 ^———————————————^
  ^_t_: Toggles   ^_o_: Org
  ^_w_: Window    ^_a_: Org-table
- ^_q_: Quit    
+ ^_q_: Quit
     "
   ("t" hydra-toggle/body nil)
   ("w" hydra-window/body nil)
@@ -1293,6 +1338,11 @@
   )
 (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 
+(use-package iedit)
+
+(use-package flyspell)
+(use-package flyspell-correct)
+
 (add-to-list 'default-frame-alist '(font . "Iosevka Nerd Font Medium"))
 (defun configure-font (frame)
   "Configure font given initial non-daemon FRAME.
@@ -1354,17 +1404,17 @@
 (set-face-attribute 'eldoc-box-body nil :background darker-bgcolor)
 (set-face-attribute 'eldoc-box-border nil :background darker-bgcolor)
 
-(set-face-attribute 'flymake-error nil :background "#42232c" :foreground "#F38BA8" :underline 'nil :weight 'bold)
-(set-face-attribute 'flymake-note nil :background "#262d25" :foreground "#A6E3A1" :underline 'nil :weight 'bold)
-(set-face-attribute 'flymake-warning nil :background "#453e29" :foreground "#F8D782" :underline 'nil :weight 'bold)
+(set-face-attribute 'flymake-error nil :background "#1a1a19" :foreground "#333129" :underline 'nil :weight 'bold)
+(set-face-attribute 'flymake-note nil :background "#161913" :foreground "#364629" :underline 'nil :weight 'bold)
+(set-face-attribute 'flymake-warning nil :background "#181812" :foreground "#434329" :underline 'nil :weight 'bold)
 
-(set-face-attribute 'flycheck-error nil :background "#42232c" :foreground "#F38BA8" :underline 'nil :weight 'bold)
-(set-face-attribute 'flycheck-info nil :background "#262d25" :foreground "#A6E3A1" :underline 'nil :weight 'bold)
-(set-face-attribute 'flycheck-warning nil :background "#453e29" :foreground "#F8D782" :underline 'nil :weight 'bold)
+(set-face-attribute 'flycheck-error nil :background "#1a1a19" :foreground "#333129" :underline 'nil :weight 'bold)
+(set-face-attribute 'flycheck-info nil :background "#161913" :foreground "#364629" :underline 'nil :weight 'bold)
+(set-face-attribute 'flycheck-warning nil :background "#181812" :foreground "#434329" :underline 'nil :weight 'bold)
 
-(set-face-attribute 'flycheck-error-list-error nil :foreground "#F38BA8" :underline 'nil :weight 'bold)
-(set-face-attribute 'flycheck-error-list-info nil :foreground "#A6E3A1" :underline 'nil :weight 'bold)
-(set-face-attribute 'flycheck-error-list-warning nil :foreground "#F8D782" :underline 'nil :weight 'bold)
+(set-face-attribute 'flycheck-error-list-error nil :foreground "#333129" :underline 'nil :weight 'bold)
+(set-face-attribute 'flycheck-error-list-info nil :foreground "#364629" :underline 'nil :weight 'bold)
+(set-face-attribute 'flycheck-error-list-warning nil :foreground "#434329" :underline 'nil :weight 'bold)
 
 (set-face-attribute 'evil-ex-info nil :foreground red-color :slant 'oblique :family "Barlow Semi Condensed" )
 (set-face-attribute 'evil-ex-substitute-matches nil :background blue-color :foreground darker-bgcolor :strike-through 't :underline 'nil )
@@ -1576,7 +1626,7 @@
 (add-to-list 'org-structure-template-alist '("cpp" . "src C++ :results verbatim \n\n  #include <iostream>\n  using namespace std;\n\n  int main(){\n    return 0;\n}"))
 
 ;; Indentation
-(setq org-startup-folded t)
+(setq org-startup-folded 'nil)
 (setq org-edit-src-content-indentation 2)
 (setq org-src-preserve-indentation nil)
 
@@ -1603,17 +1653,6 @@
   (org-babel-tangle '(4))
   (setq-local buffer-file-name mb/tangled-file-name)
   (eglot-ensure))
-
-(defun org-babel-tangle-config ()
-  (when (string-equal (buffer-file-name)
-                      (expand-file-name "~/.config/emacs/init.org"))
-    (let ((org-config-babel-evaluate nil))
-      (org-babel-tangle))))
-
-(add-hook 'org-mode-hook
-          (lambda ()
-            (add-hook 'write-file-hooks #'org-babel-tangle-config)
-            (add-hook 'after-save-hook #'org-babel-tangle-config)))
 
 (setq org-todo-keywords
       '(
@@ -1674,7 +1713,13 @@
    org-modern-block-name nil
    org-modern-keyword nil
    org-modern-todo t
-   org-modern-table nil))
+   org-modern-table nil)
+
+  (set-face-attribute 'org-modern-done nil :foreground dim-fgcolor :background bgcolor :weight 'bold :height 130 :inherit 'nil)
+  (set-face-attribute 'org-modern-time-inactive nil :foreground dim-fgcolor :background darker-bgcolor :height 130 :inherit 'nil)
+  (set-face-attribute 'org-modern-time-inactive nil :foreground dim-fgcolor :background grim-bgcolor :height 130 :inherit 'nil)
+  (set-face-attribute 'org-modern-time-active nil :background dim-fgcolor :foreground darker-bgcolor :height 130 :inherit 'nil)
+  )
 
 (use-package org-gcal
   :defer t
@@ -1773,7 +1818,7 @@ absolute path. Finally load eglot."
   ;; to get the filename
   (setq mb/tangled-file-name (expand-file-name (assoc-default :tangle (nth 2 (org-babel-get-src-block-info)))))
 
-  ;; tangle the src block at point 
+  ;; tangle the src block at point
   (org-babel-tangle '(4))
   (org-edit-special)
 

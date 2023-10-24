@@ -31,18 +31,18 @@ end-of-buffer signals; pass the rest to the default handler."
 
 (setq command-error-function #'my-command-error-function)
 
-(defun suppress-message-advice-around (fun &rest args)
-  (let (message-log-max)
-    (with-temp-message (or (current-message) "")
-      (apply fun args))))
+;; (defun suppress-message-advice-around (fun &rest args)
+;;   (let (message-log-max)
+;;     (with-temp-message (or (current-message) "")
+;;       (apply fun args))))
 
-;; example: suppress any messages from `save-buffer'
-(advice-add 'save-buffer :around 'suppress-message-advice-around)
-(advice-add 'write-file :around 'suppress-message-advice-around)
-(advice-add 'evil-save :around 'suppress-message-advice-around)
-(advice-add 'kill-buffer :around 'suppress-message-advice-around)
+;; ;; example: suppress any messages from `save-buffer'
+;; (advice-add 'save-buffer :around 'suppress-message-advice-around)
+;; (advice-add 'write-file :around 'suppress-message-advice-around)
+;; (advice-add 'evil-save :around 'suppress-message-advice-around)
+;; (advice-add 'kill-buffer :around 'suppress-message-advice-around)
 
-;; Need to do this before setting the evil keybindings
+;; ;; Need to do this before setting the evil keybindings
 (setq evil-want-keybinding nil)
 
 ;; -*- lexical-binding: t; -*-
@@ -65,7 +65,7 @@ end-of-buffer signals; pass the rest to the default handler."
 (setq idle-update-delay 1.0)
 
 ;; Disabling bidi (bidirectional editing stuff)
-(setq-default bidi-display-reordering 'left-to-right 
+(setq-default bidi-display-reordering 'left-to-right
               bidi-paragraph-direction 'left-to-right)
 
 (setq-default cursor-in-non-selected-windows nil)
