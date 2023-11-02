@@ -115,7 +115,7 @@
   :type '(choice (natnum :tag "Number of characters")
                  (float  :tag "Percent of window's width")))
 
-(defcustom bc-project-crumb-separator ""
+(defcustom bc-project-crumb-separator "  "
   "Separator for `breadcrumb-project-crumbs'." :type 'string)
 
 (defcustom bc-imenu-max-length 0.3
@@ -125,10 +125,10 @@
   :type '(choice (natnum :tag "Number of characters")
                  (float  :tag "Percent of window's width")))
 
-(defcustom bc-imenu-crumb-separator " > "
+(defcustom bc-imenu-crumb-separator "    " ; MODIFIED
   "Separator for `breadcrumb-project-crumbs'." :type 'string)
 
-(defface bc-face '((t (:inherit shadow)))
+(defface bc-face '((t (:inherit fringe)))
   "Base face for all breadcrumb things.")
 
 (defface bc-imenu-crumbs-face '((t (:inherit bc-face)))
@@ -154,7 +154,7 @@
   "Compute index to insert X in sequence A, keeping it sorted.
           If X already in A, the resulting index is the leftmost such
           index, unless FROM-END is t.  KEY is as usual in other CL land."
-  (cl-macrolet ((cl-search (from-end key)
+  (cl-macrolet ((search (from-end key)
                   `(cl-loop while (< from to)
                             for mid = (/ (+ from to) 2)
                             for p1 = (elt a mid)
@@ -162,26 +162,26 @@
                             if (,(if from-end '< '<=) x p2)
                             do (setq to mid) else do (setq from (1+ mid))
                             finally return from)))
-    (if from-end (if key (cl-search t key) (search t nil))
-      (if key (cl-search nil key) (search nil nil)))))
+    (if from-end (if key (search t key) (search t nil))
+      (if key (search nil key) (search nil nil)))))
 
 (defun bc--ipath-rich (index-alist pos)
   "Compute ipath for rich `imenu--index-alist' structures.
   These structures have a `breadcrumb-region' property on every
   node."
   (cl-labels
-      ((cl-search (nodes &optional ipath)
+      ((search (nodes &optional ipath)
          (cl-loop
           for n in nodes
           for reg = (get-text-property 0 'breadcrumb-region (car n))
           when (<= (car reg) pos (cdr reg))
-          return (cl-search (cdr n) (cons
-									 (propertize (car n)
-												 'breadcrumb-siblings nodes
-												 'breadcrumb-parent (car ipath))
-									 ipath))
+          return (search (cdr n) (cons
+                                  (propertize (car n)
+                                              'breadcrumb-siblings nodes
+                                              'breadcrumb-parent (car ipath))
+                                  ipath))
           finally (cl-return ipath))))
-    (nreverse (cl-search index-alist))))
+    (nreverse (search index-alist))))
 
 (defvar-local bc--ipath-plain-cache nil
   "A cache for `breadcrumb--ipath-plain'.")
@@ -245,6 +245,8 @@
     imenu--index-alist))
 
 
+
+(add-hook 'post-command-hook 'force-mode-line-update)
 ;;;; Higher-level functions
 ;;
 
@@ -318,7 +320,7 @@ Given BFN, the `buffer-file-name', produce a a list of
 propertized crumbs."
   (cl-loop
    with project = (project-current)
-   with root = (file-truename (if project (project-root project) default-directory) )
+   with root = (if project (project-root project) default-directory)
    with relname = (file-relative-name (file-truename (or bfn default-directory)) (file-truename root))
    for (s . more) on (split-string relname "/")
    concat s into upto
@@ -328,8 +330,9 @@ propertized crumbs."
    (cl-return
     (if root
         (cons (concat
+               ;; (propertize " " 'face 'org-level-1)
                (if (and (buffer-file-name) (buffer-modified-p))
-                   (propertize " 󰜡  " 'face 'eaBattery-icon) "")
+                   (propertize " 󰜡  " 'face 'mauve-color) "")
                (propertize (file-name-base (directory-file-name root))
                            'bc-dont-shorten t
                            'face 'bc-project-base-face) )
@@ -403,7 +406,7 @@ propertized crumbs."
   (let ((x (cl-remove-if
             #'seq-empty-p (mapcar #'funcall
                                   '(bc-project-crumbs bc-imenu-crumbs)))))
-    (mapconcat #'identity x (propertize " 󰇙 " 'face 'bc-face))))
+    (mapconcat #'identity x (propertize "    " 'face 'bc-face) )))
 
 ;;;###autoload
 (define-minor-mode breadcrumb-local-mode
@@ -439,7 +442,7 @@ propertized crumbs."
   (let (cands choice)
     (cl-labels
         ((fmt (strs)
-           (mapconcat #'identity strs " > "))
+           (mapconcat #'identity strs " "))
          (dfs (nodes &optional ipath)
            (cl-loop
             for n in nodes
