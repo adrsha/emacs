@@ -128,24 +128,43 @@
 (defcustom bc-imenu-crumb-separator "    " ; MODIFIED
   "Separator for `breadcrumb-project-crumbs'." :type 'string)
 
-(defface bc-face '((t (:inherit fringe)))
-  "Base face for all breadcrumb things.")
+ (defface bc-face
+    '((t :height 150
+         :inherit eaBattery-icon
+         ))
+    "Face for minibuffer."
+    :group 'minibuffer )
+ (defface bc-imenu-crumbs-face
+    '((t :height 150
+         :inherit eaBattery-icon
+         ))
+    "Face for minibuffer."
+    :group 'minibuffer )
 
-(defface bc-imenu-crumbs-face '((t (:inherit bc-face)))
-  "Face for imenu crumbs in the breadcrumb imenu path.")
-
-(defface bc-imenu-leaf-face '((t (:inherit (font-lock-function-name-face
-                                            bc-imenu-crumbs-face))))
-  "Face for imenu leaf crumbs in the breadcrumb imenu path.")
-
-(defface bc-project-crumbs-face '((t (:inherit bc-face)))
-  "Face for project crumbs in the breadcrumb project path.")
-
-(defface bc-project-base-face '((t (:inherit bc-project-crumbs-face)))
-  "Face for project base in the breadcrumb project path.")
-
-(defface bc-project-leaf-face '((t (:inherit (mode-line-buffer-id))))
-  "Face for the project leaf crumb in breadcrumb project path.")
+ (defface bc-imenu-leaf-face
+    '((t :height 150
+         :inherit eaBattery
+         ))
+    "Face for minibuffer."
+    :group 'minibuffer )
+ (defface bc-project-crumbs-face
+    '((t :height 150
+         :inherit eaBattery-icon
+         ))
+    "Face for minibuffer."
+    :group 'minibuffer )
+ (defface bc-project-base-face
+    '((t :height 150
+         :inherit eaBattery
+         ))
+    "Face for minibuffer."
+    :group 'minibuffer )
+ (defface bc-project-leaf-face
+    '((t :height 150
+         :inherit eaBattery
+         ))
+    "Face for minibuffer."
+    :group 'minibuffer )
 
 
 ;;;; "ipath" management logic and imenu interoperation
@@ -332,7 +351,7 @@ propertized crumbs."
         (cons (concat
                ;; (propertize " " 'face 'org-level-1)
                (if (and (buffer-file-name) (buffer-modified-p))
-                   (propertize " 󰜡  " 'face 'mauve-color) "")
+                   (propertize " 󰜡  " 'face 'org-tag) "")
                (propertize (file-name-base (directory-file-name root))
                            'bc-dont-shorten t
                            'face 'bc-project-base-face) )

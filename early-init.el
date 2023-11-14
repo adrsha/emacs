@@ -1,5 +1,6 @@
 ;; Minimize garbage collection during startup
 (setq gc-cons-threshold most-positive-fixnum)
+(fset #'jsonrpc--log-event #'ignore) 
 
 ;; Lower threshold back to 8 MiB (default is 800kB)
 (add-hook 'emacs-startup-hook
@@ -47,9 +48,6 @@
 (blink-cursor-mode -1)
 
 (global-display-line-numbers-mode t)
-
-(dolist (mode '(org-mode-hook org-agenda-mode term-mode-hook dired-mode-hook shell-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 (set-default 'truncate-lines t)
 

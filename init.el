@@ -32,6 +32,7 @@
  scroll-conservatively 101                   ; Whether to recenter cursor on scroll. If the value is greater than 100, it wont.
  indent-tabs-mode nil
  tab-always-indent 't
+ css-fontify-colors nil
  tab-width 2
  )                   
 
@@ -48,45 +49,6 @@
 (put 'narrow-to-region 'disabled nil) 
 (put 'dired-find-alternate-file 'disabled nil)     ; Open dired in same buffer
 
-(defvar bgcolor "#11111b"
-  "The normal background of emacs.")
-(defvar grim-bgcolor "#14141f"
-  "The darker background of emacs.")
-(defvar dim-bgcolor "#1e1e2e"
-  "The darker background of emacs.")
-(defvar darker-bgcolor "#0D0D15"
-  "The darker background of emacs.")
-(defvar darkest-bgcolor "#0B0B11"
-  "The darker background of emacs.")
-(defvar dim-fgcolor "#6C7096"
-  "The calm foreground of emacs.")
-(defvar calm-fgcolor "#BAC2DE"
-  "The calm foreground of emacs.")
-(defvar mauve-color "#cba6f7"
-  "The blue color for emacs.")
-(defvar lavender-color "#b4befe"
-  "The blue color for emacs.")
-(defvar blue-color "#90b6f3"
-  "The blue color for emacs.")
-(defvar pink-color "#cba6f7"
-  "The pink color for emacs.")
-(defvar red-color "#f38ba8"
-  "The red color for emacs.")
-(defvar orange-color "#fab387"
-  "The red color for emacs.")
-(defvar teal-color "#a6e3a1"
-  "The pink color for emacs.")
-(defvar grim-fgcolor "#232338"
-  "The calm foreground of emacs.")
-
-(defface minibuffer-face
-  '((t :font "Barlow SemiCondensed SemiBold"
-       :height 170
-       :foreground "#BAC2DE"
-       ))
-  "Face for minibuffer."
-  :group 'minibuffer )
-
 (defun delete-window-or-frame (&optional window frame force)
   (interactive)
   (if (= 1 (length (window-list frame)))
@@ -95,12 +57,10 @@
 
 (defun clear ()
   (interactive)
-  (evil-ex-nohighlight)
-  (iedit--quit)
-  ;; (redraw-display)
-  (posframe-hide-all)
-  ;; (evil-mc-undo-all-cursors)
+  (redraw-display)
   (evil-force-normal-state)
+  (if (eq iedit-mode t)
+      (iedit--quit))
   )
 
 (defun configure-evil-ins ()
@@ -147,6 +107,11 @@
   (interactive)
   (my-change-buffer 'previous-buffer))
 
+(defun read-from-file (file)
+  (with-temp-buffer
+    (insert-file-contents file)
+    (read (current-buffer)))) 
+
 (defun open-current-file-in-vim ()
   (interactive)
   (async-shell-command
@@ -154,14 +119,6 @@
            (+ (if (bolp) 1 0) (count-lines 1 (point)))
            (shell-quote-argument buffer-file-name))))
 
-(defun compile-latex-doc ()
-  (interactive)
-  (save-window-excursion
-    (shell-command
-     (format "pdflatex %s"
-             (shell-quote-argument buffer-file-name)))
-
-    ))
 
 (defun rename-current-buffer-file ()
   "Renames current buffer and file it is visiting."
@@ -187,6 +144,15 @@
                  (recentf-remove-if-non-kept filename))
                (message "File '%s' successfully renamed to '%s'" name (file-name-nondirectory new-name))))))))
 
+(defun compile-latex-doc ()
+  (interactive)
+  (save-window-excursion
+    (shell-command
+     (format "pdflatex %s"
+             (shell-quote-argument buffer-file-name)))
+
+    ))
+
 (defun google-this ()
   "Google the selected region if any, display a query prompt otherwise."
   (interactive)
@@ -202,7 +168,171 @@
   (interactive)
   (org-schedule t "+1d"))
 
+(defvar bgcolor "#11111b"
+  "The normal background of emacs.")
+(defvar grim-bgcolor "#14141f"
+  "The darker background of emacs.")
+(defvar dim-bgcolor "#1e1e2e"
+  "The darker background of emacs.")
+(defvar darker-bgcolor "#0E0E16"
+  "The darker background of emacs.")
+(defvar darkest-bgcolor "#0B0B11"
+  "The darker background of emacs.")
+(defvar dim-fgcolor "#424266"
+  "The calm foreground of emacs.")
+(defvar calm-fgcolor "#BAC2DE"
+  "The calm foreground of emacs.")
+(defvar mauve-color "#cba6f7"
+  "The blue color for emacs.")
+(defvar lavender-color "#b4befe"
+  "The blue color for emacs.")
+(defvar blue-color "#90b6f3"
+  "The blue color for emacs.")
+(defvar pink-color "#cba6f7"
+  "The pink color for emacs.")
+(defvar red-color "#f38ba8"
+  "The red color for emacs.")
+(defvar orange-color "#fab387"
+  "The red color for emacs.")
+(defvar teal-color "#a6e3a1"
+  "The pink color for emacs.")
+(defvar grim-fgcolor "#232338"
+  "The calm foreground of emacs.")
+(defvar cust-monospace "Iosevka Nerd Font"
+  "The monospace font for emacs.")
+(defvar cust-serif "Abel"
+  "The serif font for emacs.")
+(defvar cust-sans-serif "Barlow SemiCondensed"
+  "The sans font for emacs.")
+
+(defun set-custom-variables (frame)
+  "Org Schedule for tomorrow (+1d)."
+  (interactive)
+  (defvar cust-monospace "Iosevka Nerd Font"
+    "The monospace font for emacs.")
+  (defvar cust-serif "Abel"
+    "The serif font for emacs.")
+  (defvar cust-sans-serif "Barlow SemiCondensed"
+    "The sans font for emacs.")
+  (cond ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 1)
+         (setq bgcolor "#242933"
+               grim-bgcolor "#20242c"
+               dim-bgcolor "#21252d"
+               darker-bgcolor "#21252d"
+               darkest-bgcolor "#1C1F26"
+               dim-fgcolor "#333a47"
+               calm-fgcolor "#d8dee9"
+               mauve-color "#cba6f7"
+               lavender-color "#b4befe"
+               blue-color "#5e81ac"
+               pink-color "#cba6f7"
+               red-color "#bf616a"
+               orange-color "#d08770"
+               teal-color "#a3be8c"
+               grim-fgcolor "#20242c")
+         )
+
+        ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 2)
+         (setq bgcolor "#131C19"
+               grim-bgcolor "#14141f"
+               dim-bgcolor "#1e1e2e"
+               darker-bgcolor "#101715"
+               darkest-bgcolor "#0b100e"
+               dim-fgcolor "#343c39"
+               calm-fgcolor "#444F4C"
+               mauve-color "#4d4055"
+               lavender-color "#32454d"
+               blue-color "#324448"
+               pink-color "#4d4046"
+               red-color "#333129"
+               orange-color "#4b4329"
+               teal-color "#324a43"
+               grim-fgcolor "#39413e")
+         )
+
+        ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 3)
+         (setq bgcolor "#000000"
+               grim-bgcolor "#101010"
+               dim-bgcolor "#271c1a"
+               darker-bgcolor "#070707"
+               darkest-bgcolor "#010101"
+               dim-fgcolor "#605553"
+               calm-fgcolor "#958a88"
+               mauve-color "#a078a9"
+               lavender-color "#605553"
+               blue-color "#513833"
+               pink-color "#c3889e"
+               red-color "#C35864"
+               orange-color "#DE956F"
+               teal-color "#8faf87"
+               grim-fgcolor "#4a3f3d"
+               cust-sans-serif "ETbb"
+               cust-sans "Playfair Display"
+               ))))
+
+(add-hook 'after-make-frame-functions 'set-custom-variables)
+
+(defface minibuffer-face
+  '((t :height 170
+       :foreground "#BAC2DE"
+       ))
+  "Face for minibuffer."
+  :group 'minibuffer )
+
+(defface eaBattery
+  '((t :height 130
+       :foreground "#6C7096"
+       ))
+  "Face for minibuffer."
+  :group 'echo-bar )
+
+(defface eaBattery-icon
+  '((t :height 130
+       :foreground "#3f4158"
+       ))
+  "Face for minibuffer."
+  :group 'echo-bar )
+
+(defface eaBattery-charge-icon
+  '((t :height 130
+       :foreground "#3f4158"
+       ))
+  "Face for minibuffer."
+  :group 'echo-bar )
+
+(defun custom-vars-setup ()
+  "The custom variables setup"
+  (interactive)
+  (cond ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 1)
+         (set-face-attribute 'minibuffer-face nil :foreground "#958a88" :font cust-sans-serif)
+         (set-face-attribute 'eaBattery nil :foreground "#605553" :font cust-sans-serif)
+         (set-face-attribute 'eaBattery-icon nil :foreground "#4a3f3d" :font cust-sans-serif)
+         (set-face-attribute 'eaBattery-charge-icon nil :foreground "#4a3f3d" :font cust-sans-serif)
+         )
+        ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 2)
+         (set-face-attribute 'minibuffer-face nil :foreground "#444F4C" :font cust-sans-serif)
+         (set-face-attribute 'eaBattery nil :foreground "#343c39" :font cust-sans-serif)
+         (set-face-attribute 'eaBattery-icon nil :foreground "#2b312f" :font cust-monospace)
+         (set-face-attribute 'eaBattery-charge-icon nil :foreground "#2b312f" :font cust-monospace)
+         )
+        ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 3)
+         (set-face-attribute 'minibuffer-face nil :foreground "#958a88" :font cust-sans-serif)
+         (set-face-attribute 'eaBattery nil :foreground "#605553" :font cust-sans-serif)
+         (set-face-attribute 'eaBattery-icon nil :foreground "#4a3f3d" :font cust-sans-serif)
+         (set-face-attribute 'eaBattery-charge-icon nil :foreground "#4a3f3d" :font cust-sans-serif)
+         (set-frame-parameter nil 'alpha-background 90)
+         (add-to-list 'default-frame-alist '(alpha-background . 90))
+         )
+        ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 0)
+         (set-face-attribute 'minibuffer-face nil :foreground "#BAC2DE" :font cust-sans-serif :weight 'regular)
+         (set-face-attribute 'eaBattery nil :foreground "#6C7096" :font cust-sans-serif :weight 'semibold)
+         (set-face-attribute 'eaBattery-icon nil :foreground "#3f4158" :font cust-sans-serif :weight 'semibold)
+         (set-face-attribute 'eaBattery-charge-icon nil :foreground "#3f4158" :font cust-sans-serif :weight 'regular)))
+  )
+
 (add-to-list 'load-path "~/.config/emacs/packages/")
+
+(use-package gcmh)
 
 (require 'elpaca-setup)
 
@@ -221,39 +351,124 @@
 
 (use-package catppuccin-theme
   :config
+  ;; Customization
   (setq catppuccin-flavor 'mocha) ;; or 'latte, 'macchiato, or 'mocha
   (load-theme 'catppuccin :no-confirm)
+  (cond ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 1)
+         (catppuccin-set-color 'rosewater "#e8dee9")
+         (catppuccin-set-color 'flamingo "#81a1c1")
+         (catppuccin-set-color 'pink "#F5C2E7")
+         (catppuccin-set-color 'mauve "#b48ead")
+         (catppuccin-set-color 'red "#bf616a")
+         (catppuccin-set-color 'maroon "#E8A2AF")
+         (catppuccin-set-color 'peach "#d08770")
+         (catppuccin-set-color 'yellow "#ebcb8b")
+         (catppuccin-set-color 'green "#a3be8c")
+         (catppuccin-set-color 'teal "#B5E8E0")
+         (catppuccin-set-color 'sky "#5e81ac")
+         (catppuccin-set-color 'sapphire "#88c0d0")
+         (catppuccin-set-color 'blue "#88c0d0")
+         (catppuccin-set-color 'lavender "#81a1c1")
+         (catppuccin-set-color 'text "#eceff4")
+         (catppuccin-set-color 'subtext1 "#e5e9f0")
+         (catppuccin-set-color 'subtext0 "#e5e9f0")
+         (catppuccin-set-color 'overlay2 "#d8dee9")
+         (catppuccin-set-color 'overlay1 "#d8dee9")
+         (catppuccin-set-color 'overlay0 "#4c566a")
+         (catppuccin-set-color 'surface2 "#434c5e")
+         (catppuccin-set-color 'surface1 "#3b4252")
+         (catppuccin-set-color 'surface0 "#2e3440")
+         (catppuccin-set-color 'mantle "#242933")
+         (catppuccin-set-color 'crust "#2e3440")
+         (catppuccin-set-color 'base "#242933")
+         (catppuccin-reload))
 
-  ;; Customization
-  (catppuccin-set-color 'rosewater "#f5e0dc")
-  (catppuccin-set-color 'flamingo "#f2cdcd")
-  (catppuccin-set-color 'pink "#f5c2e7")
-  (catppuccin-set-color 'mauve "#cba6f7")
-  (catppuccin-set-color 'red "#f38ba8")
-  (catppuccin-set-color 'maroon "#eba0ac")
-  (catppuccin-set-color 'peach "#fab387")
-  (catppuccin-set-color 'yellow "#f9e2af")
-  (catppuccin-set-color 'green "#a6e3a1")
-  (catppuccin-set-color 'teal "#94e2d5")
-  (catppuccin-set-color 'sky "#89dceb")
-  (catppuccin-set-color 'sapphire "#74c7ec")
-  (catppuccin-set-color 'blue "#89b4fa")
-  (catppuccin-set-color 'lavender "#b4befe")
-  (catppuccin-set-color 'text "#cdd6f4")
-  (catppuccin-set-color 'subtext1 "#bac2de")
-  (catppuccin-set-color 'subtext0 "#a6adc8")
-  (catppuccin-set-color 'overlay2 "#9399b2")
-  (catppuccin-set-color 'overlay1 "#7f849c")
-  (catppuccin-set-color 'overlay0 "#6c7086")
-  (catppuccin-set-color 'surface2 "#585b70")
-  (catppuccin-set-color 'surface1 "#45475a")
-  (catppuccin-set-color 'surface0 "#313244")
-  (catppuccin-set-color 'mantle "#0E0E16")
-  (catppuccin-set-color 'crust "#0B0B11")
-  (catppuccin-set-color 'base "#11111B")
+        ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 2)
+         (catppuccin-set-color 'rosewater "#524546")
+         (catppuccin-set-color 'flamingo "#4d4046")
+         (catppuccin-set-color 'pink "#4d4046")
+         (catppuccin-set-color 'mauve "#4d4055")
+         (catppuccin-set-color 'red "#333129")
+         (catppuccin-set-color 'maroon "#34342d")
+         (catppuccin-set-color 'peach "#4b4329")
+         (catppuccin-set-color 'yellow "#434329")
+         (catppuccin-set-color 'green "#364629")
+         (catppuccin-set-color 'teal "#324a43")
+         (catppuccin-set-color 'sky "#324448")
+         (catppuccin-set-color 'sapphire "#324448")
+         (catppuccin-set-color 'blue "#324448")
+         (catppuccin-set-color 'lavender "#32454d")
+         (catppuccin-set-color 'text "#444F4C")
+         (catppuccin-set-color 'subtext1 "#424c49")
+         (catppuccin-set-color 'subtext0 "#3d4744")
+         (catppuccin-set-color 'overlay2 "#39413e")
+         (catppuccin-set-color 'overlay1 "#343c39")
+         (catppuccin-set-color 'overlay0 "#29302e")
+         (catppuccin-set-color 'surface2 "#29302e")
+         (catppuccin-set-color 'surface1 "#252c2a")
+         (catppuccin-set-color 'surface0 "#151C1A")
+         (catppuccin-set-color 'mantle "#151C1A")
+         (catppuccin-set-color 'crust "#151C1A")
+         (catppuccin-set-color 'base "#131C19")
+         (catppuccin-reload))
 
-  (catppuccin-reload)
-  )
+        ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 3)
+         (catppuccin-set-color 'rosewater "#cc897e")
+         (catppuccin-set-color 'flamingo "#ca9e97")
+         (catppuccin-set-color 'pink "#c3889e")
+         (catppuccin-set-color 'mauve "#9c6f68")
+         (catppuccin-set-color 'red "#C35864")
+         (catppuccin-set-color 'maroon "#B7535E")
+         (catppuccin-set-color 'peach "#5d4b42")
+         (catppuccin-set-color 'yellow "#5d4a40")
+         (catppuccin-set-color 'green "#8faf87")
+         (catppuccin-set-color 'teal "#5d4336")
+         (catppuccin-set-color 'sky "#605553")
+         (catppuccin-set-color 'sapphire "#605553")
+         (catppuccin-set-color 'blue "#605553")
+         (catppuccin-set-color 'lavender "#505553")
+         (catppuccin-set-color 'text "#958a88")
+         (catppuccin-set-color 'subtext1 "#8b807e")
+         (catppuccin-set-color 'subtext0 "#8b807e")
+         (catppuccin-set-color 'overlay2 "#605553")
+         (catppuccin-set-color 'overlay1 "#605553")
+         (catppuccin-set-color 'overlay0 "#4a3f3d")
+         (catppuccin-set-color 'surface2 "#3f3432")
+         (catppuccin-set-color 'surface1 "#271c1a")
+         (catppuccin-set-color 'surface0 "#010101")
+         (catppuccin-set-color 'mantle "#070707")
+         (catppuccin-set-color 'crust "#101010")
+         (catppuccin-set-color 'base "#000000")
+         (catppuccin-reload))
+
+        ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 0)
+         (catppuccin-set-color 'flamingo "#f2cdcd")
+         (catppuccin-set-color 'pink "#f5c2e7")
+         (catppuccin-set-color 'mauve "#cba6f7")
+         (catppuccin-set-color 'red "#f38ba8")
+         (catppuccin-set-color 'maroon "#eba0ac")
+         (catppuccin-set-color 'peach "#fab387")
+         (catppuccin-set-color 'yellow "#f9e2af")
+         (catppuccin-set-color 'green "#a6e3a1")
+         (catppuccin-set-color 'teal "#94e2d5")
+         (catppuccin-set-color 'sky "#89dceb")
+         (catppuccin-set-color 'sapphire "#74c7ec")
+         (catppuccin-set-color 'blue "#89b4fa")
+         (catppuccin-set-color 'lavender "#b4befe")
+         (catppuccin-set-color 'text "#cdd6f4")
+         (catppuccin-set-color 'subtext1 "#bac2de")
+         (catppuccin-set-color 'subtext0 "#a6adc8")
+         (catppuccin-set-color 'overlay2 "#9399b2")
+         (catppuccin-set-color 'overlay1 "#7f849c")
+         (catppuccin-set-color 'overlay0 "#6c7086")
+         (catppuccin-set-color 'surface2 "#585b70")
+         (catppuccin-set-color 'surface1 "#45475a")
+         (catppuccin-set-color 'surface0 "#313244")
+         (catppuccin-set-color 'mantle "#0E0E16")
+         (catppuccin-set-color 'crust "#0B0B11")
+         (catppuccin-set-color 'base "#11111B")
+         (catppuccin-reload))
+        ))
 
 (use-package math-symbols)
 (package-install 'auctex)
@@ -390,6 +605,44 @@
   (global-evil-surround-mode 1)
   :after evil)
 
+(use-package evil-textobj-anyblock
+  :config
+  (evil-define-text-object my-evil-textobj-anyblock-inner-quote
+    (count &optional beg end type)
+    "Select the closest outer quote."
+    (let ((evil-textobj-anyblock-blocks
+           '(("'" . "'")
+             ("\"" . "\"")
+             ("`" . "'")
+             ("“" . "”"))))
+      (evil-textobj-anyblock--make-textobj beg end type count nil)))
+
+  (evil-define-text-object my-evil-textobj-anyblock-a-quote
+    (count &optional beg end type)
+    "Select the closest outer quote."
+    (let ((evil-textobj-anyblock-blocks
+           '(("'" . "'")
+             ("\"" . "\"")
+             ("`" . "'")
+             ("“" . "”"))))
+      (evil-textobj-anyblock--make-textobj beg end type count t)))
+
+  (define-key evil-inner-text-objects-map "q" 'my-evil-textobj-anyblock-inner-quote)
+  (define-key evil-outer-text-objects-map "q" 'my-evil-textobj-anyblock-a-quote)
+
+  (add-hook 'lisp-mode-hook
+            (lambda ()
+              (setq-local evil-textobj-anyblock-blocks
+                          '(("(" . ")")
+                            ("{" . "}")
+                            ("\\[" . "\\]")
+                            ("\"" . "\"")
+                            ))))
+
+  (define-key evil-inner-text-objects-map "u" 'evil-textobj-anyblock-inner-block)
+  (define-key evil-outer-text-objects-map "u" 'evil-textobj-anyblock-a-block)
+  )
+
 (use-package undo-fu)
 (use-package undo-fu-session
   :config
@@ -410,6 +663,98 @@
   (add-hook 'org-mode-hook 'evil-org-mode)
   (add-hook 'evil-org-mode-hook
             (lambda () (evil-org-set-key-theme))))
+
+(use-package treemacs
+  :config
+
+  ;; Setup treesmacs
+  (progn
+    (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
+          treemacs-deferred-git-apply-delay        0.5
+          treemacs-directory-name-transformer      #'identity
+          treemacs-display-in-side-window          t
+          treemacs-eldoc-display                   'simple
+          treemacs-file-event-delay                2000
+          treemacs-file-extension-regex            treemacs-last-period-regex-value
+          treemacs-file-follow-delay               0
+          treemacs-file-name-transformer           #'identity
+          treemacs-follow-after-init               t
+          treemacs-expand-after-init               t
+          treemacs-find-workspace-method           'find-for-file-or-pick-first
+          treemacs-git-command-pipe                ""
+          treemacs-goto-tag-strategy               'refetch-index
+          treemacs-header-scroll-indicators        '(nil . "┴┴┴┴┴┴")
+          treemacs-hide-dot-git-directory          t
+          treemacs-indentation                     2
+          treemacs-indentation-string              " "
+          treemacs-is-never-other-window           nil
+          treemacs-max-git-entries                 5000
+          treemacs-missing-project-action          'ask
+          treemacs-move-forward-on-expand          nil
+          treemacs-no-png-images                   nil
+          treemacs-no-delete-other-windows         t
+          treemacs-project-follow-cleanup          t
+          treemacs-persist-file                    nil
+          treemacs-position                        'left
+          treemacs-read-string-input               'from-childframe
+          treemacs-recenter-distance               0.1
+          treemacs-recenter-after-file-follow      'nil
+          treemacs-recenter-after-tag-follow       'nil
+          treemacs-recenter-after-project-jump     'nil
+          treemacs-recenter-after-project-expand   'nil
+          treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
+          treemacs-project-follow-into-home        'nil
+          treemacs-show-cursor                     nil
+          treemacs-show-hidden-files               t
+          treemacs-silent-filewatch                t
+          treemacs-silent-refresh                  t
+          treemacs-sorting                         'alphabetic-asc
+          treemacs-select-when-already-in-treemacs 'move-back
+          treemacs-space-between-root-nodes        t
+          treemacs-tag-follow-cleanup              t
+          treemacs-tag-follow-delay                1.5
+          treemacs-text-scale                      nil
+          treemacs-user-mode-line-format           'none
+          treemacs-user-header-line-format         nil
+          treemacs-wide-toggle-width               70
+          treemacs-width                           35
+          treemacs-width-increment                 1
+          treemacs-width-is-initially-locked       t
+          treemacs-workspace-switch-cleanup        nil)
+
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (treemacs-fringe-indicator-mode 'always)
+
+    (when treemacs-python-executable
+      (treemacs-git-commit-diff-mode t))
+
+    (pcase (cons (not (null (executable-find "git")))
+                 (not (null treemacs-python-executable)))
+      (`(t . t)
+       (treemacs-git-mode 'deferred))
+      (`(t . _)
+       (treemacs-git-mode 'simple)))
+
+    (treemacs-hide-gitignored-files-mode nil)
+
+    ;; Modifying icons
+    (treemacs-modify-theme "Default"
+      :icon-directory "~/.config/emacs/images/"
+      :config
+      (progn
+        (treemacs-create-icon :file "folder-open.png"   :extensions (root-open))
+        (treemacs-create-icon :file "folder-asterick.png"   :extensions (root-closed))
+        (treemacs-create-icon :file "org.png"   :extensions ("org"))
+        (treemacs-create-icon :file "file.png"   :extensions (fallback))
+        (treemacs-create-icon :file "emacs.png" :extensions ("el"))
+        (treemacs-create-icon :file "logs.png" :extensions ("log"))
+        (treemacs-create-icon :file "folder-open.png" :extensions (dir-open))
+        (treemacs-create-icon :file "folder.png" :extensions (dir-closed))))
+
+    )
+  )
+(use-package treemacs-evil)
 
 (use-package org-modern
   :hook (org-mode . org-modern-mode)
@@ -548,6 +893,7 @@
   "g"  '(:ignore t :which-key "  get  ")
   "gi" '(consult-imenu :which-key "󰮫  get imenu  ")
   "gf" '(list-faces-display :which-key " 󰙃  get faces")
+  "gc" '(zenity-cp-color-at-point-dwim :which-key " 󰙃  colors picker")
   "gk" '(consult-yank-from-kill-ring :which-key "  get kill ring and yank  "))
 
 (e/leader-keys
@@ -608,7 +954,7 @@
   "tce" '((lambda () (interactive) (setq-default corfu-auto t) (corfu-mode 1)) :wk "   enable  ")
   "tcd" '((lambda () (interactive) (setq-default corfu-auto nil) (corfu-mode 1)) :wk "   disable  ")
   "tf"  '(flymake-mode :which-key "  toggle flymake  ")
-  "tb"  '(lsp-headerline-breadcrumb-mode :which-key "  toggle breadcrumbs  ")
+  "tb"  '(breadcrumb-mode :which-key "  toggle breadcrumbs  ")
   "tr"  '(org-roam-buffer-toggle :which-key "  Roam Buffer  ")
   "tm"  '(minimap-mode :which-key "󰍍  minimap toggles  "))
 
@@ -623,8 +969,8 @@
   "C-d" #'evil-scroll-down
   "C-s" (lambda () (interactive) (evil-ex "%s/"))
   "C-l" 'clear
-  "C-n" 'lsp-ui-find-next-reference
-  "C-S-n" 'lsp-ui-find-prev-reference
+  "C-n" 'iedit-next-occurrence
+  "C-S-n" 'iedit-prev-occurrence
   "RET" 'org-open-at-point-global
   "M-k" 'drag-stuff-up
   "M-j" 'drag-stuff-down
@@ -652,7 +998,7 @@
 
 (general-def
   :keymaps 'evil-motion-state-map
-  "K" 'nil
+  "K" 'eldoc-box-help-at-point
   )
 
 (general-def
@@ -771,7 +1117,7 @@
   (setq vertico-scroll-margin 2)
 
   ;; Show more candidates
-  (setq vertico-count 10)
+  (setq vertico-count 5)
 
   ;; Grow and shrink the Vertico minibuffer
   (setq vertico-resize t)
@@ -784,6 +1130,38 @@
 
 (use-package embark)
 (use-package embark-consult)
+
+(use-package eldoc-box)
+
+(setq eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly)
+(setq eldoc-box-frame-parameters '((left . -1)
+                                   (top . -1)
+                                   (width  . 0)
+                                   (height  . 0)
+                                   (no-accept-focus . t)
+                                   (no-focus-on-map . t)
+                                   (min-width  . 0)
+                                   (min-height  . 0)
+                                   (internal-border-width . 30)
+                                   (vertical-scroll-bars . nil)
+                                   (horizontal-scroll-bars . nil)
+                                   (right-fringe . 3)
+                                   (left-fringe . 3)
+                                   (menu-bar-lines . 0)
+                                   (tool-bar-lines . 0)
+                                   (line-spacing . 0)
+                                   (unsplittable . t)
+                                   (undecorated . t)
+                                   (visibility . nil)
+                                   (mouse-wheel-frame . nil)
+                                   (no-other-frame . t)
+                                   (cursor-type . nil)
+                                   (inhibit-double-buffering . t)
+                                   (drag-internal-border . t)
+                                   (no-special-glyphs . t)
+                                   (desktop-dont-save . t)
+                                   (tab-bar-lines . 0)
+                                   (tab-bar-lines-keep-state . 1)))
 
 (use-package nerd-icons
   :config
@@ -812,6 +1190,8 @@
 
 (use-package smartparens
   :config
+  (sp-pair "$$" "$$")   ;; latex math mode. 
+
   (require 'smartparens-config)
   (add-hook 'text-mode-hook 'smartparens-mode)
   (add-hook 'prog-mode-hook 'smartparens-mode)
@@ -878,7 +1258,7 @@
 (setq lsp-modeline-diagnostics-mode nil)
 (setq lsp-ui-sideline-enable nil)
 (setq lsp-ui-sideline-show-diagnostics nil)
-(setq lsp-eldoc-enable-hover nil)     ; Eldoc
+(setq lsp-eldoc-enable-hover t)     ; Eldoc
 (setq lsp-signature-auto-activate nil) ;; you could manually request them via `lsp-signature-activate`
 (setq lsp-signature-render-documentation nil)
 (setq lsp-completion-provider :none) ;; we use Corfu!
@@ -919,9 +1299,45 @@
   (setq lsp-ui-doc-border darker-bgcolor)
   )
 
+(use-package lsp-latex)
+
+(use-package lsp-dart
+  ;; :hook (dart-mode . lsp)
+  :config
+  (setq lsp-dart-flutter-widget-guides 't)
+  (dart :variables dart-enable-analysis-server t
+        lsp-enable-indentation t
+        lsp-enable-symbol-highlighting t
+        lsp-enable-text-document-color t
+        lsp-enable-folding t
+        ;; Set the threshold value to your desired number
+        lsp-completion-max-length 1)
+  )
+(use-package flutter
+  :config
+  (add-hook 'dart-mode flutter-mode)
+  )
+
 (use-package drag-stuff
   :hook (org-mode . drag-stuff-mode)
   :hook (prog-mode . drag-stuff-mode))
+
+(elpaca-wait)
+
+(require 'breadcrumb)
+(breadcrumb-mode)
+
+(require 'echo-bar)
+(echo-bar-mode)
+
+(require 'flymake-posframe)
+(add-hook 'prog-mode-hook (lambda () (interactive) 
+                            (flymake-posframe-mode 1)))
+(setq flymake-posframe-error-prefix "󰚌 ")
+(setq flymake-posframe-warning-prefix " ")
+(setq flymake-posframe-note-prefix "󰠮 ")
+
+(require 'zenity-color-picker)
 
 (defun my/org-mode/load-prettify-symbols ()
   (interactive)
@@ -950,15 +1366,6 @@
   (prettify-symbols-mode 1))
 
 (add-hook 'org-mode-hook 'my/org-mode/load-prettify-symbols)
-
-(elpaca-wait)
-
-(require 'flymake-posframe)
-(add-hook 'prog-mode-hook (lambda () (interactive) 
-                            (flymake-posframe-mode 1)))
-(setq flymake-posframe-error-prefix "󰚌 ")
-(setq flymake-posframe-warning-prefix " ")
-(setq flymake-posframe-note-prefix "󰠮 ")
 
 ;; Custom pairs for electric pair
 ;; (defvar org-electric-pairs '((?~ . ?~)) "Electric pairs for org-mode.")
@@ -1005,7 +1412,7 @@ absolute path. Finally load the lsp."
   (lsp)
   )
 
-(setq org-ellipsis "  ")
+(setq org-ellipsis " ⋅")
 
 (defun org-config (frame)
   "Configure Org mode things. Intended for `after-make-frame-functions'."
@@ -1049,6 +1456,11 @@ absolute path. Finally load the lsp."
 (add-hook 'dired-mode-hook 'config-dired)
 (add-hook 'dired-mode-hook 'dired-hide-details-mode)
 
+(setq eldoc-idle-delay 0.01)
+(advice-add 'eldoc-display-in-echo-area :override #'do-nothing-function )
+(defun do-nothing-function (docs _interactive)
+  'ignore)
+
 (setq flymake-fringe-indicator-position nil)
 
 ;; Syntax Highlighting
@@ -1087,54 +1499,93 @@ absolute path. Finally load the lsp."
                                    (output-html "xdg-open")))
 
 (add-to-list 'default-frame-alist '(font . "Iosevka Nerd Font Medium"))
-(defun configure-font (frame)
+(defun configure-font ()
   "Configure font given initial non-daemon FRAME.
  Intended for `after-make-frame-functions'."
-  (set-face-attribute 'default nil :font "Iosevka Nerd Font Medium" :height 150)
-  (set-face-attribute 'fixed-pitch nil :font "Iosevka Nerd Font Medium" :height 150)
-  (set-face-attribute 'variable-pitch nil :font "Barlow SemiCondensed" :height 170)
+  (set-face-attribute 'default nil :font cust-monospace :height 150)
+  (set-face-attribute 'fixed-pitch nil :font cust-monospace :height 150)
+  (set-face-attribute 'variable-pitch nil :font cust-sans-serif :height 170)
   (set-face-attribute 'font-lock-comment-face nil :slant 'italic)
   (set-face-attribute 'font-lock-keyword-face nil :slant 'italic)
-  (set-face-attribute 'line-number nil :font "Iosevka Nerd Font Bold" :height 120)
-  (set-face-attribute 'link nil :background darker-bgcolor :slant 'normal  :weight 'regular :overline 'nil :underline 'nil :family "Abel")
+  (set-face-attribute 'line-number nil :font cust-monospace :height 120)
+  (set-face-attribute 'link nil :background darker-bgcolor :slant 'normal  :weight 'regular :overline 'nil :underline 'nil :family cust-serif )
   (set-face-attribute 'show-paren-match nil :foreground dim-fgcolor :background 'unspecified :underline 'nil)
   (set-face-attribute 'show-paren-match-expression nil :background grim-bgcolor :foreground 'unspecified :inherit 'nil)
-  (set-face-attribute 'help-key-binding nil :font "Barlow SemiCondensed" :weight 'semibold :background darker-bgcolor :foreground dim-fgcolor :box 'nil)
-  (set-face-attribute 'header-line nil :background bgcolor :foreground dim-fgcolor))
+  (set-face-attribute 'help-key-binding nil :font cust-sans-serif :weight 'semibold :background darker-bgcolor :foreground dim-fgcolor :box 'nil)
+  (set-face-attribute 'header-line nil :background bgcolor :foreground dim-fgcolor)
+  (set-face-attribute 'window-divider nil :background bgcolor :foreground bgcolor)
+  )
 
-(add-hook 'after-make-frame-functions #'configure-font)
+(add-hook 'server-after-make-frame-hook 'configure-font)
 
 (defun configure-org-font ()
   "Configure font given initial non-daemon FRAME.
  Intended for `after-make-frame-functions'."
-  (set-face-attribute 'org-block nil :background darker-bgcolor :font "Iosevka Nerd Font Medium")
+  (set-face-attribute 'org-block nil :background darker-bgcolor :font cust-monospace)
   (set-face-attribute 'org-verbatim nil :background 'unspecified :foreground dim-fgcolor :inherit 'fixed-pitch)
   (set-face-attribute 'org-block-end-line nil :background darker-bgcolor :font "Barlow" :height 200)
   (set-face-attribute 'org-block-begin-line nil :background darker-bgcolor :font "Barlow" :height 100 :weight 'semibold)
   (set-face-attribute 'org-meta-line nil :slant 'normal :height 90)
-  (set-face-attribute 'org-level-1 nil :height 235 :family "Barlow SemiCondensed" :weight 'regular :foreground lavender-color)
-  (set-face-attribute 'org-level-2 nil :height 220 :family "Barlow SemiCondensed" :weight 'regular :foreground lavender-color)
-  (set-face-attribute 'org-level-3 nil :height 205 :family "Barlow SemiCondensed" :weight 'regular :foreground blue-color)
-  (set-face-attribute 'org-level-4 nil :height 190 :family "Barlow SemiCondensed" :weight 'regular :foreground blue-color)
-  (set-face-attribute 'org-level-5 nil :height 190 :family "Barlow SemiCondensed" :weight 'regular :foreground blue-color)
-  (set-face-attribute 'org-level-6 nil :height 190 :family "Barlow SemiCondensed" :weight 'regular :foreground blue-color)
-  (set-face-attribute 'org-level-7 nil :height 190 :family "Barlow SemiCondensed" :weight 'regular :foreground blue-color)
-  (set-face-attribute 'org-level-8 nil :height 190 :family "Barlow SemiCondensed" :weight 'regular :foreground blue-color)
+  (set-face-attribute 'org-level-1 nil :height 235 :family cust-sans-serif :weight 'regular :foreground lavender-color)
+  (set-face-attribute 'org-level-2 nil :height 220 :family cust-sans-serif :weight 'regular :foreground lavender-color)
+  (set-face-attribute 'org-level-3 nil :height 205 :family cust-sans-serif :weight 'regular :foreground blue-color)
+  (set-face-attribute 'org-level-4 nil :height 190 :family cust-sans-serif :weight 'regular :foreground blue-color)
+  (set-face-attribute 'org-level-5 nil :height 190 :family cust-sans-serif :weight 'regular :foreground blue-color)
+  (set-face-attribute 'org-level-6 nil :height 190 :family cust-sans-serif :weight 'regular :foreground blue-color)
+  (set-face-attribute 'org-level-7 nil :height 190 :family cust-sans-serif :weight 'regular :foreground blue-color)
+  (set-face-attribute 'org-level-8 nil :height 190 :family cust-sans-serif :weight 'regular :foreground blue-color)
   (set-face-attribute 'org-table nil :background darker-bgcolor :inherit 'fixed-pitch)
 
-  (set-face-attribute 'org-document-title nil :height 260 :font "Abel")
+  (set-face-attribute 'org-document-title nil :height 260 :font cust-sans-serif :foreground blue-color)
   (set-face-attribute 'org-ellipsis nil :slant 'normal :foreground dim-fgcolor)
   (set-face-attribute 'org-done nil :slant 'normal :strike-through 't :foreground dim-fgcolor)
+  (set-face-attribute 'org-drawer nil  :foreground dim-fgcolor)
 
   (set-face-attribute 'org-agenda-date nil :font "Abel" :weight 'regular :height 200 :foreground pink-color)
-  (set-face-attribute 'org-agenda-date-today nil :font "Barlow SemiCondensed" :weight 'semibold :height 200 )
-  (set-face-attribute 'org-agenda-done nil :font "Abel" :weight 'regular :height 190 :strike-through 't)
-  (set-face-attribute 'org-agenda-structure nil :font "Abel" :weight 'regular :height 230 :foreground blue-color)
+  (set-face-attribute 'org-agenda-date-today nil :font cust-sans-serif :weight 'semibold :height 200 )
+  (set-face-attribute 'org-agenda-done nil :font cust-serif :weight 'regular :height 190 :strike-through 't)
+  (set-face-attribute 'org-agenda-structure nil :font cust-serif :weight 'regular :height 230 :foreground blue-color)
   )
 
 (add-hook 'org-mode-hook #'configure-org-font)
 
-(defun configure-lsp-font (frame)
+(defun configure-eldoc-font ()
+  "Configure font given initial non-daemon FRAME.
+     Intended for `after-make-frame-functions'."
+  (set-face-attribute 'eldoc-box-body nil :background darker-bgcolor)
+  (set-face-attribute 'eldoc-box-border nil :background darker-bgcolor)
+  )
+(add-hook 'eldoc-mode-hook #'configure-eldoc-font)
+
+(defun configure-vertico-font ()
+  "Configure font given initial non-daemon FRAME.
+ Intended for `after-make-frame-functions'."
+  (interactive)
+  (set-face-attribute 'vertico-current nil :foreground blue-color :weight 'semibold :background darker-bgcolor :family cust-sans-serif)
+  (set-face-attribute 'vertico-multiline nil :weight 'semibold :height 170 :family cust-sans-serif)
+  (set-face-attribute 'minibuffer-prompt nil :foreground mauve-color :weight 'semibold :background bgcolor :height 190 :family cust-sans-serif)
+  (set-face-attribute 'minibuffer-face nil :height 170 )
+  )
+(add-hook 'server-after-make-frame-hook #'configure-vertico-font)
+
+(defun configure-corfu-font ()
+  "Configure font given initial non-daemon FRAME.
+   Intended for `after-make-frame-functions'."
+
+  (set-face-attribute 'corfu-default nil :height 150 :background darker-bgcolor :foreground dim-fgcolor :weight 'semibold :family "Iosevka Nerd Font")
+  (set-face-attribute 'corfu-current nil :height 150 :foreground calm-fgcolor :background bgcolor :weight 'semibold :family "Iosevka Nerd Font")
+  (set-face-attribute 'corfu-annotations nil :height 150 :foreground grim-fgcolor :weight 'semibold :family "Iosevka Nerd Font")
+  )
+(add-hook 'server-after-make-frame-hook 'configure-corfu-font)
+
+(defun configure-parens-font ()
+  "Configure font given initial non-daemon FRAME.
+   Intended for `after-make-frame-functions'."
+  (set-face-attribute 'sp-show-pair-enclosing nil :background darkest-bgcolor :foreground 'unspecified :inherit 'nil)
+  (set-face-attribute 'sp-pair-overlay-face nil :background darkest-bgcolor :foreground 'unspecified :inherit 'nil))
+(add-hook 'smartparens-mode-hook #'configure-parens-font)
+
+(defun configure-lsp-font ()
   "Configure font given initial non-daemon FRAME.
    Intended for `after-make-frame-functions'."
 
@@ -1143,7 +1594,7 @@ absolute path. Finally load the lsp."
   (set-face-attribute 'lsp-face-highlight-write nil :underline 'nil :foreground 'unspecified :background grim-fgcolor :inherit 'nil)
   (set-face-attribute 'lsp-face-highlight-read nil :underline 'nil :foreground 'unspecified :background grim-fgcolor :inherit 'nil)
   )
-(add-hook 'after-make-frame-functions #'configure-lsp-font)
+(add-hook 'server-after-make-frame-hook 'configure-lsp-font)
 
 (defun configure-flymake-font ()
   "Configure font given initial non-daemon FRAME.
@@ -1165,39 +1616,6 @@ absolute path. Finally load the lsp."
   )
 (add-hook 'flymake-posframe-mode-hook #'configure-flymake-posframe-font)
 
-(defun configure-dired-font (frame)
-  "Configure font given initial non-daemon FRAME.
-   Intended for `after-make-frame-functions'."
-  (set-face-attribute 'dired-header nil :height 250 :weight 'regular))
-(add-hook 'after-make-frame-functions #'configure-lsp-font)
-
-(defun configure-vertico-font (frame)
-  "Configure font given initial non-daemon FRAME.
- Intended for `after-make-frame-functions'."
-  (set-face-attribute 'vertico-current nil :foreground blue-color :weight 'semibold :background darker-bgcolor :family "Barlow SemiCondensed")
-  (set-face-attribute 'vertico-multiline nil :weight 'semibold :height 170 :family "Barlow SemiCondensed")
-  (set-face-attribute 'minibuffer-prompt nil :foreground mauve-color :weight 'semibold :background bgcolor :height 190 :family "Barlow SemiCondensed")
-  )
-
-(add-hook 'after-make-frame-functions #'configure-vertico-font)
-
-(defun configure-corfu-font (frame)
-  "Configure font given initial non-daemon FRAME.
-   Intended for `after-make-frame-functions'."
-
-  (set-face-attribute 'corfu-default nil :height 150 :background darker-bgcolor :foreground dim-fgcolor :weight 'semibold :family "Iosevka Nerd Font")
-  (set-face-attribute 'corfu-current nil :height 150 :foreground calm-fgcolor :background bgcolor :weight 'semibold :family "Iosevka Nerd Font")
-  (set-face-attribute 'corfu-annotations nil :height 150 :foreground grim-fgcolor :weight 'semibold :family "Iosevka Nerd Font")
-  )
-(add-hook 'after-make-frame-functions #'configure-corfu-font)
-
-(defun configure-parens-font ()
-  "Configure font given initial non-daemon FRAME.
-   Intended for `after-make-frame-functions'."
-  (set-face-attribute 'sp-show-pair-enclosing nil :background darkest-bgcolor :foreground 'unspecified :inherit 'nil)
-  (set-face-attribute 'sp-pair-overlay-face nil :background darkest-bgcolor :foreground 'unspecified :inherit 'nil))
-(add-hook 'smartparens-mode-hook #'configure-parens-font)
-
 (defun configure-dired-font ()
   "Configure font given initial non-daemon FRAME.
    Intended for `after-make-frame-functions'."
@@ -1205,11 +1623,26 @@ absolute path. Finally load the lsp."
   )
 (add-hook 'dired-mode-hook #'configure-dired-font)
 
+(defun configure-treemacs-font ()
+  "Configure font given initial non-daemon FRAME.
+   Intended for `after-make-frame-functions'."
+  (set-face-attribute 'treemacs-marked-file-face nil :foreground calm-fgcolor)
+  (set-face-attribute 'treemacs-git-conflict-face nil :foreground calm-fgcolor)
+  (set-face-attribute 'treemacs-git-added-face nil :foreground calm-fgcolor)
+  (set-face-attribute 'treemacs-root-unreadable-face nil :foreground calm-fgcolor)
+  (set-face-attribute 'treemacs-root-remote-unreadable-face nil :foreground calm-fgcolor)
+  (set-face-attribute 'treemacs-git-commit-diff-face nil :foreground calm-fgcolor)
+  (set-face-attribute 'treemacs-git-modified-face nil :foreground calm-fgcolor)
+  (set-face-attribute 'treemacs-git-untracked-face nil :foreground calm-fgcolor)
+  )
+(add-hook 'treemacs-mode-hook #'configure-treemacs-font)
+
 (defun configure-latex-font ()
   "Configure font given initial non-daemon FRAME.
    Intended for `tex-mode'."
   (set-face-attribute 'font-latex-script-char-face nil :foreground grim-fgcolor)
   (set-face-attribute 'font-latex-math-face nil :foreground teal-color :weight 'bold)
+  (set-face-attribute 'font-latex-sectioning-5-face nil :foreground teal-color)
   )
 (add-hook 'TeX-mode-hook #'configure-latex-font)
 
@@ -1222,14 +1655,24 @@ absolute path. Finally load the lsp."
   )
 (add-hook 'highlight-indent-guides-mode-hook #'configure-highlight-indent-font)
 
-(defun configure-evil-font (frame)
+(defun configure-evil-font ()
   "Configure font given initial non-daemon FRAME.
  Intended for `after-make-frame-functions'."
   (set-face-attribute 'evil-ex-info nil :foreground red-color :slant 'oblique :family "Barlow Semi Condensed" )
   (set-face-attribute 'evil-ex-substitute-matches nil :background blue-color :foreground darker-bgcolor :strike-through 't :underline 'nil )
   (set-face-attribute 'evil-ex-substitute-replacement nil :background teal-color :foreground darker-bgcolor :underline 'nil ))
 
-(add-hook 'after-make-frame-functions #'configure-evil-font)
+(add-hook 'server-after-make-frame-hook 'configure-evil-font)
+
+(add-hook 'focus-out-hook 'garbage-collect)
+(add-hook 'server-after-make-frame-hook 'custom-vars-setup)
+
+(add-hook 'org-mode-hook #'(lambda () (display-line-numbers-mode -1)))
+(add-hook 'org-agenda-mode-hook #'(lambda () (display-line-numbers-mode -1)))
+(add-hook 'term-mode-hook #'(lambda () (display-line-numbers-mode -1)))
+(add-hook 'dired-mode-hook #'(lambda () (display-line-numbers-mode -1)))
+(add-hook 'shell-mode-hook #'(lambda () (display-line-numbers-mode -1)))
+(add-hook 'treemacs-mode-hook #'(lambda () (display-line-numbers-mode -1)))
 
 ;; Corfu
 (add-hook 'eshell-mode-hook
@@ -1254,23 +1697,28 @@ absolute path. Finally load the lsp."
   (unless (or (bound-and-true-p mct--active)
               (bound-and-true-p vertico--input)
               (eq (current-local-map) read-passwd-map))
-    (setq-local corfu-auto t) ;; Enable/disable auto completion
+    (setq-local corfu-auto nil) ;; Enable/disable auto completion
     (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
                 corfu-popupinfo-delay nil)
     (corfu-mode 1)))
 
 ;; SRC
 (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
-(add-hook 'org-src-mode-hook '(lambda () (interactive) (setq header-line-format 'nil)))
-(add-hook 'org-capture-mode-hook '(lambda () (interactive) (setq header-line-format 'nil)))
+(add-hook 'org-src-mode-hook #'(lambda () (interactive) (setq header-line-format 'nil)))
+(add-hook 'org-capture-mode-hook #'(lambda () (interactive) (setq header-line-format 'nil)))
 
 ;; LaTeX
 (add-hook 'LaTeX-mode-hook 'visual-line-mode)
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 (add-hook 'LaTeX-mode-hook #'(lambda () (interactive)
-                               (advice-add 'save-buffer :after 'compile-latex-doc)
+                               (lsp)
                                (prettify-symbols-mode 1) ))
+
+;; (add-hook 'prog-mode-hook #'(lambda () (interactive)
+;;                               (add-hook 'evil-insert-state-exit-hook #'(lambda () (interactive) (flymake-mode 1)))
+;;                               (add-hook 'evil-insert-state-entry-hook #'(lambda () (interactive) (flymake-mode -1)))
+;;                               ))
 
 ;; -------------------------------------------------------------------------------- ;;
 ;; Completed init.el                                                                ;;

@@ -276,12 +276,12 @@ Returns the formatted text from `echo-bar-format'."
               (percent (round (string-to-number (battery-format "%p" status))))
               (power-method (battery-format "%L" status)))
     ;; (format "%s %s %s%s %s %s "
-    (format "%s %s %s %s %s "
+    (format "%s %s %s %s "
 
             ;; (propertize "󰇙" 'face 'eaSep)
 
             (propertize 
-             "󰊠 "
+             " "
             'face 'eaBattery-icon)
 
             (propertize 
@@ -289,15 +289,8 @@ Returns the formatted text from `echo-bar-format'."
             'face 'eaBattery)
 
             (propertize
-             (if (string= power-method "AC") "  " "")
+             (if (string= power-method "AC") "  " "")
              'face 'eaBattery-charge-icon) 
-            (propertize
-            (cond ((>= percent 95) "󰁹")
-                  ((>= percent 70) "󰂀")
-                  ((>= percent 50) "󰁾")
-                  ((>= percent 15) "󰁺")
-                  (t "󰂎"))
-             'face 'eaBattery-icon) 
             (propertize
             (concat (number-to-string percent) "%" )
              'face 'eaBattery) 

@@ -1,0 +1,59 @@
+:PROPERTIES:
+:ID:       18b4bf04-f8ff-481a-b709-e13b57fdf0e9
+:END:
+#+title: App Idea: WLAN Coms
+#+Author:Adarsha Acharya
+
+* Requisites
+** Networking:
+The app would need to facilitate a mesh network where each device acts as a node. This is technically complex but feasible.
+*** Latency
+**** Optimizing Network Algos
+Algorithms that can quickly adapt to changing network conditions and choose the fastest path can significantly reduce latency.
+**** Load Balancing:
+Distribute network traffic evenly across the network to prevent any single device from becoming a bottleneck. This can be particularly effective in a mesh network where multiple pathways are available.
+**** Use of 5G Technology
+**** Data Compression Techniques
+**** Quality of Service (QoS) Management:
+Prioritize traffic based on the type of data being transmitted. For instance, voice and video data could be prioritized over less time-sensitive data like text.
+**** Dedicated Channels for Critical Data:
+Establish dedicated channels for latency-sensitive communication, ensuring that these data packets are not delayed by other network traffic.
+**** Edge Computing:
+Process data closer to the source.
+**** Network Caching:
+Implement caching strategies where frequently accessed data is stored locally or in strategic locations within the network, reducing the time taken to retrieve this data.
+**** Reducing Interference:
+Minimizing interference from other wireless devices and networks can improve signal strength and transmission efficiency, thereby reducing latency.
+**** Software Optimization:
+Optimizing the software running on each device in the network, including the operating system and the app itself, to ensure efficient processing and data transmission.
+
+** Compatibility and Range:
+Ensuring compatibility across various devices and operating systems could be challenging. The effective range of Wi-Fi and hotspot connections is also a limitation.
+** Incentivizing Participation:
+Users would need a strong reason to share their device’s connectivity, especially considering the potential drain on battery life and data usage.
+** Critical Mass:
+The network’s effectiveness would depend on having a large number of users in close proximity to each other, which might be challenging in less populated areas.
+** Monetization Strategy:
+Determining how the app would generate revenue is important. Options could include advertising, premium features, or partnerships.
+** Operational Costs:
+The costs of developing, maintaining, and updating the app, as well as customer support, need to be considered.
+** Identifying Target Market:
+Understanding who needs such a network and in what contexts (e.g., in areas with poor connectivity, schools, colleges) is essential.
+** Competitive Analysis:
+Assessing existing solutions, like traditional Wi-Fi networks, cellular data, or other mesh network technologies, is important to determine the unique value proposition of the app.
+** Handling Traffic:
+The network should be able to handle high traffic without significant latency or loss of performance.
+** Scalability:
+It should be scalable to accommodate a growing number of users.
+** Reliability:
+Consistent and reliable performance would be key to user retention.
+
+
+* Good practices
+- Use ~const~ constructors where possible to enable the compiler to reuse widgets.
+- Avoid unnecessary nesting of widgets. Deep widget trees can lead to performance issues.
+- Prefer stateless widgets over stateful ones when the state doesn't need to change.
+- Use efficient state management solutions like Provider, Riverpod, or Bloc to manage app state. Efficient state management can greatly reduce the amount of unnecessary rendering.
+- Minimize the use of setState() in stateful widgets, as it can lead to the entire widget tree being rebuilt.
+
+* 

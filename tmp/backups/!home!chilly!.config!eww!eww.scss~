@@ -1,0 +1,113 @@
+* {
+  all: unset;
+}
+
+.time {
+  font-size: 30px;
+  color: #ffffff;
+  font-family: "Barlow";
+  // font-weight: bold;
+}
+.quoteicon {
+  font-size: 30px;
+  padding-right: 10px;
+  padding-bottom: 50px;
+}
+.quote {
+  font-size: 30px;
+  padding: 20px;
+  color: #fff;
+  font-family: "Playfair Display";
+  font-weight: bold;
+  font-style: italic;
+}
+.time-apm {
+  color: #c7b6a5;
+  font-size: 30px;
+  font-weight: bold;
+  margin-top: 20px;
+  font-style: italic;
+  font-family: "Playfair Display";
+}
+.date {
+  font-size: 30px;
+  color: #ffffff;
+  font-family: "Barlow";
+  margin-bottom: -20px;
+  margin-top: 20px;
+  // font-weight: bold;
+}
+.win2 {
+  color: #ffffff;
+  font-family: "Barlow Bold";
+  font-size: 22px;
+  padding: 0;
+}
+
+.musicicon {
+  font-size: 60px;
+  color: #ffffff;
+  padding-left: 20px;
+  margin-bottom: -10px;
+}
+.musicinfo {
+  .artist {
+    font-size: 27px;
+    font-weight: bold;
+    font-style: italic;
+    color: #c7b6a5;
+    font-family: "Playfair Display";
+  }
+  .song {
+    color: #9f8e7d;
+    font-size: 16px;
+    font-family: "Barlow";
+    font-weight: bold;
+  }
+}
+.day {
+  font-size: 100px;
+  font-family: "Playfair Display";
+  font-weight: bold;
+  color: #c7b6a5;
+  .its {
+    color: #ffffff;
+  }
+}
+.info {
+  background-color: #9a8978;
+  border-radius: 10px;
+  padding: 3px;
+  margin-top: 50px;
+}
+.infoContainer {
+  border: 3px dashed #655443;
+  // border-image-source: url("https://i.stack.imgur.com/wLdVc.png");
+  // border-image-width: 1;
+  // border-image-slice: 2;
+  padding: 5px;
+  background-color: transparent;
+  color: #070906;
+  border-radius: 10px;
+}
+.visibility {
+  opacity: 0;
+}
+.bat {
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 20;
+}
+.wifi-icon {
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 20;
+}
+
+tooltip {
+  background-color: #c7b6a5;
+  color: #fff;
+  font-size: 18px;
+  padding: 10px;
+  border-radius: 10px;
+}
