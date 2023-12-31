@@ -1,37 +1,15 @@
-;; Minimize garbage collection during startup
-(setq gc-cons-threshold most-positive-fixnum)
-(fset #'jsonrpc--log-event #'ignore) 
+(org-babel-load-file (locate-user-emacs-file "init.org"))
 
-;; Lower threshold back to 8 MiB (default is 800kB)
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (setq gc-cons-threshold 100000000)))
-
-(setq-default pgtk-wait-for-event-timeout 0)
-
-(setq frame-inhibit-implied-resize t) ;; Supposed to hasten startup
-
-(setq idle-update-delay 1.0)
-
-(setq-default display-line-numbers-width 3)
-
-(setq-default bidi-display-reordering 'left-to-right 
-              bidi-paragraph-direction 'left-to-right)
-
-(setq fast-but-imprecise-scrolling t)
-
-;; In noninteractive sessions, prioritize non-byte-compiled source files to
-;; prevent the use of stale byte-code. Otherwise, it saves us a little IO time
-;; to skip the mtime checks on every *.elc file.
-(setq-default load-prefer-newer noninteractive)
+;; EMACS UIs
 
 (setq-default mode-line-format nil)
 
 (setq-default cursor-in-non-selected-windows nil)
 
-(setq inhibit-startup-screen t)
+;;(setq inhibit-startup-screen t)
 
-(setq inhibit-startup-echo-area-message t)
+(setq server-client-instructions nil)
+;;(setq inhibit-startup-echo-area-message t)
 
 (setq initial-scratch-message nil)
 
@@ -103,4 +81,4 @@
 
 (setq user-emacs-directory (expand-file-name "~/.cache/emacs"))
 
-(setq-default recentf-save-file "~/.cache/emacs/recentf")
+(setq-default recentf-save-file "~/.config/emacs/recentf")

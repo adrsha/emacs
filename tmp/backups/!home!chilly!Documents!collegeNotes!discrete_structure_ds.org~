@@ -1,0 +1,39 @@
+:PROPERTIES:
+:ID:       868a4235-ade9-400c-b0b5-916779ddcddc
+:END:
+#+title: Discrete Structure (DS)
+#+Author:Adarsha Acharya
+
+* Logic, Induction and Reasoning
+** Class 1
+*** Link: [[/home/chilly/Documents/PDFs/DS1.pdf][  DS Class 1  ]]
+*** Overview:
+Propositions, Types of Propositions : Atomic and compound, Connectives: Conjuctions, Disjunctions, Negation, Implications, Double Implications, X-OR, NOR, NAND.
+
+** Class 2
+Overview: Converse, Inverse, Contrapositive, Bi-conditional/Bi-implication
+*** Link: [[/home/chilly/Documents/PDFs/DS2.pdf][  DS Class 2  ]]
+
+* TODO INCOMPLETE NOTES ( Isha's Absent Day)
+
+** TODO Class 3
+Overview: 
+*** Link: 
+
+** Class 4
+Overview: Numericals, Resolution principle, Numericals on Resolution principles
+*** Link: [[/home/chilly/Documents/PDFs/DS4.pdf][  DS Class 4  ]]
+
+** Class 5
+Overview: Predicate Logic,  Predicates, Quantifiers, Negating Quantified Expression, Nested Quantifiers, =BLURRED=, 
+*** Link: [[/home/chilly/Documents/PDFs/DS5.pdf][  DS Class 5  ]]
+
+** Class 6
+Overview: Proof Methods:  Proof by contradiction
+*** Link: [[/home/chilly/Documents/PDFs/DS6.pdf][  DS Class 6  ]]
+
+* Finite State Automata
+
+* Recurrence Relation
+
+* Graph Theory

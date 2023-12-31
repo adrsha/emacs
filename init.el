@@ -1,54 +1,3 @@
-(setq package-enable-at-startup nil)
-
-(setq-default font-lock-maximum-size nil)
-
-;; (setq byte-compile-warnings '(not free-vars unresolved noruntime lexical make-local))
-(setq byte-compile-warnings 'nil)
-
-(if (boundp 'comp-deferred-compilation)
-    (setq-default comp-deferred-compilation nil)
-  (setq-default native-comp-deferred-compilation nil))
-
-(setq-default native-comp-async-report-warnings-errors nil)
-
-;; Display Minimum warnings
-(setq-default warning-minimum-level :emergency)
-
-(setq-default
- ad-redefinition-action 'accept                  ; Silence warnings for redefinition
- delete-by-moving-to-trash t                     ; Delete files to trash
- help-window-select t                            ; Focus new help windows when opened
- mouse-yank-at-point t                           ; Yank at point rather than cursor
- scroll-conservatively most-positive-fixnum      ; Always scroll by one line
- select-enable-clipboard t                       ; Merge system's and Emacs' clipboard
- show-trailing-whitespace nil                    ; Do not display trailing whitespaces
- tab-width 2                                     ; Set width for tabs
- uniquify-buffer-name-style 'forward             ; Uniquify buffer names
- ring-bell-function 'ignore                      ; Be quiet!
- custom-file (locate-user-emacs-file "custom-vars.el")    ; Move customization variables to a separate file and load it
- confirm-kill-processes nil
- sentence-end-double-space nil               ; a sentence ends with only one space
- scroll-step 1                               ; Line wise scroll.
- scroll-conservatively 101                   ; Whether to recenter cursor on scroll. If the value is greater than 100, it wont.
- indent-tabs-mode nil
- tab-always-indent 't
- css-fontify-colors nil
- tab-width 2
- )                   
-
-(load custom-file 'noerror 'nomessage)
-(fset 'yes-or-no-p 'y-or-n-p)                      ; Replace yes/no prompts with y/n
-(recentf-mode 1)                                   ; Remember recently opened files
-(save-place-mode 1)                                ; Remember the last traversed point in file
-(global-auto-revert-mode 1)                        ; Automatically revert buffers when the underlying file is changed
-(setq global-auto-revert-non-file-buffers t)       ; Auto revert other non file buffers too
-
-;; Run at full power please
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
-(put 'narrow-to-region 'disabled nil) 
-(put 'dired-find-alternate-file 'disabled nil)     ; Open dired in same buffer
-
 (defun delete-window-or-frame (&optional window frame force)
   (interactive)
   (if (= 1 (length (window-list frame)))
@@ -144,6 +93,34 @@
                  (recentf-remove-if-non-kept filename))
                (message "File '%s' successfully renamed to '%s'" name (file-name-nondirectory new-name))))))))
 
+(defun hm/convert-org-to-docx-with-pandoc ()
+  "Use Pandoc to convert .org to .docx.
+Comments:
+- The `-N' flag numbers the headers lines.
+- Use the `--from org' flag to have this function work on files
+  that are in Org syntax but do not have a .org extension"
+  (interactive)
+  (message "exporting .org to .docx")
+  (shell-command
+   (concat "pandoc -N --from org " (buffer-file-name)
+           " -o "
+           (file-name-sans-extension (buffer-file-name))
+           (format-time-string "-%Y-%m-%d-%H%M%S") ".docx")))
+
+(defun er-open-asm (arg)
+  "Open visited file in default external program.
+
+With a prefix ARG always prompt for command to use."
+  (interactive "P")
+  (when buffer-file-name
+    (shell-command (concat
+                    (cond
+                     ((and (not arg) (eq system-type 'darwin)) "open")
+                     ((and (not arg) (member system-type '(gnu gnu/linux gnu/kfreebsd))) "xdg-open")
+                     (t (read-shell-command "Open current file with: ")))
+                    " "
+                    (shell-quote-argument buffer-file-name)))))
+
 (defun compile-latex-doc ()
   (interactive)
   (save-window-excursion
@@ -167,6 +144,15 @@
   "Org Schedule for tomorrow (+1d)."
   (interactive)
   (org-schedule t "+1d"))
+
+(defun org-copy-blocks ()
+  (interactive)
+  (let ((code ""))
+    (save-restriction
+      (org-narrow-to-subtree)
+      (org-babel-map-src-blocks nil
+        (setq code (concat code (org-no-properties body)))))
+    (kill-new code)))
 
 (defvar bgcolor "#11111b"
   "The normal background of emacs.")
@@ -200,7 +186,7 @@
   "The calm foreground of emacs.")
 (defvar cust-monospace "Iosevka Nerd Font"
   "The monospace font for emacs.")
-(defvar cust-serif "Abel"
+(defvar cust-serif "Besley"
   "The serif font for emacs.")
 (defvar cust-sans-serif "Barlow SemiCondensed"
   "The sans font for emacs.")
@@ -210,9 +196,9 @@
   (interactive)
   (defvar cust-monospace "Iosevka Nerd Font"
     "The monospace font for emacs.")
-  (defvar cust-serif "Abel"
-    "The serif font for emacs.")
   (defvar cust-sans-serif "Barlow SemiCondensed"
+    "The serif font for emacs.")
+  (defvar cust-serif "Besley"
     "The sans font for emacs.")
   (cond ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 1)
          (setq bgcolor "#242933"
@@ -330,24 +316,166 @@
          (set-face-attribute 'eaBattery-charge-icon nil :foreground "#3f4158" :font cust-sans-serif :weight 'regular)))
   )
 
-(add-to-list 'load-path "~/.config/emacs/packages/")
+(setq package-enable-at-startup nil)
 
-(use-package gcmh)
+;; (setq byte-compile-warnings '(not free-vars unresolved noruntime lexical make-local))
+(setq byte-compile-warnings 'nil)
+
+(if (boundp 'comp-deferred-compilation)
+    (setq-default comp-deferred-compilation nil)
+  (setq-default native-comp-deferred-compilation nil))
+
+(setq-default native-comp-async-report-warnings-errors nil)
+
+;; Display Minimum warnings
+(setq-default warning-minimum-level :emergency)
+
+(setq-default
+ ad-redefinition-action 'accept                  ; Silence warnings for redefinition
+ delete-by-moving-to-trash t                     ; Delete files to trash
+ help-window-select t                            ; Focus new help windows when opened
+ mouse-yank-at-point t                           ; Yank at point rather than cursor
+ scroll-conservatively most-positive-fixnum      ; Always scroll by one line
+ select-enable-clipboard t                       ; Merge system's and Emacs' clipboard
+ show-trailing-whitespace nil                    ; Do not display trailing whitespaces
+ tab-width 2                                     ; Set width for tabs
+ uniquify-buffer-name-style 'forward             ; Uniquify buffer names
+ ring-bell-function 'ignore                      ; Be quiet!
+ custom-file (locate-user-emacs-file "custom-vars.el")    ; Move customization variables to a separate file and load it
+ confirm-kill-processes nil
+ sentence-end-double-space nil               ; a sentence ends with only one space
+ scroll-step 1                               ; Line wise scroll.
+ scroll-conservatively 101                   ; Whether to recenter cursor on scroll. If the value is greater than 100, it wont.
+ indent-tabs-mode nil
+ tab-always-indent 't
+ css-fontify-colors nil
+ tab-width 2
+ )                   
+
+(load custom-file 'noerror 'nomessage)
+(fset 'yes-or-no-p 'y-or-n-p)                      ; Replace yes/no prompts with y/n
+(recentf-mode 1)                                   ; Remember recently opened files
+(save-place-mode 1)                                ; Remember the last traversed point in file
+(global-auto-revert-mode 1)                        ; Automatically revert buffers when the underlying file is changed
+(setq global-auto-revert-non-file-buffers t)       ; Auto revert other non file buffers too
+
+;; Run at full power please
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil) 
+(put 'dired-find-alternate-file 'disabled nil)     ; Open dired in same buffer
+
+(add-to-list 'load-path "~/.config/emacs/packages/")
 
 (require 'elpaca-setup)
 
-;; Optionally use the `orderless' completion style.
-(use-package orderless
-  :init
-  ;; Configure a custom style dispatcher (see the Consult wiki)
-  ;; (setq orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch)
-  ;;       orderless-component-separator #'orderless-escapable-split-on-space)
-  (setq completion-styles '(orderless basic)
-        completion-category-defaults nil
-        completion-cycle-threshold 0
-        completion-category-overrides '((file (styles partial-completion)))))
+(use-package gcmh)
 
-(use-package devdocs)
+(use-package evil
+  :init
+  (setq evil-undo-system 'undo-fu)
+  (setq evil-want-C-i-jump nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-d-scroll t)
+  (setq evil-want-fine-undo t)
+  (setq evil-want-Y-yank-to-eol t)
+
+  ;; ----- Setting cursor colors
+  (setq evil-emacs-state-cursor    '("#cba6f7" box))
+  (setq evil-normal-state-cursor   '("#BAC2DE" box))
+  (setq evil-operator-state-cursor '("#90b6f3" (bar . 6))) 
+  (setq evil-visual-state-cursor   '("#6C7096" box))
+  (setq evil-insert-state-cursor   '("#b4befe" (bar . 2)))
+  (setq evil-replace-state-cursor  '("#eb998b" hbar))
+  (setq evil-motion-state-cursor   '("#f38ba8" box))
+  :config
+  (evil-mode 1)
+  ;; INITIAL BINDINGS
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal)
+  (evil-define-key 'motion help-mode-map "q" 'kill-this-buffer)
+  )
+
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init))
+
+(use-package evil-commentary
+  :after evil)
+
+(use-package evil-escape
+  :config
+  (evil-escape-mode)
+  :custom
+  (evil-escape-key-sequence "jk")
+  (evil-escape-delay 0.2))
+
+(use-package evil-surround
+  :config
+  (global-evil-surround-mode 1)
+  :after evil)
+
+(use-package evil-textobj-anyblock
+  :config
+  (evil-define-text-object my-evil-textobj-anyblock-inner-quote
+    (count &optional beg end type)
+    "Select the closest outer quote."
+    (let ((evil-textobj-anyblock-blocks
+           '(("'" . "'")
+             ("\"" . "\"")
+             ("`" . "'")
+             ("“" . "”"))))
+      (evil-textobj-anyblock--make-textobj beg end type count nil)))
+
+  (evil-define-text-object my-evil-textobj-anyblock-a-quote
+    (count &optional beg end type)
+    "Select the closest outer quote."
+    (let ((evil-textobj-anyblock-blocks
+           '(("'" . "'")
+             ("\"" . "\"")
+             ("`" . "'")
+             ("“" . "”"))))
+      (evil-textobj-anyblock--make-textobj beg end type count t)))
+
+  (define-key evil-inner-text-objects-map "q" 'my-evil-textobj-anyblock-inner-quote)
+  (define-key evil-outer-text-objects-map "q" 'my-evil-textobj-anyblock-a-quote)
+
+  (add-hook 'lisp-mode-hook
+            (lambda ()
+              (setq-local evil-textobj-anyblock-blocks
+                          '(("(" . ")")
+                            ("{" . "}")
+                            ("\\[" . "\\]")
+                            ("\"" . "\"")
+                            ))))
+
+  (define-key evil-inner-text-objects-map "u" 'evil-textobj-anyblock-inner-block)
+  (define-key evil-outer-text-objects-map "u" 'evil-textobj-anyblock-a-block)
+  )
+
+(use-package undo-fu)
+(use-package undo-fu-session
+  :config
+  (setq undo-fu-session-incompatible-files '("/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'"))
+  (undo-fu-session-global-mode))
+
+(use-package helpful
+  :config
+  (setq counsel-describe-function-function #'helpful-callable)
+  (setq counsel-describe-variable-function #'helpful-variable))
+
+(use-package evil-org
+  :diminish evil-org-mode
+  :after org
+  :config
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys)
+  (add-hook 'org-mode-hook 'evil-org-mode)
+  (add-hook 'evil-org-mode-hook
+            (lambda () (evil-org-set-key-theme))))
 
 (use-package catppuccin-theme
   :config
@@ -470,19 +598,25 @@
          (catppuccin-reload))
         ))
 
-(use-package math-symbols)
-(package-install 'auctex)
-;; (use-package latex-preview-pane
-;;   :init
-;;   (setq message-latex-preview-pane-welcome " \n\n\n ")
-;;   (setq latex-preview-pane-use-frame 't)
-;;   (setq doc-view-resolution 200)
-;;   (setq doc-view-continuous 't)
-;;   (setq doc-view-svg-background bgcolor)
-;;   (setq doc-view-svg-foreground calm-fgcolor)
-;;   :hook
-;;   (latex-mode)
-;;   )
+;; Optionally use the `orderless' completion style.
+(use-package orderless
+  :init
+  ;; Configure a custom style dispatcher (see the Consult wiki)
+  ;; (setq orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch)
+  ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-cycle-threshold 0
+        completion-category-overrides '((file (styles partial-completion)))))
+
+(use-package devdocs)
+
+(use-package openwith
+  :config
+  (require 'openwith)
+  (openwith-mode t)
+  (setq openwith-associations '(("\\.pdf\\'" "zathura" (file)) ("\\.pptx\\'" "libreoffice" (file)) ("\\.docx\\'" "libreoffice" (file))))
+  )
 
 (use-package corfu
   :init
@@ -491,16 +625,16 @@
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
   (corfu-separator ?\s)          ;; Orderless field separator
   (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
-  (corfu-quit-no-match t)      ;; Never quit, even if there is no match
+  (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
   (corfu-preview-current nil)    ;; Disable current candidate preview
   (corfu-preselect 'first)      ;; Preselect the prompt
-  (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+  (corfu-on-exact-match t)     ;; Configure handling of exact matches
   (corfu-scroll-margin 5)        ;; Use scroll margin
   (corfu-minimum-width 100)        ;; Use scroll margin
   (corfu-maximum-width 190)        ;; Use scroll margin
   (corfu-auto-prefix 1)
   (corfu-auto-delay 0.3)
-  (corfu-popupinfo-delay '(2.0 . 1.0))
+  (corfu-popupinfo-delay '(0.5 . 1.0))
 
   :config
   (corfu-popupinfo-mode 1)
@@ -535,246 +669,11 @@
   (add-to-list 'completion-at-point-functions #'cape-history)
   ;; (add-to-list 'completion-at-point-functions #'cape-keyword)
   ;; (add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
-  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+  ;; (add-to-list 'completion-at-point-functions #'cape-elisp-block)
   ;; (add-to-list 'completion-at-point-functions #'cape-line)
   )
 
-(use-package yasnippet-capf
-  :after cape
-  :config
-  ;; (setq yasnippet-capf-lookup-by 'name) ;; Prefer the name of the snippet instead
-  (add-to-list 'completion-at-point-functions #'yasnippet-capf))
-
-(use-package posframe)
-
-(use-package popper
-  :init
-  (setq popper-reference-buffers
-        '("\\*Messages\\*"
-          "\\*gud-test\\*"
-          "Output\\*$"
-          "\\*Warnings\\*"
-          help-mode
-          compilation-mode))
-  (popper-mode +1))
-
-(use-package evil
-  :init
-  (setq evil-undo-system 'undo-fu)
-  (setq evil-want-C-i-jump nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-d-scroll t)
-  (setq evil-want-fine-undo t)
-  (setq evil-want-Y-yank-to-eol t)
-
-  ;; ----- Setting cursor colors
-  (setq evil-emacs-state-cursor    '("#cba6f7" box))
-  (setq evil-normal-state-cursor   '("#BAC2DE" box))
-  (setq evil-operator-state-cursor '("#90b6f3" (bar . 6))) 
-  (setq evil-visual-state-cursor   '("#6C7096" box))
-  (setq evil-insert-state-cursor   '("#b4befe" (bar . 2)))
-  (setq evil-replace-state-cursor  '("#eb998b" hbar))
-  (setq evil-motion-state-cursor   '("#f38ba8" box))
-  :config
-  (evil-mode 1)
-  ;; INITIAL BINDINGS
-  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal)
-  (evil-define-key 'motion help-mode-map "q" 'kill-this-buffer)
-  )
-
-(use-package evil-collection
-  :after evil
-  :config
-  (evil-collection-init))
-
-(use-package evil-commentary
-  :after evil)
-
-(use-package evil-escape
-  :config
-  (evil-escape-mode)
-  :custom
-  (evil-escape-key-sequence "jk")
-  (evil-escape-delay 0.2))
-
-(use-package evil-surround
-  :config
-  (global-evil-surround-mode 1)
-  :after evil)
-
-(use-package evil-textobj-anyblock
-  :config
-  (evil-define-text-object my-evil-textobj-anyblock-inner-quote
-    (count &optional beg end type)
-    "Select the closest outer quote."
-    (let ((evil-textobj-anyblock-blocks
-           '(("'" . "'")
-             ("\"" . "\"")
-             ("`" . "'")
-             ("“" . "”"))))
-      (evil-textobj-anyblock--make-textobj beg end type count nil)))
-
-  (evil-define-text-object my-evil-textobj-anyblock-a-quote
-    (count &optional beg end type)
-    "Select the closest outer quote."
-    (let ((evil-textobj-anyblock-blocks
-           '(("'" . "'")
-             ("\"" . "\"")
-             ("`" . "'")
-             ("“" . "”"))))
-      (evil-textobj-anyblock--make-textobj beg end type count t)))
-
-  (define-key evil-inner-text-objects-map "q" 'my-evil-textobj-anyblock-inner-quote)
-  (define-key evil-outer-text-objects-map "q" 'my-evil-textobj-anyblock-a-quote)
-
-  (add-hook 'lisp-mode-hook
-            (lambda ()
-              (setq-local evil-textobj-anyblock-blocks
-                          '(("(" . ")")
-                            ("{" . "}")
-                            ("\\[" . "\\]")
-                            ("\"" . "\"")
-                            ))))
-
-  (define-key evil-inner-text-objects-map "u" 'evil-textobj-anyblock-inner-block)
-  (define-key evil-outer-text-objects-map "u" 'evil-textobj-anyblock-a-block)
-  )
-
-(use-package undo-fu)
-(use-package undo-fu-session
-  :config
-  (setq undo-fu-session-incompatible-files '("/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'"))
-  (undo-fu-session-global-mode))
-
-(use-package helpful
-  :config
-  (setq counsel-describe-function-function #'helpful-callable)
-  (setq counsel-describe-variable-function #'helpful-variable))
-
-(use-package evil-org
-  :diminish evil-org-mode
-  :after org
-  :config
-  (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys)
-  (add-hook 'org-mode-hook 'evil-org-mode)
-  (add-hook 'evil-org-mode-hook
-            (lambda () (evil-org-set-key-theme))))
-
-(use-package treemacs
-  :config
-
-  ;; Setup treesmacs
-  (progn
-    (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
-          treemacs-deferred-git-apply-delay        0.5
-          treemacs-directory-name-transformer      #'identity
-          treemacs-display-in-side-window          t
-          treemacs-eldoc-display                   'simple
-          treemacs-file-event-delay                2000
-          treemacs-file-extension-regex            treemacs-last-period-regex-value
-          treemacs-file-follow-delay               0
-          treemacs-file-name-transformer           #'identity
-          treemacs-follow-after-init               t
-          treemacs-expand-after-init               t
-          treemacs-find-workspace-method           'find-for-file-or-pick-first
-          treemacs-git-command-pipe                ""
-          treemacs-goto-tag-strategy               'refetch-index
-          treemacs-header-scroll-indicators        '(nil . "┴┴┴┴┴┴")
-          treemacs-hide-dot-git-directory          t
-          treemacs-indentation                     2
-          treemacs-indentation-string              " "
-          treemacs-is-never-other-window           nil
-          treemacs-max-git-entries                 5000
-          treemacs-missing-project-action          'ask
-          treemacs-move-forward-on-expand          nil
-          treemacs-no-png-images                   nil
-          treemacs-no-delete-other-windows         t
-          treemacs-project-follow-cleanup          t
-          treemacs-persist-file                    nil
-          treemacs-position                        'left
-          treemacs-read-string-input               'from-childframe
-          treemacs-recenter-distance               0.1
-          treemacs-recenter-after-file-follow      'nil
-          treemacs-recenter-after-tag-follow       'nil
-          treemacs-recenter-after-project-jump     'nil
-          treemacs-recenter-after-project-expand   'nil
-          treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
-          treemacs-project-follow-into-home        'nil
-          treemacs-show-cursor                     nil
-          treemacs-show-hidden-files               t
-          treemacs-silent-filewatch                t
-          treemacs-silent-refresh                  t
-          treemacs-sorting                         'alphabetic-asc
-          treemacs-select-when-already-in-treemacs 'move-back
-          treemacs-space-between-root-nodes        t
-          treemacs-tag-follow-cleanup              t
-          treemacs-tag-follow-delay                1.5
-          treemacs-text-scale                      nil
-          treemacs-user-mode-line-format           'none
-          treemacs-user-header-line-format         nil
-          treemacs-wide-toggle-width               70
-          treemacs-width                           35
-          treemacs-width-increment                 1
-          treemacs-width-is-initially-locked       t
-          treemacs-workspace-switch-cleanup        nil)
-
-    (treemacs-follow-mode t)
-    (treemacs-filewatch-mode t)
-    (treemacs-fringe-indicator-mode 'always)
-
-    (when treemacs-python-executable
-      (treemacs-git-commit-diff-mode t))
-
-    (pcase (cons (not (null (executable-find "git")))
-                 (not (null treemacs-python-executable)))
-      (`(t . t)
-       (treemacs-git-mode 'deferred))
-      (`(t . _)
-       (treemacs-git-mode 'simple)))
-
-    (treemacs-hide-gitignored-files-mode nil)
-
-    ;; Modifying icons
-    (treemacs-modify-theme "Default"
-      :icon-directory "~/.config/emacs/images/"
-      :config
-      (progn
-        (treemacs-create-icon :file "folder-open.png"   :extensions (root-open))
-        (treemacs-create-icon :file "folder-asterick.png"   :extensions (root-closed))
-        (treemacs-create-icon :file "org.png"   :extensions ("org"))
-        (treemacs-create-icon :file "file.png"   :extensions (fallback))
-        (treemacs-create-icon :file "emacs.png" :extensions ("el"))
-        (treemacs-create-icon :file "logs.png" :extensions ("log"))
-        (treemacs-create-icon :file "folder-open.png" :extensions (dir-open))
-        (treemacs-create-icon :file "folder.png" :extensions (dir-closed))))
-
-    )
-  )
-(use-package treemacs-evil)
-
-(use-package org-modern
-  :hook (org-mode . org-modern-mode)
-  :config
-  (setq
-   org-modern-star '( "" "  " "  " "  ")
-   org-modern-list '((42 . "◦") (43 . "•") (45 . "–"))
-   org-modern-block-name nil
-   org-modern-keyword nil
-   org-modern-todo t
-   org-modern-table nil
-   )
-  (set-face-attribute 'org-modern-done nil :foreground dim-fgcolor :background bgcolor :weight 'bold :slant 'normal :height 130 :inherit 'nil)
-  (set-face-attribute 'org-modern-todo nil :background darker-bgcolor :foreground blue-color :weight 'bold :height 130 :inherit 'fixed-pitch)
-  (set-face-attribute 'org-modern-time-inactive nil :foreground dim-fgcolor :background darker-bgcolor :height 130 :inherit 'nil)
-  (set-face-attribute 'org-modern-time-inactive nil :foreground dim-fgcolor :background grim-bgcolor :height 130 :inherit 'nil)
-  (set-face-attribute 'org-modern-time-active nil :background dim-fgcolor :foreground darker-bgcolor :height 130 :inherit 'nil)
-  (set-face-background 'fringe (face-attribute 'default :background))
-
-  )
+(use-package org-superstar)
 
 (use-package visual-fill-column
   :config
@@ -811,6 +710,17 @@
   :config
   (org-roam-setup))
 
+(use-package popper
+  :init
+  (setq popper-reference-buffers
+        '("\\*Messages\\*"
+          "\\*gud-test\\*"
+          "Output\\*$"
+          "\\*Warnings\\*"
+          help-mode
+          compilation-mode))
+  (popper-mode +1))
+
 (use-package general
   :config
 
@@ -822,6 +732,7 @@
   "C-k" 'nil)
 
 (general-def
+  "M-a" 'mark-whole-buffer
   "M-p" 'popper-toggle-type
   "M-n" 'popper-cycle
   "M-," 'which-key-abort
@@ -856,7 +767,7 @@
   "cs"  '(lsp-iedit-highlights :which-key "󰅱  execute code in org  ")
   "cS"  '(iedit-mode :which-key "󰅱  execute code in org  ")
   "cc"  '(compile :which-key "  format buffer  ")
-  "cf"  '(format-all :which-key "  format buffer  ")
+  "cf"  '(format-all-region-or-buffer :which-key "  format buffer  ")
   "cF" '((lambda () (interactive) (indent-region (point-min) (point-max))) :wk "  format default  "))
 
 (e/leader-keys
@@ -880,6 +791,7 @@
 (e/leader-keys
   "o"  '(:ignore t :which-key "󰉋  org  ")
   "oe" '(e/org-babel-edit :which-key "󰕪  open agendas  ")
+  "od" '(hm/convert-org-to-docx-with-pandoc :which-key "󰕪  open convert org to docx  ")
   "oa" '(org-agenda :which-key "󰕪   open agendas  ")
   "oc" '(org-capture :which-key "󰄄   open capture  ")
   "oi"  '(:ignore t :which-key "󰉋  org insert  ")
@@ -956,6 +868,8 @@
   "tf"  '(flymake-mode :which-key "  toggle flymake  ")
   "tb"  '(breadcrumb-mode :which-key "  toggle breadcrumbs  ")
   "tr"  '(org-roam-buffer-toggle :which-key "  Roam Buffer  ")
+  "to"  '(:ignore t :which-key "󰮫  toggle org  ")
+  "tol" '(org-toggle-link-display :which-key "  Toggle Link Display  ")
   "tm"  '(minimap-mode :which-key "󰍍  minimap toggles  "))
 
 (e/goto-keys
@@ -998,7 +912,6 @@
 
 (general-def
   :keymaps 'evil-motion-state-map
-  "K" 'eldoc-box-help-at-point
   )
 
 (general-def
@@ -1128,77 +1041,6 @@
   (add-hook 'minibuffer-mode-hook (lambda () (interactive)
                                     (setq-local face-remapping-alist '((default minibuffer-face))))))
 
-(use-package embark)
-(use-package embark-consult)
-
-(use-package eldoc-box)
-
-(setq eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly)
-(setq eldoc-box-frame-parameters '((left . -1)
-                                   (top . -1)
-                                   (width  . 0)
-                                   (height  . 0)
-                                   (no-accept-focus . t)
-                                   (no-focus-on-map . t)
-                                   (min-width  . 0)
-                                   (min-height  . 0)
-                                   (internal-border-width . 30)
-                                   (vertical-scroll-bars . nil)
-                                   (horizontal-scroll-bars . nil)
-                                   (right-fringe . 3)
-                                   (left-fringe . 3)
-                                   (menu-bar-lines . 0)
-                                   (tool-bar-lines . 0)
-                                   (line-spacing . 0)
-                                   (unsplittable . t)
-                                   (undecorated . t)
-                                   (visibility . nil)
-                                   (mouse-wheel-frame . nil)
-                                   (no-other-frame . t)
-                                   (cursor-type . nil)
-                                   (inhibit-double-buffering . t)
-                                   (drag-internal-border . t)
-                                   (no-special-glyphs . t)
-                                   (desktop-dont-save . t)
-                                   (tab-bar-lines . 0)
-                                   (tab-bar-lines-keep-state . 1)))
-
-(use-package nerd-icons
-  :config
-  :if (display-graphic-p))
-
-(use-package nerd-icons-completion
-  :config
-  (nerd-icons-completion-mode)
-  )
-
-(use-package nerd-icons-dired
-  :hook
-  (dired-mode . nerd-icons-dired-mode))
-
-(use-package highlight-indent-guides
-  :config
-  (setq highlight-indent-guides-method 'character)
-  (setq highlight-indent-guides-character ?│)
-  ;; │┊
-  (setq-default highlight-indent-guides-delay 0.01)
-  (setq highlight-indent-guides-responsive 'top)
-  )
-(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-
-(use-package iedit)
-
-(use-package smartparens
-  :config
-  (sp-pair "$$" "$$")   ;; latex math mode. 
-
-  (require 'smartparens-config)
-  (add-hook 'text-mode-hook 'smartparens-mode)
-  (add-hook 'prog-mode-hook 'smartparens-mode)
-  (add-hook 'org-mode-hook 'smartparens-mode))
-(use-package evil-smartparens
-  :hook (smartparens-mode))
-
 (use-package consult
   :init
   (setq register-preview-delay 0.5
@@ -1225,6 +1067,35 @@
   (setq consult-narrow-key "<") ;; "C-+"
   )
 
+(use-package embark)
+(use-package embark-consult)
+
+(use-package nerd-icons
+  :config
+  :if (display-graphic-p))
+
+(use-package nerd-icons-completion
+  :config
+  (nerd-icons-completion-mode)
+  )
+
+(use-package nerd-icons-dired
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
+
+(use-package iedit)
+
+(use-package smartparens
+  :config
+  (sp-pair "$$" "$$")   ;; latex math mode. 
+
+  (require 'smartparens-config)
+  (add-hook 'text-mode-hook 'smartparens-mode)
+  (add-hook 'prog-mode-hook 'smartparens-mode)
+  (add-hook 'org-mode-hook 'smartparens-mode))
+(use-package evil-smartparens
+  :hook (smartparens-mode))
+
 (use-package yasnippet
   :config
   (yas-global-mode))
@@ -1238,6 +1109,29 @@
 (defun my/lsp-mode-setup-completion ()
   (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
         '(flex))) ;; Configure flex
+
+(defun lsp-ui-doc--handle-hr-lines nil
+  (let (bolp next before after)
+    (goto-char 1)
+    (while (setq next (next-single-property-change (or next 1) 'markdown-hr))
+      (when (get-text-property next 'markdown-hr)
+        (goto-char next)
+        (setq bolp (bolp)
+              before (char-before))
+        (delete-region (point) (save-excursion (forward-visible-line 1) (point)))
+        (setq after (char-after (1+ (point))))
+        (insert
+         (concat
+          (and bolp (not (equal before ?\n)) (propertize "\n" 'face '(:height 0.5)))
+          (propertize " "
+                      ;; :align-to is added with lsp-ui-doc--fix-hr-props
+                      'display '(space :height (1))
+                      'lsp-ui-doc--replace-hr t
+                      ;; 'face '(:background "dark grey")
+                      )
+          ;; :align-to is added here too
+          (propertize " " 'display '(space :height (1)))
+          (and (not (equal after ?\n)) (propertize " \n" 'face '(:height 0.2)))))))))
 :hook
 (lsp-completion-mode . my/lsp-mode-setup-completion)
 (prog-mode . lsp-deferred)
@@ -1247,7 +1141,7 @@
 (setq lsp-ui-doc-show-with-cursor nil)
 (setq lsp-ui-doc-show-with-mouse nil)
 (setq lsp-lens-enable nil)
-(setq lsp-idle-delay 0.2)
+(setq lsp-idle-delay 0.0)
 (setq lsp-headerline-breadcrumb-enable nil)
 (setq lsp-ui-sideline-enable nil)
 (setq lsp-ui-sideline-show-code-actions nil)
@@ -1258,7 +1152,7 @@
 (setq lsp-modeline-diagnostics-mode nil)
 (setq lsp-ui-sideline-enable nil)
 (setq lsp-ui-sideline-show-diagnostics nil)
-(setq lsp-eldoc-enable-hover t)     ; Eldoc
+(setq lsp-eldoc-enable-hover nil)     ; Eldoc
 (setq lsp-signature-auto-activate nil) ;; you could manually request them via `lsp-signature-activate`
 (setq lsp-signature-render-documentation nil)
 (setq lsp-completion-provider :none) ;; we use Corfu!
@@ -1299,24 +1193,119 @@
   (setq lsp-ui-doc-border darker-bgcolor)
   )
 
-(use-package lsp-latex)
+(use-package format-all
+  :commands format-all-mode
+  :hook (prog-mode . format-all-mode)
+  :config
+  (setq-default format-all-formatters '(("C"     (astyle "--mode=c"))
+                                        ("Shell" (shfmt "-i" "4" "-ci")))))
 
-(use-package lsp-dart
-  ;; :hook (dart-mode . lsp)
+(use-package org-modern
+  :hook (org-mode . org-modern-mode)
   :config
-  (setq lsp-dart-flutter-widget-guides 't)
-  (dart :variables dart-enable-analysis-server t
-        lsp-enable-indentation t
-        lsp-enable-symbol-highlighting t
-        lsp-enable-text-document-color t
-        lsp-enable-folding t
-        ;; Set the threshold value to your desired number
-        lsp-completion-max-length 1)
+  (setq
+   org-modern-star '( "" "   " "   " "   ")
+   org-modern-list '((42 . "◦") (43 . "•") (45 . "–"))
+   org-modern-block-name nil
+   org-modern-keyword nil
+   org-modern-todo t
+   org-modern-table nil
+   )
+  (set-face-attribute 'org-modern-done nil :foreground dim-fgcolor :background bgcolor :weight 'bold :slant 'normal :height 130 :inherit 'nil)
+  (set-face-attribute 'org-modern-todo nil :background darker-bgcolor :foreground blue-color :weight 'bold :height 130 :inherit 'fixed-pitch)
+  (set-face-attribute 'org-modern-time-inactive nil :foreground dim-fgcolor :background darker-bgcolor :height 130 :inherit 'nil)
+  (set-face-attribute 'org-modern-time-inactive nil :foreground dim-fgcolor :background grim-bgcolor :height 130 :inherit 'nil)
+  (set-face-attribute 'org-modern-time-active nil :background dim-fgcolor :foreground darker-bgcolor :height 130 :inherit 'nil)
+  (set-face-background 'fringe (face-attribute 'default :background))
+
   )
-(use-package flutter
+
+(use-package visual-fill-column
   :config
-  (add-hook 'dart-mode flutter-mode)
+
+  (defun org-mode-visual-fill ()
+    (setq visual-fill-column-width 150
+          visual-fill-column-center-text t)
+    (visual-fill-column-mode 1))
+
+  :hook (org-mode . org-mode-visual-fill))
+
+(use-package org-appear
+  :config
+  ;; Hide org markup
+  (setq-default org-hide-emphasis-markers t)
+  (add-hook 'org-mode-hook 'org-appear-mode)
   )
+
+;; ROAM
+(use-package org-roam
+  :ensure t
+  :custom
+  (org-roam-directory (file-truename "~/Documents/collegeNotes/"))
+  (org-roam-db-autosync-mode)
+  (org-roam-capture-templates
+   '(("d" "default" plain
+      "%?"
+      :if-new (file+head "${slug}.org" "#+title: ${title}\n#+Author:Adarsha Acharya")
+      :unnarrowed t)
+     ;; ("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
+     ;; 	:if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
+     ;; 	:unnarrowed t)
+     ))
+  :config
+  (org-roam-setup))
+
+(use-package which-key
+  :config
+  ;; Set the time delay (in seconds) for the which-key popup to appear. A value of
+  ;; zero might cause issues so a non-zero value is recommended.
+  (setq which-key-idle-delay 0.3)
+
+  ;; Set the maximum length (in characters) for key descriptions (commands or
+  ;; prefixes). Descriptions that are longer are truncated and have ".." added.
+  ;; This can also be a float (fraction of available width) or a function.
+  (setq which-key-max-description-length 27)
+
+  ;; Use additional padding between columns of keys. This variable specifies the
+  ;; number of spaces to add to the left of each column.
+  (setq which-key-add-column-padding 3)
+
+  ;; The maximum number of columns to display in the which-key buffer. nil means
+  ;; don't impose a maximum.
+  (setq which-key-max-display-columns nil)
+
+  ;; Set the separator used between keys and descriptions. Change this setting to
+  ;; an ASCII character if your font does not show the default arrow. The second
+  ;; setting here allows for extra padding for Unicode characters. which-key uses
+  ;; characters as a means of width measurement, so wide Unicode characters can
+  ;; throw off the calculation.
+  (setq which-key-separator "  " )
+
+  ;; Set the prefix string that will be inserted in front of prefix commands
+  ;; (i.e., commands that represent a sub-map).
+  (setq which-key-prefix-prefix " " )
+
+  ;; Set the special keys. These are automatically truncated to one character and
+  ;; have which-key-special-key-face applied. Disabled by default. An example
+  ;; setting is
+  ;; (setq which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
+  (setq which-key-special-keys nil)
+
+  ;; Show the key prefix on the left, top, or bottom (nil means hide the prefix).
+  ;; The prefix consists of the keys you have typed so far. which-key also shows
+  ;; the page information along with the prefix.
+  (setq which-key-show-prefix 'nil)
+
+  ;; Set to t to show the count of keys shown vs. total keys in the mode line.
+  (setq which-key-show-remaining-keys nil)
+
+  (setq which-key-frame-max-height 10)
+
+  (setq which-key-frame-max-width 150)
+
+  (setq which-key-popup-type 'frame)
+
+  (which-key-mode))
 
 (use-package drag-stuff
   :hook (org-mode . drag-stuff-mode)
@@ -1324,48 +1313,10 @@
 
 (elpaca-wait)
 
-(require 'breadcrumb)
-(breadcrumb-mode)
-
 (require 'echo-bar)
 (echo-bar-mode)
 
-(require 'flymake-posframe)
-(add-hook 'prog-mode-hook (lambda () (interactive) 
-                            (flymake-posframe-mode 1)))
-(setq flymake-posframe-error-prefix "󰚌 ")
-(setq flymake-posframe-warning-prefix " ")
-(setq flymake-posframe-note-prefix "󰠮 ")
-
 (require 'zenity-color-picker)
-
-(defun my/org-mode/load-prettify-symbols ()
-  (interactive)
-  (setq prettify-symbols-alist
-        (mapcan (lambda (x) (list x (cons (upcase (car x)) (cdr x))))
-                '(("#+begin_src" . " ")
-                  ("#+end_src" . " ")
-                  ("#+begin_example" . ?)
-                  ("#+end_example" . ?)
-                  ("#+header:" . ?)
-                  ("#+name:" . ?﮸)
-                  ("#+results:" . ?)
-                  ("#+call:" . ?)
-                  ("#+title:" . " ")
-                  ("#+property:" . "✱")
-                  (":properties:" . ?✱)
-                  ("clock:"         . ?⧖) ; Other items in the logbook have a bullet.
-                  ("[-]"            . ?⊟) ; different from the other ballot icons.
-                  ("[#A]"           . ?🄰)
-                  ("[#B]"           . ?🄱)
-                  ("[#C]"           . ?🄲)
-                  ("lambda" .  "λ")
-                  ("[ ]" . "☐")
-                  ("[X]" . "☑")
-                  ("[-]" . "❍"))))
-  (prettify-symbols-mode 1))
-
-(add-hook 'org-mode-hook 'my/org-mode/load-prettify-symbols)
 
 ;; Custom pairs for electric pair
 ;; (defvar org-electric-pairs '((?~ . ?~)) "Electric pairs for org-mode.")
@@ -1389,11 +1340,10 @@
 
 ;; How is a buffer opened when calling `org-edit-special'.
 (setq org-src-window-setup 'current-window)
-
 (defun e/org-babel-edit ()
   "Edit python src block with lsp support by tangling the block and
-then setting the org-edit-special buffer-file-name to the
-absolute path. Finally load the lsp."
+  then setting the org-edit-special buffer-file-name to the
+  absolute path. Finally load the lsp."
   (interactive)
 
   ;; org-babel-get-src-block-info returns lang, code_src, and header
@@ -1412,6 +1362,49 @@ absolute path. Finally load the lsp."
   (lsp)
   )
 
+(with-eval-after-load 'org
+  (setq org-directory "~/Documents/collegeNotes")
+  (setq org-agenda-files '("~/Documents/collegeNotes")) ; DO not add backslash at the end
+  (setq org-agenda-block-separator 32)                  ; Make it space
+  (setq org-agenda-window-setup 'current-window)                  ; Make it space
+  ;; (setq org-fancy-priorities-list '("" "󰉀" ""))
+  (setq org-agenda-prefix-format "%c  ")
+
+  (setq org-agenda-include-all-todo nil)
+  (setq org-agenda-skip-scheduled-if-done t)
+  (setq org-agenda-skip-deadline-if-done t)
+  (setq org-agenda-include-diary t)
+  (setq org-agenda-info t)
+  (setq org-agenda-columns-add-appointments-to-effort-sum t)
+  (setq org-agenda-default-appointment-duration 60)
+  (setq org-agenda-mouse-1-follows-link t)
+  (setq org-agenda-skip-unavailable-files t)
+  (setq org-agenda-use-time-grid nil)
+
+
+  (setq org-agenda-todo-keyword-format "%-6s")
+  (setq org-agenda-custom-commands
+        '(("v" "A better agenda view"
+           ((agenda "")
+            (alltodo ""
+                     ((org-agenda-overriding-header "Unscheduled tasks")))
+            ))
+          ))
+  (defvar org-agenda--todo-keyword-regex
+    (cl-reduce (lambda (cur acc)
+                 (concat acc "\\|" cur))
+               (mapcar (lambda (entry) (concat "\\* " entry))
+                       '("TODO" "HOMEWORK" "DONE")))
+    "Regex which filters all TODO keywords")
+
+  )
+(defun org-agenda-change-font ()
+  (interactive)
+  (setq buffer-face-mode-face '(:family "Barlow SemiCondensed" :height 140 :foreground "#424266" ))
+  (buffer-face-mode))
+
+(add-hook 'org-agenda-mode-hook #'org-agenda-change-font)
+
 (setq org-ellipsis " ⋅")
 
 (defun org-config (frame)
@@ -1420,7 +1413,25 @@ absolute path. Finally load the lsp."
   (setq org-log-done 'nil)
   (setq org-agenda-span 10)
   (setq org-agenda-start-on-weekday nil)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(org-emphasis-alist
+     (quote
+      (("*" bold)
+       ("/" italic)
+       ("_" underline)
+       ("=" org-verbatim verbatim)
+       ("~" org-code verbatim)
+       ("+"
+        (:strike-through t))
+       ))))
+
   (setq org-log-into-drawer t)
+  (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
+  (setq org-startup-folded 'nofold)
   )
 (add-hook 'after-make-frame-functions 'org-config)
 
@@ -1437,6 +1448,8 @@ absolute path. Finally load the lsp."
 (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp \n "))
 (add-to-list 'org-structure-template-alist '("py" . "src python :results output \n"))
 (add-to-list 'org-structure-template-alist '("cpp" . "src C++ :results verbatim \n\n  #include <iostream>\n  using namespace std;\n\n  int main(){\n    return 0;\n}"))
+(add-to-list 'org-structure-template-alist '("cl" . "src C :results verbatim \n\n  #include <iostream>\n  using namespace std;\n\n  int main(){\n    return 0;\n}"))
+(add-to-list 'org-structure-template-alist '("asm" . "src asm :results verbatim"))
 
 (setq dired-use-ls-dired nil)
 (setq dired-kill-when-opening-new-dired-buffer t)
@@ -1455,11 +1468,6 @@ absolute path. Finally load the lsp."
 
 (add-hook 'dired-mode-hook 'config-dired)
 (add-hook 'dired-mode-hook 'dired-hide-details-mode)
-
-(setq eldoc-idle-delay 0.01)
-(advice-add 'eldoc-display-in-echo-area :override #'do-nothing-function )
-(defun do-nothing-function (docs _interactive)
-  'ignore)
 
 (setq flymake-fringe-indicator-position nil)
 
@@ -1487,17 +1495,6 @@ absolute path. Finally load the lsp."
 
 (setq treesit-font-lock-level 4)
 
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq TeX-PDF-mode t) 
-(setq TeX-view-program-selection '(((output-dvi has-no-display-manager)
-                                    "dvi2tty")
-                                   ((output-dvi style-pstricks)
-                                    "dvips and gv")
-                                   (output-dvi "xdvi")
-                                   (output-pdf "Zathura")
-                                   (output-html "xdg-open")))
-
 (add-to-list 'default-frame-alist '(font . "Iosevka Nerd Font Medium"))
 (defun configure-font ()
   "Configure font given initial non-daemon FRAME.
@@ -1508,7 +1505,7 @@ absolute path. Finally load the lsp."
   (set-face-attribute 'font-lock-comment-face nil :slant 'italic)
   (set-face-attribute 'font-lock-keyword-face nil :slant 'italic)
   (set-face-attribute 'line-number nil :font cust-monospace :height 120)
-  (set-face-attribute 'link nil :background darker-bgcolor :slant 'normal  :weight 'regular :overline 'nil :underline 'nil :family cust-serif )
+  (set-face-attribute 'link nil :background darker-bgcolor :slant 'oblique  :weight 'regular :overline 'nil :underline 'nil :family cust-serif )
   (set-face-attribute 'show-paren-match nil :foreground dim-fgcolor :background 'unspecified :underline 'nil)
   (set-face-attribute 'show-paren-match-expression nil :background grim-bgcolor :foreground 'unspecified :inherit 'nil)
   (set-face-attribute 'help-key-binding nil :font cust-sans-serif :weight 'semibold :background darker-bgcolor :foreground dim-fgcolor :box 'nil)
@@ -1523,39 +1520,35 @@ absolute path. Finally load the lsp."
  Intended for `after-make-frame-functions'."
   (set-face-attribute 'org-block nil :background darker-bgcolor :font cust-monospace)
   (set-face-attribute 'org-verbatim nil :background 'unspecified :foreground dim-fgcolor :inherit 'fixed-pitch)
-  (set-face-attribute 'org-block-end-line nil :background darker-bgcolor :font "Barlow" :height 200)
-  (set-face-attribute 'org-block-begin-line nil :background darker-bgcolor :font "Barlow" :height 100 :weight 'semibold)
-  (set-face-attribute 'org-meta-line nil :slant 'normal :height 90)
-  (set-face-attribute 'org-level-1 nil :height 235 :family cust-sans-serif :weight 'regular :foreground lavender-color)
-  (set-face-attribute 'org-level-2 nil :height 220 :family cust-sans-serif :weight 'regular :foreground lavender-color)
-  (set-face-attribute 'org-level-3 nil :height 205 :family cust-sans-serif :weight 'regular :foreground blue-color)
-  (set-face-attribute 'org-level-4 nil :height 190 :family cust-sans-serif :weight 'regular :foreground blue-color)
-  (set-face-attribute 'org-level-5 nil :height 190 :family cust-sans-serif :weight 'regular :foreground blue-color)
-  (set-face-attribute 'org-level-6 nil :height 190 :family cust-sans-serif :weight 'regular :foreground blue-color)
-  (set-face-attribute 'org-level-7 nil :height 190 :family cust-sans-serif :weight 'regular :foreground blue-color)
-  (set-face-attribute 'org-level-8 nil :height 190 :family cust-sans-serif :weight 'regular :foreground blue-color)
+  (set-face-attribute 'org-block-end-line nil :background darker-bgcolor :foreground darker-bgcolor :font cust-sans-serif :height 200)
+  (set-face-attribute 'org-block-begin-line nil :background darker-bgcolor :foreground darker-bgcolor :font cust-sans-serif :height 200)
+  (set-face-attribute 'org-meta-line nil :slant 'normal :height 90 :foreground bgcolor :font cust-serif)
+  (set-face-attribute 'org-drawer nil :foreground bgcolor)
+  (set-face-attribute 'org-todo nil :background bgcolor :foreground teal-color :weight 'bold :font cust-sans-serif :height 200)
+  (set-face-attribute 'org-agenda-diary nil :foreground blue-color :weight 'bold :font cust-sans-serif)
+
+  (set-face-attribute 'org-document-info-keyword nil :foreground bgcolor)
+  (set-face-attribute 'org-level-1 nil :height 235 :family cust-serif :weight 'semibold :foreground lavender-color)
+  (set-face-attribute 'org-level-2 nil :height 220 :family cust-serif :weight 'semibold :foreground lavender-color)
+  (set-face-attribute 'org-level-3 nil :height 205 :family cust-serif :weight 'regular :foreground blue-color)
+  (set-face-attribute 'org-level-4 nil :height 190 :family cust-serif :weight 'regular :foreground blue-color)
+  (set-face-attribute 'org-level-5 nil :height 190 :family cust-serif :weight 'regular :foreground blue-color)
+  (set-face-attribute 'org-level-6 nil :height 190 :family cust-serif :weight 'regular :foreground blue-color)
+  (set-face-attribute 'org-level-7 nil :height 190 :family cust-serif :weight 'regular :foreground blue-color)
+  (set-face-attribute 'org-level-8 nil :height 190 :family cust-serif :weight 'regular :foreground blue-color)
   (set-face-attribute 'org-table nil :background darker-bgcolor :inherit 'fixed-pitch)
 
   (set-face-attribute 'org-document-title nil :height 260 :font cust-sans-serif :foreground blue-color)
   (set-face-attribute 'org-ellipsis nil :slant 'normal :foreground dim-fgcolor)
   (set-face-attribute 'org-done nil :slant 'normal :strike-through 't :foreground dim-fgcolor)
-  (set-face-attribute 'org-drawer nil  :foreground dim-fgcolor)
 
-  (set-face-attribute 'org-agenda-date nil :font "Abel" :weight 'regular :height 200 :foreground pink-color)
+  (set-face-attribute 'org-agenda-date nil :font cust-sans-serif :weight 'regular :height 200 :foreground dim-fgcolor)
   (set-face-attribute 'org-agenda-date-today nil :font cust-sans-serif :weight 'semibold :height 200 )
   (set-face-attribute 'org-agenda-done nil :font cust-serif :weight 'regular :height 190 :strike-through 't)
-  (set-face-attribute 'org-agenda-structure nil :font cust-serif :weight 'regular :height 230 :foreground blue-color)
+  (set-face-attribute 'org-agenda-structure nil :font cust-serif :weight 'regular :height 230 :foreground lavender-color)
   )
 
 (add-hook 'org-mode-hook #'configure-org-font)
-
-(defun configure-eldoc-font ()
-  "Configure font given initial non-daemon FRAME.
-     Intended for `after-make-frame-functions'."
-  (set-face-attribute 'eldoc-box-body nil :background darker-bgcolor)
-  (set-face-attribute 'eldoc-box-border nil :background darker-bgcolor)
-  )
-(add-hook 'eldoc-mode-hook #'configure-eldoc-font)
 
 (defun configure-vertico-font ()
   "Configure font given initial non-daemon FRAME.
@@ -1604,56 +1597,12 @@ absolute path. Finally load the lsp."
   (set-face-attribute 'flymake-warning nil :background "#453e29" :foreground "#F8D782" :underline 'nil :weight 'bold))
 (add-hook 'flymake-mode-hook #'configure-flymake-font)
 
-(defun configure-flymake-posframe-font ()
-  "Configure font given initial non-daemon FRAME.
-   Intended for `lsp-mode'."
-  (set-face-attribute 'flymake-posframe-background-face nil :background darker-bgcolor :foreground calm-fgcolor :weight 'bold)
-  (set-face-attribute 'flymake-posframe-foreground-face nil :background darker-bgcolor :foreground calm-fgcolor :weight 'bold)
-
-  (set-face-attribute 'flymake-posframe-error-face nil :background darker-bgcolor :foreground red-color :weight 'bold)
-  (set-face-attribute 'flymake-posframe-warning-face nil :background darker-bgcolor :foreground orange-color :weight 'bold)
-  (set-face-attribute 'flymake-posframe-note-face nil :background darker-bgcolor :foreground teal-color :weight 'bold)
-  )
-(add-hook 'flymake-posframe-mode-hook #'configure-flymake-posframe-font)
-
 (defun configure-dired-font ()
   "Configure font given initial non-daemon FRAME.
    Intended for `after-make-frame-functions'."
   (set-face-attribute 'dired-header nil :height 250 :weight 'normal)
   )
 (add-hook 'dired-mode-hook #'configure-dired-font)
-
-(defun configure-treemacs-font ()
-  "Configure font given initial non-daemon FRAME.
-   Intended for `after-make-frame-functions'."
-  (set-face-attribute 'treemacs-marked-file-face nil :foreground calm-fgcolor)
-  (set-face-attribute 'treemacs-git-conflict-face nil :foreground calm-fgcolor)
-  (set-face-attribute 'treemacs-git-added-face nil :foreground calm-fgcolor)
-  (set-face-attribute 'treemacs-root-unreadable-face nil :foreground calm-fgcolor)
-  (set-face-attribute 'treemacs-root-remote-unreadable-face nil :foreground calm-fgcolor)
-  (set-face-attribute 'treemacs-git-commit-diff-face nil :foreground calm-fgcolor)
-  (set-face-attribute 'treemacs-git-modified-face nil :foreground calm-fgcolor)
-  (set-face-attribute 'treemacs-git-untracked-face nil :foreground calm-fgcolor)
-  )
-(add-hook 'treemacs-mode-hook #'configure-treemacs-font)
-
-(defun configure-latex-font ()
-  "Configure font given initial non-daemon FRAME.
-   Intended for `tex-mode'."
-  (set-face-attribute 'font-latex-script-char-face nil :foreground grim-fgcolor)
-  (set-face-attribute 'font-latex-math-face nil :foreground teal-color :weight 'bold)
-  (set-face-attribute 'font-latex-sectioning-5-face nil :foreground teal-color)
-  )
-(add-hook 'TeX-mode-hook #'configure-latex-font)
-
-(defun configure-highlight-indent-font ()
-  "Configure font given initial non-daemon FRAME.
-     Intended for `after-make-frame-functions'."
-  (set-face-attribute 'highlight-indent-guides-character-face nil :foreground dim-bgcolor)
-  (set-face-attribute 'highlight-indent-guides-top-character-face nil :foreground dim-fgcolor)
-  (set-face-attribute 'highlight-indent-guides-stack-character-face nil :foreground dim-bgcolor)
-  )
-(add-hook 'highlight-indent-guides-mode-hook #'configure-highlight-indent-font)
 
 (defun configure-evil-font ()
   "Configure font given initial non-daemon FRAME.
@@ -1682,7 +1631,7 @@ absolute path. Finally load the lsp."
 
 (add-hook 'prog-mode-hook
           (lambda ()
-            (setq corfu-auto t)                 ;; Enable auto completion
+            (setq corfu-auto nil)                 ;; Enable auto completion
             ))
 
 (add-hook 'org-mode-hook
@@ -1709,7 +1658,6 @@ absolute path. Finally load the lsp."
 
 ;; LaTeX
 (add-hook 'LaTeX-mode-hook 'visual-line-mode)
-(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 (add-hook 'LaTeX-mode-hook #'(lambda () (interactive)
                                (lsp)

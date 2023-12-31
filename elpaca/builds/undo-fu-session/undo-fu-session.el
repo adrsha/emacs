@@ -1,0 +1,1 @@
+/home/chilly/.config/emacs/elpaca/repos/emacs-undo-fu-session/undo-fu-session.el

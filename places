@@ -1,0 +1,26 @@
+;;; -*- coding: utf-8; mode: lisp-data -*-
+(("/home/chilly/Documents/collegeNotes/discrete_structure_ds.org" . 611)
+ ("/home/chilly/Documents/collegeNotes/numerical_methods_nm.org" . 1568)
+ ("/home/chilly/Documents/collegeNotes/microprocessors.org" . 13)
+ ("/home/chilly/Documents/collegeNotes/instrumentation_1_i1.org" . 1525)
+ ("/home/chilly/Documents/collegeNotes/home.org" . 884)
+ ("/home/chilly/Documents/collegeNotes/electrical_machines_em.org" . 1546)
+ ("/home/chilly/Documents/collegeNotes/data_structure_and_algorithms_dsa.org" . 564)
+ ("/home/chilly/Documents/collegeNotes/applied_mathematics_am.org" . 2665)
+ ("/home/chilly/.config/emacs/init.org" . 65037)
+ ("/home/chilly/Documents/collegeNotes/resources/MP_Ch1.pptx" . 163)
+ ("/home/chilly/Documents/collegeNotes/Labs/MP/Lab2.org" . 146)
+ ("/home/chilly/Documents/collegeNotes/Labs/MP/l2_q1.asm" . 2)
+ ("/home/chilly/.config/emacs/init.el" . 114)
+ ("/home/chilly/Documents/ImpDocs/usage_examples.org" . 6634)
+ ("/home/chilly/Documents/PDFs/NM1.pdf" . 249)
+ ("/home/chilly/Documents/collegeNotes/Labs/Computer/l2.c" . 1254)
+ ("/home/chilly/Documents/collegeNotes/Labs/NM/nm.org" . 2)
+ ("/home/chilly/Documents/collegeNotes/Labs/Computer/"
+  (dired-filename . "/home/chilly/Documents/collegeNotes/Labs/Computer/comp.org"))
+ ("/home/chilly/Documents/collegeNotes/Labs/"
+  (dired-filename . "/home/chilly/Documents/collegeNotes/Labs/Computer"))
+ ("/home/chilly/Documents/collegeNotes/"
+  (dired-filename . "/home/chilly/Documents/collegeNotes/Labs"))
+ ("/home/chilly/Documents/"
+  (dired-filename . "/home/chilly/Documents/collegeNotes")))

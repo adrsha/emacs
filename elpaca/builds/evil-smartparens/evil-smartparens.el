@@ -1,0 +1,1 @@
+/home/chilly/.config/emacs/elpaca/repos/evil-smartparens/evil-smartparens.el
