@@ -1,1 +1,0 @@
-/home/chilly/.config/emacs/elpaca/repos/annalist/annalist.el

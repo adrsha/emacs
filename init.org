@@ -1227,7 +1227,7 @@ Directory to store the recent files list.
     "fot" '(org-babel-tangle :which-key "󰗆  org tangle")
     "fn" '(org-roam-node-find :which-key "󰣜  find nodes  ")
     "fc"  '(:ignore t :which-key "󰈔  current file  ")
-    "fcr"  '(rename-current-buffer-file :which-key "󰑕  rename current file  "))
+    "fcr"  '(recover-this-file :which-key "󰑕  rename current file  "))
 
   (e/leader-keys
     "o"  '(:ignore t :which-key "󰉋  org  ")

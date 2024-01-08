@@ -1,1 +1,0 @@
-/home/chilly/.config/emacs/elpaca/repos/emacs-format-all-the-code/format-all.el
