@@ -22,6 +22,7 @@
   "Default evil ins key"
   (evil-escape-mode -1))
 (add-hook 'evil-visual-state-entry-hook #'configure-evil-exit-ins)
+(add-hook 'org-agenda-mode-hook #'configure-evil-exit-ins)
 
 (defcustom my-skippable-buffer-regexp
   (rx bos (or "*Messages*" "*scratch*" "*Help*") eos)
@@ -201,21 +202,21 @@ With a prefix ARG always prompt for command to use."
   (defvar cust-serif "Besley"
     "The sans font for emacs.")
   (cond ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 1)
-         (setq bgcolor "#242933"
-               grim-bgcolor "#20242c"
-               dim-bgcolor "#21252d"
-               darker-bgcolor "#21252d"
-               darkest-bgcolor "#1C1F26"
-               dim-fgcolor "#333a47"
-               calm-fgcolor "#d8dee9"
+         (setq bgcolor "#000000"
+               grim-bgcolor "#222222"
+               dim-bgcolor "#14141C"
+               darker-bgcolor "#0B0B0E"
+               darkest-bgcolor "#0a0a0a"
+               dim-fgcolor "#424266"
+               calm-fgcolor "#BAC2DE"
                mauve-color "#cba6f7"
                lavender-color "#b4befe"
-               blue-color "#5e81ac"
+               blue-color "#90b6f3"
                pink-color "#cba6f7"
-               red-color "#bf616a"
-               orange-color "#d08770"
-               teal-color "#a3be8c"
-               grim-fgcolor "#20242c")
+               red-color "#f38ba8"
+               orange-color "#fab387"
+               teal-color "#a6e3a1"
+               grim-fgcolor "#232338")
          )
 
         ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 2)
@@ -484,31 +485,31 @@ With a prefix ARG always prompt for command to use."
   (load-theme 'catppuccin :no-confirm)
   (cond ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 1)
          (catppuccin-set-color 'rosewater "#e8dee9")
-         (catppuccin-set-color 'flamingo "#81a1c1")
-         (catppuccin-set-color 'pink "#F5C2E7")
-         (catppuccin-set-color 'mauve "#b48ead")
-         (catppuccin-set-color 'red "#bf616a")
-         (catppuccin-set-color 'maroon "#E8A2AF")
-         (catppuccin-set-color 'peach "#d08770")
-         (catppuccin-set-color 'yellow "#ebcb8b")
-         (catppuccin-set-color 'green "#a3be8c")
-         (catppuccin-set-color 'teal "#B5E8E0")
-         (catppuccin-set-color 'sky "#5e81ac")
-         (catppuccin-set-color 'sapphire "#88c0d0")
-         (catppuccin-set-color 'blue "#88c0d0")
-         (catppuccin-set-color 'lavender "#81a1c1")
-         (catppuccin-set-color 'text "#eceff4")
-         (catppuccin-set-color 'subtext1 "#e5e9f0")
-         (catppuccin-set-color 'subtext0 "#e5e9f0")
-         (catppuccin-set-color 'overlay2 "#d8dee9")
-         (catppuccin-set-color 'overlay1 "#d8dee9")
-         (catppuccin-set-color 'overlay0 "#4c566a")
-         (catppuccin-set-color 'surface2 "#434c5e")
-         (catppuccin-set-color 'surface1 "#3b4252")
-         (catppuccin-set-color 'surface0 "#2e3440")
-         (catppuccin-set-color 'mantle "#242933")
-         (catppuccin-set-color 'crust "#2e3440")
-         (catppuccin-set-color 'base "#242933")
+         (catppuccin-set-color 'flamingo "#f2cdcd")
+         (catppuccin-set-color 'pink "#f5c2e7")
+         (catppuccin-set-color 'mauve "#cba6f7")
+         (catppuccin-set-color 'red "#f38ba8")
+         (catppuccin-set-color 'maroon "#eba0ac")
+         (catppuccin-set-color 'peach "#fab387")
+         (catppuccin-set-color 'yellow "#f9e2af")
+         (catppuccin-set-color 'green "#a6e3a1")
+         (catppuccin-set-color 'teal "#94e2d5")
+         (catppuccin-set-color 'sky "#89dceb")
+         (catppuccin-set-color 'sapphire "#74c7ec")
+         (catppuccin-set-color 'blue "#89b4fa")
+         (catppuccin-set-color 'lavender "#b4befe")
+         (catppuccin-set-color 'text "#cdd6f4")
+         (catppuccin-set-color 'subtext1 "#bac2de")
+         (catppuccin-set-color 'subtext0 "#a6adc8")
+         (catppuccin-set-color 'overlay2 "#9399b2")
+         (catppuccin-set-color 'overlay1 "#7f849c")
+         (catppuccin-set-color 'overlay0 "#6c7086")
+         (catppuccin-set-color 'surface2 "#585b70")
+         (catppuccin-set-color 'surface1 "#45475a")
+         (catppuccin-set-color 'surface0 "#313244")
+         (catppuccin-set-color 'mantle "#0E0E16")
+         (catppuccin-set-color 'crust "#0B0B11")
+         (catppuccin-set-color 'base "#000000")
          (catppuccin-reload))
 
         ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 2)
@@ -615,7 +616,7 @@ With a prefix ARG always prompt for command to use."
   :config
   (require 'openwith)
   (openwith-mode t)
-  (setq openwith-associations '(("\\.pdf\\'" "zathura" (file)) ("\\.pptx\\'" "libreoffice" (file)) ("\\.docx\\'" "libreoffice" (file))))
+  (setq openwith-associations '(("\\.pdf\\'" "evince" (file)) ("\\.pptx\\'" "libreoffice" (file)) ("\\.docx\\'" "libreoffice" (file))))
   )
 
 (use-package corfu
@@ -696,7 +697,7 @@ With a prefix ARG always prompt for command to use."
 (use-package org-roam
   :ensure t
   :custom
-  (org-roam-directory (file-truename "~/Documents/notes"))
+  (org-roam-directory (file-truename "~/Documents/collegeNotes"))
   (org-roam-db-autosync-mode)
   (org-roam-capture-templates
    '(("d" "default" plain
@@ -786,7 +787,7 @@ With a prefix ARG always prompt for command to use."
   "fot" '(org-babel-tangle :which-key "󰗆  org tangle")
   "fn" '(org-roam-node-find :which-key "󰣜  find nodes  ")
   "fc"  '(:ignore t :which-key "󰈔  current file  ")
-  "fcr"  '(rename-current-buffer-file :which-key "󰑕  rename current file  "))
+  "fcr"  '(recover-this-file :which-key "󰑕  rename current file  "))
 
 (e/leader-keys
   "o"  '(:ignore t :which-key "󰉋  org  ")
@@ -1365,7 +1366,8 @@ With a prefix ARG always prompt for command to use."
 (with-eval-after-load 'org
   (setq org-directory "~/Documents/collegeNotes")
   (setq org-agenda-files '("~/Documents/collegeNotes")) ; DO not add backslash at the end
-  (setq org-agenda-block-separator 32)                  ; Make it space
+  ;; (setq org-agenda-block-separator 32)                  ; Make it space
+  (setq org-agenda-block-separator " ")                  ; Make it space
   (setq org-agenda-window-setup 'current-window)                  ; Make it space
   ;; (setq org-fancy-priorities-list '("" "󰉀" ""))
   (setq org-agenda-prefix-format "%c  ")
@@ -1380,11 +1382,14 @@ With a prefix ARG always prompt for command to use."
   (setq org-agenda-mouse-1-follows-link t)
   (setq org-agenda-skip-unavailable-files t)
   (setq org-agenda-use-time-grid nil)
-
+  (setq org-todo-keywords '
+        ((sequence "TODO(t)" "QUESTION(q)" "HOMEWORK(h)" "NOTE(n)"
+                   "|"
+                   "DONE(d/!)" "CANCELLED(c@/!)")))
 
   (setq org-agenda-todo-keyword-format "%-6s")
   (setq org-agenda-custom-commands
-        '(("v" "A better agenda view"
+        '(("a" "A better agenda view"
            ((agenda "")
             (alltodo ""
                      ((org-agenda-overriding-header "Unscheduled tasks")))
@@ -1394,7 +1399,7 @@ With a prefix ARG always prompt for command to use."
     (cl-reduce (lambda (cur acc)
                  (concat acc "\\|" cur))
                (mapcar (lambda (entry) (concat "\\* " entry))
-                       '("TODO" "HOMEWORK" "DONE")))
+                       '("TODO" "HOMEWORK" "QUESTION" "DONE")))
     "Regex which filters all TODO keywords")
 
   )
@@ -1436,9 +1441,9 @@ With a prefix ARG always prompt for command to use."
 (add-hook 'after-make-frame-functions 'org-config)
 
 (setq org-capture-templates
-      `(("t" "Task" entry (file+olp "~/Documents/notes/home.org" "Inbox")
+      `(("t" "Task" entry (file+olp "~/Documents/collegeNotes/home.org" "Inbox")
          "* TODO %?\n  %i")
-        ("h" "Homework" entry (file+olp "~/Documents/notes/home.org" "Inbox")
+        ("h" "Homework" entry (file+olp "~/Documents/collegeNotes/home.org" "Inbox")
          "* TODO %?\n  %i")))
 
 (require 'org-tempo)

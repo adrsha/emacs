@@ -47,6 +47,7 @@ To prevent the evil escape key from impacting the visual mode.
     "Default evil ins key"
     (evil-escape-mode -1))
   (add-hook 'evil-visual-state-entry-hook #'configure-evil-exit-ins)
+  (add-hook 'org-agenda-mode-hook #'configure-evil-exit-ins)
 #+END_SRC
 
 Cleaner buffer traversal.
@@ -205,7 +206,6 @@ Extensions functions
 ** Variables
 
 #+BEGIN_SRC emacs-lisp
-
   (defvar bgcolor "#11111b"
     "The normal background of emacs.")
   (defvar grim-bgcolor "#14141f"
@@ -253,21 +253,21 @@ Extensions functions
     (defvar cust-serif "Besley"
       "The sans font for emacs.")
     (cond ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 1)
-           (setq bgcolor "#242933"
-                 grim-bgcolor "#20242c"
-                 dim-bgcolor "#21252d"
-                 darker-bgcolor "#21252d"
-                 darkest-bgcolor "#1C1F26"
-                 dim-fgcolor "#333a47"
-                 calm-fgcolor "#d8dee9"
+           (setq bgcolor "#000000"
+                 grim-bgcolor "#222222"
+                 dim-bgcolor "#14141C"
+                 darker-bgcolor "#0B0B0E"
+                 darkest-bgcolor "#0a0a0a"
+                 dim-fgcolor "#424266"
+                 calm-fgcolor "#BAC2DE"
                  mauve-color "#cba6f7"
                  lavender-color "#b4befe"
-                 blue-color "#5e81ac"
+                 blue-color "#90b6f3"
                  pink-color "#cba6f7"
-                 red-color "#bf616a"
-                 orange-color "#d08770"
-                 teal-color "#a3be8c"
-                 grim-fgcolor "#20242c")
+                 red-color "#f38ba8"
+                 orange-color "#fab387"
+                 teal-color "#a6e3a1"
+                 grim-fgcolor "#232338")
            )
 
           ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 2)
@@ -314,8 +314,6 @@ Extensions functions
 ** Faces
 
 #+BEGIN_SRC emacs-lisp
-
-
   (defface minibuffer-face
     '((t :height 170
          :foreground "#BAC2DE"
@@ -376,7 +374,6 @@ Extensions functions
 #+END_SRC
 
 * Options
-
 ** Auto Tangle
 
 #+begin_src emacs-lisp :tangle ./early-init.el
@@ -386,41 +383,31 @@ Extensions functions
 ** Package Startup Disable
 
 #+BEGIN_SRC emacs-lisp
-
   (setq package-enable-at-startup nil)
-
 #+END_SRC
 
 ** Emacs UI
 
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
-
   ;; EMACS UIs
-
 #+END_SRC
 
 Remove modeline.
 
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
-
   (setq-default mode-line-format nil)
-
 #+END_SRC
 
 No cursor in inactive windows.
 	
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
-
   (setq-default cursor-in-non-selected-windows nil)
-
 #+END_SRC
 
 No start up screen.
 
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
-
   ;;(setq inhibit-startup-screen t)
-
 #+END_SRC
 
 No echo area message during startup.
@@ -428,55 +415,42 @@ No echo area message during startup.
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
   (setq server-client-instructions nil)
   ;;(setq inhibit-startup-echo-area-message t)
-
 #+END_SRC
 
 No message in scratch buffer
 	
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
-
   (setq initial-scratch-message nil)
-
 #+END_SRC
 
 No Initial buffer, i.e. make initial buffer the scratch buffer.
 
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
-
   (setq initial-buffer-choice nil)
-
 #+END_SRC
 
 No title frame.
 
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
-
   (setq frame-title-format nil)
-
 #+END_SRC
 
 No scroll bars.
 	
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
-
   (if (fboundp 'scroll-bar-mode) (set-scroll-bar-mode nil))
-
 #+END_SRC
 
 No toolbars at all.
 	
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
-
   (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-
 #+END_SRC
 
 No menu bar.
 	
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
-
   (menu-bar-mode -1)
-
 #+END_SRC
 
 No limit on font lock. (tree style levels)
@@ -490,66 +464,50 @@ No limit on font lock. (tree style levels)
 No Blinking cursor.
 
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
-
   (blink-cursor-mode -1)
-
 #+END_SRC
 
 Display line numbers globally
 
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
-
   (global-display-line-numbers-mode t)
-
 #+END_SRC
 
 Enable lines being truncated.
 
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
-
   (set-default 'truncate-lines t)
-
 #+END_SRC
 
 Disable most messages in echo area. Doesnt work if enabled before starting the GUI.
 
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
-
   (setq-default inhibit-message nil)
-
 #+END_SRC
 
 Setting some default frame settings. For border and cursors.
 
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
-
   (add-to-list 'default-frame-alist '(internal-border-width . 10 ))
   (add-to-list 'default-frame-alist '(internal-show-cursor . -1))
-
 #+END_SRC
 
 Replace the truncation symbols for file buffers with truncation enabled. (Doesn't work for org-mode)
 
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
-
   (set-display-table-slot standard-display-table 0 ?\ ) 
-
 #+END_SRC
 
 Disable the line break symbols in fringes.
 
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
-
   (setf (cdr (assq 'continuation fringe-indicator-alist)) '(nil nil))
-
 #+END_SRC
 
 To disable buttons for checkboxes
 
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
-
   (setq-default widget-image-enable nil)
-
 #+END_SRC
 
 
@@ -557,7 +515,6 @@ To disable buttons for checkboxes
 **** Suppress EOB and BOBs
 
 #+BEGIN_SRC emacs-lisp :tangle ./early-init.el
-
   (defun my-command-error-function (data context caller)
     "Ignore the buffer-read-only, beginning-of-buffer,
    end-of-buffer signals; pass the rest to the default handler."
@@ -594,10 +551,8 @@ To disable buttons for checkboxes
 List of warnings that the byte-compiler should issue. 
 
 #+BEGIN_SRC emacs-lisp
-
   ;; (setq byte-compile-warnings '(not free-vars unresolved noruntime lexical make-local))
   (setq byte-compile-warnings 'nil)
-
 #+END_SRC
 
 Silence compiler warnings as they can be pretty disruptive.
@@ -866,31 +821,31 @@ Directory to store the recent files list.
     (load-theme 'catppuccin :no-confirm)
     (cond ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 1)
            (catppuccin-set-color 'rosewater "#e8dee9")
-           (catppuccin-set-color 'flamingo "#81a1c1")
-           (catppuccin-set-color 'pink "#F5C2E7")
-           (catppuccin-set-color 'mauve "#b48ead")
-           (catppuccin-set-color 'red "#bf616a")
-           (catppuccin-set-color 'maroon "#E8A2AF")
-           (catppuccin-set-color 'peach "#d08770")
-           (catppuccin-set-color 'yellow "#ebcb8b")
-           (catppuccin-set-color 'green "#a3be8c")
-           (catppuccin-set-color 'teal "#B5E8E0")
-           (catppuccin-set-color 'sky "#5e81ac")
-           (catppuccin-set-color 'sapphire "#88c0d0")
-           (catppuccin-set-color 'blue "#88c0d0")
-           (catppuccin-set-color 'lavender "#81a1c1")
-           (catppuccin-set-color 'text "#eceff4")
-           (catppuccin-set-color 'subtext1 "#e5e9f0")
-           (catppuccin-set-color 'subtext0 "#e5e9f0")
-           (catppuccin-set-color 'overlay2 "#d8dee9")
-           (catppuccin-set-color 'overlay1 "#d8dee9")
-           (catppuccin-set-color 'overlay0 "#4c566a")
-           (catppuccin-set-color 'surface2 "#434c5e")
-           (catppuccin-set-color 'surface1 "#3b4252")
-           (catppuccin-set-color 'surface0 "#2e3440")
-           (catppuccin-set-color 'mantle "#242933")
-           (catppuccin-set-color 'crust "#2e3440")
-           (catppuccin-set-color 'base "#242933")
+           (catppuccin-set-color 'flamingo "#f2cdcd")
+           (catppuccin-set-color 'pink "#f5c2e7")
+           (catppuccin-set-color 'mauve "#cba6f7")
+           (catppuccin-set-color 'red "#f38ba8")
+           (catppuccin-set-color 'maroon "#eba0ac")
+           (catppuccin-set-color 'peach "#fab387")
+           (catppuccin-set-color 'yellow "#f9e2af")
+           (catppuccin-set-color 'green "#a6e3a1")
+           (catppuccin-set-color 'teal "#94e2d5")
+           (catppuccin-set-color 'sky "#89dceb")
+           (catppuccin-set-color 'sapphire "#74c7ec")
+           (catppuccin-set-color 'blue "#89b4fa")
+           (catppuccin-set-color 'lavender "#b4befe")
+           (catppuccin-set-color 'text "#cdd6f4")
+           (catppuccin-set-color 'subtext1 "#bac2de")
+           (catppuccin-set-color 'subtext0 "#a6adc8")
+           (catppuccin-set-color 'overlay2 "#9399b2")
+           (catppuccin-set-color 'overlay1 "#7f849c")
+           (catppuccin-set-color 'overlay0 "#6c7086")
+           (catppuccin-set-color 'surface2 "#585b70")
+           (catppuccin-set-color 'surface1 "#45475a")
+           (catppuccin-set-color 'surface0 "#313244")
+           (catppuccin-set-color 'mantle "#0E0E16")
+           (catppuccin-set-color 'crust "#0B0B11")
+           (catppuccin-set-color 'base "#000000")
            (catppuccin-reload))
 
           ((equal (read-from-file "/home/chilly/Scripts/data/themeIndex.txt") 2)
@@ -1009,7 +964,7 @@ Directory to store the recent files list.
     :config
     (require 'openwith)
     (openwith-mode t)
-    (setq openwith-associations '(("\\.pdf\\'" "zathura" (file)) ("\\.pptx\\'" "libreoffice" (file)) ("\\.docx\\'" "libreoffice" (file))))
+    (setq openwith-associations '(("\\.pdf\\'" "evince" (file)) ("\\.pptx\\'" "libreoffice" (file)) ("\\.docx\\'" "libreoffice" (file))))
     )
 #+end_src
 
@@ -1115,7 +1070,7 @@ Directory to store the recent files list.
   (use-package org-roam
     :ensure t
     :custom
-    (org-roam-directory (file-truename "~/Documents/notes"))
+    (org-roam-directory (file-truename "~/Documents/collegeNotes"))
     (org-roam-db-autosync-mode)
     (org-roam-capture-templates
      '(("d" "default" plain
@@ -1964,13 +1919,20 @@ The one additional feature we have used below is Cape’s cape-capf-buster. This
     (setq org-agenda-mouse-1-follows-link t)
     (setq org-agenda-skip-unavailable-files t)
     (setq org-agenda-use-time-grid nil)
-
+    (setq org-todo-keywords '
+          ((sequence "TODO(t)" "QUESTION(q)" "HOMEWORK(h)" "NOTE(n)"
+                     "|"
+                     "DONE(d/!)" "CANCELLED(c@/!)")))
 
     (setq org-agenda-todo-keyword-format "%-6s")
     (setq org-agenda-custom-commands
-          '(("v" "A better agenda view"
+          '(("a" "A better agenda view"
              ((agenda "")
-              (alltodo ""
+              (todo "HOMEWORK"
+                       ((org-agenda-overriding-header "Due Assignments")))
+              (todo "QUESTION"
+                       ((org-agenda-overriding-header "Unanswered Questions")))
+              (todo "TODO"
                        ((org-agenda-overriding-header "Unscheduled tasks")))
               ))
             ))
@@ -1978,9 +1940,8 @@ The one additional feature we have used below is Cape’s cape-capf-buster. This
       (cl-reduce (lambda (cur acc)
                    (concat acc "\\|" cur))
                  (mapcar (lambda (entry) (concat "\\* " entry))
-                         '("TODO" "HOMEWORK" "DONE")))
+                         '("TODO" "HOMEWORK" "QUESTION" "DONE")))
       "Regex which filters all TODO keywords")
-
     )
   (defun org-agenda-change-font ()
     (interactive)
@@ -2028,9 +1989,9 @@ The one additional feature we have used below is Cape’s cape-capf-buster. This
 
 #+begin_src emacs-lisp
   (setq org-capture-templates
-        `(("t" "Task" entry (file+olp "~/Documents/notes/home.org" "Inbox")
+        `(("t" "Task" entry (file+olp "~/Documents/collegeNotes/home.org" "Inbox")
            "* TODO %?\n  %i")
-          ("h" "Homework" entry (file+olp "~/Documents/notes/home.org" "Inbox")
+          ("h" "Homework" entry (file+olp "~/Documents/collegeNotes/home.org" "Inbox")
            "* TODO %?\n  %i")))
 #+end_src
 
