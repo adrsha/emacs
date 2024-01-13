@@ -370,7 +370,11 @@ With a prefix ARG always prompt for command to use."
 
 (require 'elpaca-setup)
 
-(use-package gcmh)
+(use-package gcmh
+  :config
+  (setq gcmh-high-cons-threshold 33554432)
+  (gcmh-mode 1)
+  )
 
 (use-package evil
   :init
@@ -619,60 +623,85 @@ With a prefix ARG always prompt for command to use."
   (setq openwith-associations '(("\\.pdf\\'" "evince" (file)) ("\\.pptx\\'" "libreoffice" (file)) ("\\.docx\\'" "libreoffice" (file))))
   )
 
-(use-package corfu
-  :init
-  (global-corfu-mode)
-  :custom
-  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-  (corfu-separator ?\s)          ;; Orderless field separator
-  (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
-  (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
-  (corfu-preview-current nil)    ;; Disable current candidate preview
-  (corfu-preselect 'first)      ;; Preselect the prompt
-  (corfu-on-exact-match t)     ;; Configure handling of exact matches
-  (corfu-scroll-margin 5)        ;; Use scroll margin
-  (corfu-minimum-width 100)        ;; Use scroll margin
-  (corfu-maximum-width 190)        ;; Use scroll margin
-  (corfu-auto-prefix 1)
-  (corfu-auto-delay 0.3)
-  (corfu-popupinfo-delay '(0.5 . 1.0))
-
+(use-package company
   :config
-  (corfu-popupinfo-mode 1)
-  (corfu-history-mode 1))
-
-(setq corfu--frame-parameters '((no-accept-focus . t)
-                                (no-focus-on-map . t)
-                                (min-width . t)
-                                (min-height . t)
-                                (border-width . 0)
-                                (child-frame-border-width . 10)
-                                (left-fringe . 0)
-                                (right-fringe . 0)
-                                (vertical-scroll-bars)
-                                (horizontal-scroll-bars)
-                                (menu-bar-lines . 0)
-                                (tool-bar-lines . 0)
-                                (tab-bar-lines . 0)
-                                (no-other-frame . t)
-                                (unsplittable . t)
-                                (undecorated . t)
-                                (cursor-type)
-                                (no-special-glyphs . t)
-                                (desktop-dont-save . t)))
-
-;; Add extensions
-(use-package cape
-  :init
-  ;; Add `completion-at-point-functions', used by `completion-at-point'.
-  ;; (add-to-list 'completion-at-point-functions #'cape-dabbrev 5)
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-history)
-  ;; (add-to-list 'completion-at-point-functions #'cape-keyword)
-  ;; (add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
-  ;; (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-  ;; (add-to-list 'completion-at-point-functions #'cape-line)
+  (setq company-prefix 'nil)
+  (setq company-tooltip-scrollbar-width 0)
+  (setq company-tooltip-margin 1)
+  (setq company-idle-delay 'nil)        ; to remove the auto complete
+  (setq company-insertion-on-trigger 'nil)
+  (setq company-async-wait 0.03)
+  (setq company-selection-wrap-around t)
+  (setq company-minimum-prefix-length 1)
+  (setq company-tooltip-align-annotations 't)
+  (setq company-global-modes '(not org-mode shell-mode))
+  (setq company-show-numbers 'nil)
+  (setq company-preview-overlay 't)
+  (setq company-pseudo-tooltip-overlay 't)
+  (setq company-format-margin-function nil) ; To remove icons
+  (global-company-mode 1)
+  :custom-face
+  (company-tooltip
+   ((t (:family "Iosevka NF Semibold"))))
   )
+
+;; (use-package corfu
+;;   :init
+;;   (global-corfu-mode)
+;;   :custom
+;;   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+;;   (corfu-separator ?\s)          ;; Orderless field separator
+;;   (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+;;   (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+;;   (corfu-preview-current nil)    ;; Disable current candidate preview
+;;   (corfu-preselect 'first)      ;; Preselect the prompt
+;;   (corfu-on-exact-match t)     ;; Configure handling of exact matches
+;;   (corfu-scroll-margin 5)        ;; Use scroll margin
+;;   (corfu-minimum-width 100)        ;; Use scroll margin
+;;   (corfu-maximum-width 190)        ;; Use scroll margin
+;;   (corfu-auto-prefix 1)
+;;   (corfu-auto-delay 0.3)
+;;   (corfu-popupinfo-delay '(0.5 . 1.0))
+
+;;   :config
+;;   (corfu-popupinfo-mode 1)
+
+;;   (corfu-history-mode 1))
+;; (setq corfu--frame-parameters
+;;   '((no-accept-focus . t)
+;;     (no-focus-on-map . t)
+;;     (min-width . t)
+;;     (min-height . t)
+;;     (border-width . 0)
+;;     (outer-border-width . 0)
+;;     (internal-border-width . 0)
+;;     (child-frame-border-width . 10)
+;;     (left-fringe . 0)
+;;     (right-fringe . 0)
+;;     (vertical-scroll-bars . nil)
+;;     (horizontal-scroll-bars . nil)
+;;     (menu-bar-lines . 0)
+;;     (tool-bar-lines . 0)
+;;     (tab-bar-lines . 0)
+;;     (no-other-frame . t)
+;;     (unsplittable . t)
+;;     (undecorated . t)
+;;     (cursor-type . nil)
+;;     (no-special-glyphs . t)
+;;     (desktop-dont-save . t)))
+
+;; ;; Add extensions
+;; (use-package cape
+;;   :init
+;;   ;; Add `completion-at-point-functions', used by `completion-at-point'.
+;;   ;; (add-to-list 'completion-at-point-functions #'cape-dabbrev 5)
+;;   (add-to-list 'completion-at-point-functions #'cape-file)
+;;   ;; (add-to-list 'completion-at-point-functions #'cape-history)
+;;   ;; (add-to-list 'completion-at-point-functions #'cape-keyword)
+;;   ;; (add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
+;;   ;; (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+;;   ;; (add-to-list 'completion-at-point-functions #'cape-line)
+;;   )
 
 (use-package org-superstar)
 
@@ -684,7 +713,9 @@ With a prefix ARG always prompt for command to use."
           visual-fill-column-center-text t)
     (visual-fill-column-mode 1))
 
-  :hook (org-mode . org-mode-visual-fill))
+  :hook (org-mode . org-mode-visual-fill)
+  :hook (org-agenda-finalize-hook . org-mode-visual-fill)
+  )
 
 (use-package org-appear
   :config
@@ -730,14 +761,16 @@ With a prefix ARG always prompt for command to use."
 
 (general-def
   "C-j" 'nil
+  "C-l" 'nil
   "C-k" 'nil)
 
 (general-def
   "M-a" 'mark-whole-buffer
-  "M-p" 'popper-toggle-type
+  "M-S-p" 'popper-toggle-type
+  "M-p" 'popper-toggle
   "M-n" 'popper-cycle
-  "M-," 'which-key-abort
   "M-S-n" 'popper-cycle-backwards
+  "M-," 'which-key-abort
   "M-d" 'popper-kill-latest-popup
   "C-;" 'embark-become
   "C-<return>" 'embark-act
@@ -781,7 +814,7 @@ With a prefix ARG always prompt for command to use."
 (e/leader-keys
   "f"  '(:ignore t :which-key "󰈔  files  ")
   "ff" '(find-file :which-key "󰈞  find a file  ")
-  "fr" '(consult-recent-file :which-key "󰣜  recent files  ")
+  "fr" '(consult-buffer :which-key "󰣜  recent files  ")
   "fd" '(dired-jump :which-key "󰉓   open dired  ")
   "fi" '(evil-show-file-info :which-key "  file info  ")
   "fot" '(org-babel-tangle :which-key "󰗆  org tangle")
@@ -899,7 +932,7 @@ With a prefix ARG always prompt for command to use."
 (general-def
   :keymaps 'evil-insert-state-map
   "C-h" 'nil
-  "C-l" 'completion-at-point
+  "C-l" 'nil
   "C-f" 'find-file-at-point
   )
 
@@ -931,11 +964,17 @@ With a prefix ARG always prompt for command to use."
   )
 
 (general-def
-  :keymaps 'corfu-map
-  "C-k" 'corfu-previous
-  "C-j" 'corfu-next
-  "C-l" 'completion-at-point
-  "C-h" 'corfu-quit
+  :keymaps 'company-mode-map
+  "C-k" 'company-select-previous
+  "C-j" 'company-select-next
+  "C-l" 'company-complete
+  "C-h" 'company-cancel
+  )
+(general-def 
+  :keymaps 'comint-mode-map
+  "M-n" 'nil
+  "M-p" 'nil
+  "M-S-p" 'nil
   )
 
 ;; NOTE: =Information on general=
@@ -1045,9 +1084,10 @@ With a prefix ARG always prompt for command to use."
 (use-package consult
   :init
   (setq register-preview-delay 0.5
-        register-preview-function #'consult-register-format)
+        ;; register-preview-function #'consult-register-format)
+        register-preview-function 'nil)
 
-  (advice-add #'register-preview :override #'consult-register-window)
+  ;; (advice-add #'register-preview :override #'consult-register-window)
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
   :config
@@ -1056,7 +1096,7 @@ With a prefix ARG always prompt for command to use."
   (setq consult-async-min-input 1)
 
   (consult-customize
-   consult-theme consult-buffer :preview-key '(:debounce 0.2 any)
+   consult-theme consult-buffer :preview-key 'nil
    consult-recent-file :preview-key "C-h"
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-xref
@@ -1070,6 +1110,8 @@ With a prefix ARG always prompt for command to use."
 
 (use-package embark)
 (use-package embark-consult)
+
+(package-install 'auctex)
 
 (use-package nerd-icons
   :config
@@ -1094,8 +1136,6 @@ With a prefix ARG always prompt for command to use."
   (add-hook 'text-mode-hook 'smartparens-mode)
   (add-hook 'prog-mode-hook 'smartparens-mode)
   (add-hook 'org-mode-hook 'smartparens-mode))
-(use-package evil-smartparens
-  :hook (smartparens-mode))
 
 (use-package yasnippet
   :config
@@ -1107,92 +1147,103 @@ With a prefix ARG always prompt for command to use."
   :init
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
-(defun my/lsp-mode-setup-completion ()
-  (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-        '(flex))) ;; Configure flex
+  (defun my/lsp-mode-setup-completion ()
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(flex))) ;; Configure flex
 
-(defun lsp-ui-doc--handle-hr-lines nil
-  (let (bolp next before after)
-    (goto-char 1)
-    (while (setq next (next-single-property-change (or next 1) 'markdown-hr))
-      (when (get-text-property next 'markdown-hr)
-        (goto-char next)
-        (setq bolp (bolp)
-              before (char-before))
-        (delete-region (point) (save-excursion (forward-visible-line 1) (point)))
-        (setq after (char-after (1+ (point))))
-        (insert
-         (concat
-          (and bolp (not (equal before ?\n)) (propertize "\n" 'face '(:height 0.5)))
-          (propertize " "
-                      ;; :align-to is added with lsp-ui-doc--fix-hr-props
-                      'display '(space :height (1))
-                      'lsp-ui-doc--replace-hr t
-                      ;; 'face '(:background "dark grey")
-                      )
-          ;; :align-to is added here too
-          (propertize " " 'display '(space :height (1)))
-          (and (not (equal after ?\n)) (propertize " \n" 'face '(:height 0.2)))))))))
-:hook
-(lsp-completion-mode . my/lsp-mode-setup-completion)
-(prog-mode . lsp-deferred)
+  (defun lsp-ui-doc--handle-hr-lines nil
+    (let (bolp next before after)
+      (goto-char 1)
+      (while (setq next (next-single-property-change (or next 1) 'markdown-hr))
+        (when (get-text-property next 'markdown-hr)
+          (goto-char next)
+          (setq bolp (bolp)
+                before (char-before))
+          (delete-region (point) (save-excursion (forward-visible-line 1) (point)))
+          (setq after (char-after (1+ (point))))
+          (insert
+           (concat
+            (and bolp (not (equal before ?\n)) (propertize "\n" 'face '(:height 0.5)))
+            (propertize " "
+                        ;; :align-to is added with lsp-ui-doc--fix-hr-props
+                        'display '(space :height (1))
+                        'lsp-ui-doc--replace-hr t
+                        ;; 'face '(:background "dark grey")
+                        )
+            ;; :align-to is added here too
+            (propertize " " 'display '(space :height (1)))
+            (and (not (equal after ?\n)) (propertize " \n" 'face '(:height 0.2)))))))))
+  :hook
+  (lsp-completion-mode . my/lsp-mode-setup-completion)
+  (prog-mode . lsp-deferred)
 
-:config
-(setq lsp-ui-doc-enable nil)
-(setq lsp-ui-doc-show-with-cursor nil)
-(setq lsp-ui-doc-show-with-mouse nil)
-(setq lsp-lens-enable nil)
-(setq lsp-idle-delay 0.0)
-(setq lsp-headerline-breadcrumb-enable nil)
-(setq lsp-ui-sideline-enable nil)
-(setq lsp-ui-sideline-show-code-actions nil)
-(setq lsp-ui-sideline-show-hover nil)
-(setq lsp-diagnostics-provider :flymake)
-(setq lsp-ui-sideline-enable nil)     ; To disable the entire sideline
-(setq lsp-modeline-code-actions-enable nil)
-(setq lsp-modeline-diagnostics-mode nil)
-(setq lsp-ui-sideline-enable nil)
-(setq lsp-ui-sideline-show-diagnostics nil)
-(setq lsp-eldoc-enable-hover nil)     ; Eldoc
-(setq lsp-signature-auto-activate nil) ;; you could manually request them via `lsp-signature-activate`
-(setq lsp-signature-render-documentation nil)
-(setq lsp-completion-provider :none) ;; we use Corfu!
-(setq lsp-completion-show-detail nil)
+  :config
+  (setq lsp-ui-doc-enable nil)
+  (setq lsp-ui-doc-show-with-cursor nil)
+  (setq lsp-ui-doc-show-with-mouse nil)
+  (setq lsp-lens-enable nil)
+  (setq lsp-idle-delay 0.0)
+  (setq lsp-headerline-breadcrumb-enable nil)
+  (setq lsp-ui-sideline-enable nil)
+  (setq lsp-ui-sideline-show-code-actions nil)
+  (setq lsp-ui-sideline-show-hover nil)
+  (setq lsp-diagnostics-provider :flymake)
+  (setq lsp-ui-sideline-enable nil)     ; To disable the entire sideline
+  (setq lsp-modeline-code-actions-enable nil)
+  (setq lsp-modeline-diagnostics-mode nil)
+  (setq lsp-ui-sideline-enable nil)
+  (setq lsp-ui-sideline-show-diagnostics nil)
+  (setq lsp-eldoc-enable-hover nil)     ; Eldoc
+  (setq lsp-signature-auto-activate nil) ;; you could manually request them via `lsp-signature-activate`
+  (setq lsp-signature-render-documentation nil)
+  (setq lsp-completion-provider :none) ;; we use Corfu!
+  (setq lsp-completion-show-detail nil)
 
-(setq lsp-ui-doc-frame-parameters
-      '((left . -1)
-        (no-focus-on-map . t)
-        (min-width  . 0)
-        (width  . 0)
-        (min-height  . 0)
-        (height  . 0)
-        (internal-border-width . 15)
-        (vertical-scroll-bars . nil)
-        (horizontal-scroll-bars . nil)
-        (right-fringe . 0)
-        (menu-bar-lines . 0)
-        (tool-bar-lines . 0)
-        (tab-bar-lines . 0)
-        (tab-bar-lines-keep-state . 0)
-        (line-spacing . 0)
-        (unsplittable . t)
-        (undecorated . t)
-        (bottom . -1)
-        (visibility . nil)
-        (mouse-wheel-frame . nil)
-        (no-other-frame . t)
-        (inhibit-double-buffering . t)
-        (drag-internal-border . t)
-        (no-special-glyphs . t)
-        (desktop-dont-save . t)))
+  (setq lsp-ui-doc-frame-parameters
+        '((left . -1)
+          (no-focus-on-map . t)
+          (min-width  . 0)
+          (width  . 0)
+          (min-height  . 0)
+          (height  . 0)
+          (internal-border-width . 15)
+          (vertical-scroll-bars . nil)
+          (horizontal-scroll-bars . nil)
+          (right-fringe . 0)
+          (menu-bar-lines . 0)
+          (tool-bar-lines . 0)
+          (tab-bar-lines . 0)
+          (tab-bar-lines-keep-state . 0)
+          (line-spacing . 0)
+          (unsplittable . t)
+          (undecorated . t)
+          (bottom . -1)
+          (visibility . nil)
+          (mouse-wheel-frame . nil)
+          (no-other-frame . t)
+          (inhibit-double-buffering . t)
+          (drag-internal-border . t)
+          (no-special-glyphs . t)
+          (desktop-dont-save . t)))
 
-:commands (lsp lsp-deferred))
+  :commands (lsp lsp-deferred))
 
 (use-package lsp-ui
+  :commands lsp-ui-mode
   :config
   (setq lsp-ui-doc-position 'at-point)
   (setq lsp-ui-doc-border darker-bgcolor)
+
+  (set-face-attribute 'lsp-ui-doc-background nil :background darker-bgcolor :foreground darker-bgcolor)
   )
+
+;; Assuming usage with dart-mode
+(use-package dart-mode)
+
+(use-package flutter
+  :after dart-mode)
+
+(use-package lsp-dart)
 
 (use-package format-all
   :commands format-all-mode
@@ -1385,14 +1436,18 @@ With a prefix ARG always prompt for command to use."
   (setq org-todo-keywords '
         ((sequence "TODO(t)" "QUESTION(q)" "HOMEWORK(h)" "NOTE(n)"
                    "|"
-                   "DONE(d/!)" "CANCELLED(c@/!)")))
+                   "DONE(d/!)")))
 
   (setq org-agenda-todo-keyword-format "%-6s")
   (setq org-agenda-custom-commands
         '(("a" "A better agenda view"
            ((agenda "")
-            (alltodo ""
-                     ((org-agenda-overriding-header "Unscheduled tasks")))
+            (todo "HOMEWORK"
+                  ((org-agenda-overriding-header "Due Assignments")))
+            (todo "QUESTION"
+                  ((org-agenda-overriding-header "Unanswered Questions")))
+            (todo "TODO"
+                  ((org-agenda-overriding-header "Unscheduled tasks")))
             ))
           ))
   (defvar org-agenda--todo-keyword-regex
@@ -1401,7 +1456,6 @@ With a prefix ARG always prompt for command to use."
                (mapcar (lambda (entry) (concat "\\* " entry))
                        '("TODO" "HOMEWORK" "QUESTION" "DONE")))
     "Regex which filters all TODO keywords")
-
   )
 (defun org-agenda-change-font ()
   (interactive)
@@ -1441,10 +1495,10 @@ With a prefix ARG always prompt for command to use."
 (add-hook 'after-make-frame-functions 'org-config)
 
 (setq org-capture-templates
-      `(("t" "Task" entry (file+olp "~/Documents/collegeNotes/home.org" "Inbox")
+      `(("t" "Task" entry (file "~/Documents/collegeNotes/tasks.org")
          "* TODO %?\n  %i")
-        ("h" "Homework" entry (file+olp "~/Documents/collegeNotes/home.org" "Inbox")
-         "* TODO %?\n  %i")))
+        ("h" "Homework" entry (file "~/Documents/collegeNotes/tasks.org")
+         "* HOMEWORK %?\n  %i")))
 
 (require 'org-tempo)
 
@@ -1545,7 +1599,7 @@ With a prefix ARG always prompt for command to use."
 
   (set-face-attribute 'org-document-title nil :height 260 :font cust-sans-serif :foreground blue-color)
   (set-face-attribute 'org-ellipsis nil :slant 'normal :foreground dim-fgcolor)
-  (set-face-attribute 'org-done nil :slant 'normal :strike-through 't :foreground dim-fgcolor)
+  (set-face-attribute 'org-done nil :slant 'normal :strike-through 'nil :foreground dim-fgcolor)
 
   (set-face-attribute 'org-agenda-date nil :font cust-sans-serif :weight 'regular :height 200 :foreground dim-fgcolor)
   (set-face-attribute 'org-agenda-date-today nil :font cust-sans-serif :weight 'semibold :height 200 )
@@ -1570,11 +1624,22 @@ With a prefix ARG always prompt for command to use."
   "Configure font given initial non-daemon FRAME.
    Intended for `after-make-frame-functions'."
 
-  (set-face-attribute 'corfu-default nil :height 150 :background darker-bgcolor :foreground dim-fgcolor :weight 'semibold :family "Iosevka Nerd Font")
-  (set-face-attribute 'corfu-current nil :height 150 :foreground calm-fgcolor :background bgcolor :weight 'semibold :family "Iosevka Nerd Font")
-  (set-face-attribute 'corfu-annotations nil :height 150 :foreground grim-fgcolor :weight 'semibold :family "Iosevka Nerd Font")
+  ;;(set-face-attribute 'corfu-default nil :height 150 :background darker-bgcolor :foreground dim-fgcolor :weight 'semibold :family "Iosevka Nerd Font")
+  ;;(set-face-attribute 'corfu-current nil :height 150 :foreground calm-fgcolor :background bgcolor :weight 'semibold :family "Iosevka Nerd Font")
+  ;;(set-face-attribute 'corfu-annotations nil :height 150 :foreground grim-fgcolor :weight 'semibold :family "Iosevka Nerd Font")
   )
 (add-hook 'server-after-make-frame-hook 'configure-corfu-font)
+
+(defun configure-company-font ()
+  "Configure font given initial non-daemon FRAME.
+   Intended for `after-make-frame-functions'."
+  (set-face-attribute 'company-tooltip nil :height 150 :background darker-bgcolor :foreground dim-fgcolor :weight 'semibold)
+  (set-face-attribute 'company-tooltip-selection nil :height 150 :background lavender-color :foreground bgcolor :weight 'semibold)
+  (set-face-attribute 'company-tooltip-common-selection nil :height 150 :foreground red-color :background 'nil :weight 'semibold)
+  (set-face-attribute 'company-preview-common nil :height 150 :background bgcolor :foreground grim-fgcolor :weight 'semibold)
+
+  )
+(add-hook 'server-after-make-frame-hook 'configure-company-font)
 
 (defun configure-parens-font ()
   "Configure font given initial non-daemon FRAME.
@@ -1586,13 +1651,11 @@ With a prefix ARG always prompt for command to use."
 (defun configure-lsp-font ()
   "Configure font given initial non-daemon FRAME.
    Intended for `after-make-frame-functions'."
-
-  (set-face-attribute 'lsp-ui-doc-background nil :background darker-bgcolor )
   (set-face-attribute 'lsp-face-highlight-textual nil :foreground 'unspecified :background grim-fgcolor :inherit 'nil)
   (set-face-attribute 'lsp-face-highlight-write nil :underline 'nil :foreground 'unspecified :background grim-fgcolor :inherit 'nil)
   (set-face-attribute 'lsp-face-highlight-read nil :underline 'nil :foreground 'unspecified :background grim-fgcolor :inherit 'nil)
   )
-(add-hook 'server-after-make-frame-hook 'configure-lsp-font)
+(add-hook 'lsp-mode-hook 'configure-lsp-font)
 
 (defun configure-flymake-font ()
   "Configure font given initial non-daemon FRAME.
@@ -1622,7 +1685,9 @@ With a prefix ARG always prompt for command to use."
 (add-hook 'server-after-make-frame-hook 'custom-vars-setup)
 
 (add-hook 'org-mode-hook #'(lambda () (display-line-numbers-mode -1)))
-(add-hook 'org-agenda-mode-hook #'(lambda () (display-line-numbers-mode -1)))
+(add-hook 'org-agenda-mode-hook #'(lambda ()
+                                    (display-line-numbers-mode -1)
+                                    ))
 (add-hook 'term-mode-hook #'(lambda () (display-line-numbers-mode -1)))
 (add-hook 'dired-mode-hook #'(lambda () (display-line-numbers-mode -1)))
 (add-hook 'shell-mode-hook #'(lambda () (display-line-numbers-mode -1)))
@@ -1631,19 +1696,22 @@ With a prefix ARG always prompt for command to use."
 ;; Corfu
 (add-hook 'eshell-mode-hook
           (lambda ()
-            (setq corfu-auto t)                 ;; Enable auto completion
-            (setq-local corfu-auto nil)))
+            ;; (company-mode)
+            ;;(setq corfu-auto t)                 ;; Enable auto completion
+            ;;(setq-local corfu-auto nil)
+            ))
 
 (add-hook 'prog-mode-hook
           (lambda ()
-            (setq corfu-auto nil)                 ;; Enable auto completion
+            ;;(setq corfu-auto nil)                 ;; Enable auto completion
+            ;; (company-mode)
             ))
 
 (add-hook 'org-mode-hook
           (lambda ()
             (org-indent-mode 1)
             (variable-pitch-mode 1)               ;; Enable Variable pitch
-            (setq corfu-auto nil)                 ;; Enable auto completion
+            ;;(setq corfu-auto nil)                 ;; Enable auto completion
             ))
 
 (defun corfu-enable-always-in-minibuffer ()
@@ -1657,7 +1725,7 @@ With a prefix ARG always prompt for command to use."
     (corfu-mode 1)))
 
 ;; SRC
-(add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
+;;(add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
 (add-hook 'org-src-mode-hook #'(lambda () (interactive) (setq header-line-format 'nil)))
 (add-hook 'org-capture-mode-hook #'(lambda () (interactive) (setq header-line-format 'nil)))
 
